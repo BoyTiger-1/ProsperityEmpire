@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prosperity Empire — Financial Civilization Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Cormorant+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/game.css">
+  <!-- Three.js for 3D city -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+</head>
+<body>
+
+<!-- ══ FULL-SCREEN 3D CITY CANVAS (always behind everything) ══ -->
+<div id="city-3d-container"></div>
+
+<!-- ══════════════════════════════════════════════════
+     LOADING SCREEN
+══════════════════════════════════════════════════ -->
+<div id="loading-screen">
+  <div class="loading-inner">
+    <div class="loading-ornament">❧</div>
+    <div class="loading-masthead">
+      <div class="loading-edition">EST. MMXXVI — FIRST EDITION</div>
+      <h1 class="loading-title">Prosperity<br>Empire</h1>
+      <div class="loading-subtitle">A Financial Civilization</div>
+    </div>
+    <div class="loading-rule"></div>
+    <div class="loading-bar-wrap"><div class="loading-bar-fill" id="loading-bar"></div></div>
+    <p class="loading-status" id="loading-status">Initialising the economy…</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     GAME CONTAINER
+══════════════════════════════════════════════════ -->
+<div id="game-container" class="hidden">
+
+  <!-- TICKER TAPE -->
+  <div id="ticker-tape">
+    <span class="ticker-label">MARKETS ◆</span>
+    <div class="ticker-track">
+      <div class="ticker-inner" id="ticker-inner">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER / MASTHEAD -->
+  <header id="game-header">
+    <div class="hdr-left">
+      <div class="hdr-title-block">
+        <div class="hdr-eyebrow">FINANCIAL CIVILIZATION BUILDER</div>
+        <div class="hdr-title">PROSPERITY EMPIRE</div>
+      </div>
+      <div class="hdr-empire-block">
+        <div class="hdr-name-wrap">
+          <span class="hdr-empire-name" id="empire-name">Humble Hamlet</span>
+          <button class="btn-rename" id="btn-rename" title="Rename your city">✏️</button>
+          <input type="text" class="rename-input" id="rename-input" placeholder="City name…" maxlength="30">
+        </div>
+        <span class="hdr-phase-badge" id="hdr-phase">Early Economy</span>
+      </div>
+    </div>
+    <div class="hdr-resources" id="hdr-resources"></div>
+    <div class="hdr-right">
+      <div class="hdr-clock">
+        <div class="hdr-clock-label">EMPIRE AGE</div>
+        <div class="hdr-clock-val" id="hdr-time">0 seconds</div>
+      </div>
+      <button class="btn-hdr" id="btn-save" title="Save Game (Ctrl+S)">SAVE</button>
+      <button class="btn-hdr btn-hdr-danger" id="btn-reset" title="Hold 3s to reset">RESET</button>
+    </div>
+  </header>
+
+  <!-- NAVIGATION -->
+  <nav id="game-nav">
+    <button class="tab-btn active" data-tab="empire">Empire</button>
+    <button class="tab-btn" data-tab="buildings">Buildings</button>
+    <button class="tab-btn" data-tab="research">Research</button>
+    <button class="tab-btn" data-tab="markets">Markets</button>
+    <button class="tab-btn" data-tab="academy">Academy</button>
+    <button class="tab-btn" data-tab="policies">Policies</button>
+    <button class="tab-btn" data-tab="codex">Codex</button>
+    <button class="tab-btn" data-tab="world">World</button>
+    <button class="tab-btn" data-tab="prestige">Prestige</button>
+    <button class="tab-btn" data-tab="achievements">Awards</button>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="game-main">
+
+    <!-- ─── EMPIRE TAB ─── -->
+    <div id="tab-empire" class="tab-content active">
+      <div class="empire-layout">
+
+        <!-- LEFT: resources panel (city is the full-screen backdrop) -->
+        <div class="empire-col empire-col-left">
+
+          <!-- ── CLICK HINT (replaces old click zone) ── -->
+          <div class="city-click-hint" id="city-click-hint">
+            <div class="click-power" id="click-power">⚡ Click anywhere in the city to generate Labour</div>
+            <div class="combo-display" id="combo-display"></div>
+            <div id="click-floats"></div>
+          </div>
+
+          <!-- ── OLD CLICK ZONE (preserved, commented out for later use) ──
+          <div class="click-zone" id="click-zone-old">
+            <div class="city-visual">
+              <div class="city-emoji" id="city-emoji">🏘️</div>
+              <div class="click-label">CLICK TO GENERATE LABOUR</div>
+              <div class="click-power-old">+1 Labour / click</div>
+              <div class="combo-display-old"></div>
+            </div>
+            <div id="click-floats-old"></div>
+          </div>
+          ── END OLD CLICK ZONE ── -->
+
+          <!-- Population bar -->
+          <div class="pop-bar" id="pop-bar">
+            <div class="pop-bar-inner">
+              <span class="pop-label">👥 POPULATION</span>
+              <span class="pop-val" id="pop-val">0</span>
+            </div>
+            <div class="happiness-row">
+              <span class="hap-label">HAPPINESS</span>
+              <div class="hap-bar-wrap"><div class="hap-bar-fill" id="hap-fill"></div></div>
+              <span class="hap-val" id="hap-val">50%</span>
+            </div>
+          </div>
+
+          <!-- Resource rows -->
+          <div id="resource-panel"></div>
+        </div>
+
+        <!-- CENTRE: production + stats + advisors -->
+        <div class="empire-col empire-col-mid">
+          <div class="newspaper-section" id="production-panel">
+            <div class="section-head">
+              <span class="section-rule"></span>
+              <span class="section-title">PRODUCTION REPORT</span>
+              <span class="section-rule"></span>
+            </div>
+            <div id="production-list"></div>
+          </div>
+
+          <div class="newspaper-section" id="milestones-panel">
+            <div class="section-head">
+              <span class="section-rule"></span>
+              <span class="section-title">ACTIVE MILESTONES</span>
+              <span class="section-rule"></span>
+            </div>
+            <div id="milestones-list"></div>
+          </div>
+
+          <div class="newspaper-section" id="stats-panel">
+            <div class="section-head">
+              <span class="section-rule"></span>
+              <span class="section-title">EMPIRE STATISTICS</span>
+              <span class="section-rule"></span>
+            </div>
+            <div id="stats-list"></div>
+          </div>
+
+          <div class="newspaper-section" id="advisors-panel">
+            <div class="section-head">
+              <span class="section-rule"></span>
+              <span class="section-title">ADVISORY COUNCIL</span>
+              <span class="section-rule"></span>
+            </div>
+            <div id="advisors-list"></div>
+          </div>
+        </div>
+
+        <!-- RIGHT: The Prosperity Times news feed -->
+        <div class="empire-col empire-col-right" id="news-column">
+          <div class="newspaper-masthead">
+            <div class="news-edition">FIRST EDITION</div>
+            <div class="news-title">The Prosperity Times</div>
+            <div class="news-dateline" id="news-dateline">Vol. I — Day 1</div>
+            <div class="news-ornament">✦ ✦ ✦</div>
+          </div>
+          <div id="news-feed"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ─── BUILDINGS TAB ─── -->
+    <div id="tab-buildings" class="tab-content hidden">
+      <div class="buildings-toolbar">
+        <div class="filter-group">
+          <span class="toolbar-label">FILTER:</span>
+          <button class="pill-btn active" data-filter="all">All Tiers</button>
+          <button class="pill-btn" data-filter="1">Tier I</button>
+          <button class="pill-btn" data-filter="2">Tier II</button>
+          <button class="pill-btn" data-filter="3">Tier III</button>
+          <button class="pill-btn" data-filter="4">Tier IV</button>
+        </div>
+        <div class="buy-group">
+          <span class="toolbar-label">QUANTITY:</span>
+          <button class="pill-btn active" data-buy="1">×1</button>
+          <button class="pill-btn" data-buy="10">×10</button>
+          <button class="pill-btn" data-buy="100">×100</button>
+          <button class="pill-btn" data-buy="max">Max</button>
+        </div>
+      </div>
+      <div class="buildings-grid" id="buildings-grid"></div>
+    </div>
+
+    <!-- ─── RESEARCH TAB ─── -->
+    <div id="tab-research" class="tab-content hidden">
+      <div class="research-topbar">
+        <div class="kp-readout">
+          <span class="kp-label">KNOWLEDGE POINTS</span>
+          <span class="kp-val" id="kp-display">0</span>
+          <span class="kp-rate" id="kp-rate-display">(0/s)</span>
+        </div>
+        <div class="research-hint">Each discovery permanently multiplies your empire's output. Prerequisites shown as locks.</div>
+      </div>
+      <div id="research-branches"></div>
+    </div>
+
+    <!-- ─── MARKETS TAB ─── -->
+    <div id="tab-markets" class="tab-content hidden">
+      <div class="markets-subnav">
+        <button class="mkt-tab active" data-mkt="stocks">Stocks</button>
+        <button class="mkt-tab" data-mkt="bonds">Bonds</button>
+        <button class="mkt-tab" data-mkt="commodities">Commodities</button>
+        <button class="mkt-tab" data-mkt="forex">Forex</button>
+        <button class="mkt-tab" data-mkt="portfolio">Portfolio</button>
+      </div>
+      <div id="markets-body"></div>
+    </div>
+
+    <!-- ─── ACADEMY TAB ─── -->
+    <div id="tab-academy" class="tab-content hidden">
+      <div class="academy-layout">
+        <div class="academy-main">
+          <div class="newspaper-section">
+            <div class="section-head">
+              <span class="section-rule"></span>
+              <span class="section-title">THE FINANCIAL ACADEMY</span>
+              <span class="section-rule"></span>
+            </div>
+            <div id="question-area"></div>
+          </div>
+        </div>
+        <div class="academy-sidebar">
+          <div class="newspaper-section">
+            <div class="section-head">
+              <span class="section-rule"></span>
+              <span class="section-title">MASTERY</span>
+              <span class="section-rule"></span>
+            </div>
+            <div id="mastery-display"></div>
+          </div>
+          <div class="newspaper-section">
+            <div class="section-head">
+              <span class="section-rule"></span>
+              <span class="section-title">RECORD</span>
+              <span class="section-rule"></span>
+            </div>
+            <div id="quiz-stats"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── POLICIES TAB ─── -->
+    <div id="tab-policies" class="tab-content hidden">
+      <div id="policies-body"></div>
+    </div>
+
+    <!-- ─── CODEX TAB ─── -->
+    <div id="tab-codex" class="tab-content hidden">
+      <div class="codex-layout">
+        <div class="codex-sidebar" id="codex-sidebar"></div>
+        <div class="codex-body" id="codex-body"></div>
+      </div>
+    </div>
+
+    <!-- ─── WORLD TAB ─── -->
+    <div id="tab-world" class="tab-content hidden">
+      <div class="world-layout">
+        <div class="world-col">
+          <div class="newspaper-section">
+            <div class="section-head"><span class="section-rule"></span><span class="section-title">GLOBAL EVENTS</span><span class="section-rule"></span></div>
+            <div id="world-events-list"></div>
+          </div>
+          <div class="newspaper-section">
+            <div class="section-head"><span class="section-rule"></span><span class="section-title">EVENT HISTORY</span><span class="section-rule"></span></div>
+            <div id="world-event-history"></div>
+          </div>
+        </div>
+        <div class="world-col">
+          <div class="newspaper-section">
+            <div class="section-head"><span class="section-rule"></span><span class="section-title">RIVAL NATIONS</span><span class="section-rule"></span></div>
+            <div id="world-nations-list"></div>
+          </div>
+          <div class="newspaper-section">
+            <div class="section-head"><span class="section-rule"></span><span class="section-title">DIPLOMACY</span><span class="section-rule"></span></div>
+            <div id="world-diplomacy"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PRESTIGE TAB ─── -->
+    <div id="tab-prestige" class="tab-content hidden">
+      <div id="prestige-body"></div>
+    </div>
+
+    <!-- ─── ACHIEVEMENTS TAB ─── -->
+    <div id="tab-achievements" class="tab-content hidden">
+      <div class="ach-header">
+        <div class="ach-progress-text" id="ach-progress-text">0 / 0 Honours Awarded</div>
+        <div class="ach-progress-bar"><div id="ach-progress-fill"></div></div>
+      </div>
+      <div class="achievements-grid" id="achievements-grid"></div>
+    </div>
+
+  </main>
+
+  <!-- NOTIFICATIONS -->
+  <div id="notif-area"></div>
+
+  <!-- MODAL -->
+  <div id="modal-overlay" class="hidden">
+    <div id="modal-box"></div>
+  </div>
+
+  <!-- TUTORIAL OVERLAY -->
+  <div id="tutorial-overlay" class="hidden">
+    <div id="tutorial-spotlight"></div>
+    <div id="tutorial-card">
+      <div class="tut-step-indicator" id="tut-step-indicator"></div>
+      <h3 class="tut-title" id="tut-title"></h3>
+      <p class="tut-body" id="tut-body"></p>
+      <div class="tut-actions">
+        <button class="btn-tut-skip" id="tut-skip">Skip Tutorial</button>
+        <button class="btn-tut-next" id="tut-next">Next →</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /#game-container -->
+
+<!-- ══ SCRIPTS ══ -->
+<script src="js/config.js"></script>
+
+<script src="js/data/buildings.js"></script>
+<script src="js/data/technologies.js"></script>
+<script src="js/data/questions.js"></script>
+<script src="js/data/events.js"></script>
+<script src="js/data/market.js"></script>
+<script src="js/data/codex.js"></script>
+<script src="js/data/nations.js"></script>
+<script src="js/data/achievements.js"></script>
+<script src="js/data/tutorial.js"></script>
+<script src="js/data/policies.js"></script>
+
+<script src="js/game.js"></script>
+
+<script src="js/engine/format.js"></script>
+<script src="js/engine/newsEngine.js"></script>
+<script src="js/engine/production.js"></script>
+<script src="js/engine/buildingEngine.js"></script>
+<script src="js/engine/researchEngine.js"></script>
+<script src="js/engine/marketEngine.js"></script>
+<script src="js/engine/learningEngine.js"></script>
+<script src="js/engine/eventsEngine.js"></script>
+<script src="js/engine/prestigeEngine.js"></script>
+<script src="js/engine/saveEngine.js"></script>
+<script src="js/engine/achievementEngine.js"></script>
+<script src="js/engine/populationEngine.js"></script>
+<script src="js/engine/policyEngine.js"></script>
+
+<script src="js/ui/notifications.js"></script>
+<script src="js/ui/modals.js"></script>
+<script src="js/ui/tabs.js"></script>
+<script src="js/ui/cityScene.js"></script>
+<script src="js/ui/empireUI.js"></script>
+<script src="js/ui/newsUI.js"></script>
+<script src="js/ui/tutorialUI.js"></script>
+<script src="js/ui/buildingsUI.js"></script>
+<script src="js/ui/researchUI.js"></script>
+<script src="js/ui/marketsUI.js"></script>
+<script src="js/ui/academyUI.js"></script>
+<script src="js/ui/policiesUI.js"></script>
+<script src="js/ui/codexUI.js"></script>
+<script src="js/ui/worldUI.js"></script>
+<script src="js/ui/prestigeUI.js"></script>
+<script src="js/ui/achievementsUI.js"></script>
+
+<script src="js/main.js"></script>
+</body>
+</html>
