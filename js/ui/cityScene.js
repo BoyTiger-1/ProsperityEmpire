@@ -498,6 +498,11 @@ const CityScene = (() => {
 
   // ── Rebuild city with zone placement ────────────────────────────
   function rebuildCity() {
+    // Clear any stale selection before removing old groups
+    if (selectedGroup) {
+      selectedGroup = null;
+      if (typeof EmpireUI !== 'undefined') EmpireUI.hideBuildingPanel();
+    }
     for (const m of buildingMeshes) cityGroup.remove(m);
     buildingMeshes = [];
 
@@ -556,6 +561,7 @@ const CityScene = (() => {
     if (selectedGroup && selectedGroup !== group) _unhighlight(selectedGroup);
     selectedGroup = group;
     rotPaused = true;
+    rotTarget = null; // stop any in-progress zone zoom
     const wp = new THREE.Vector3();
     group.getWorldPosition(wp);
     const frac = Math.max(0.25, 1 - wp.length()/40);
