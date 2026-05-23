@@ -1,4 +1,4 @@
-/* ── CITY SCENE — zone-based 3D city ── */
+﻿/* ── CITY SCENE — zone-based 3D city ── */
 const CityScene = (() => {
   let renderer, scene, camera, clock;
   let cityGroup, pulseLight;
@@ -598,56 +598,184 @@ const CityScene = (() => {
     });
   }
 
-  // ── Ground ───────────────────────────────────────────────────────
+  // ── Ground & city environment ─────────────────────────────────────
   function _buildGround() {
-    const grass = new THREE.Mesh(new THREE.PlaneGeometry(220, 220), new THREE.MeshLambertMaterial({ color:0x2d6030 }));
+    // Base grass
+    const grass = new THREE.Mesh(new THREE.PlaneGeometry(260, 260), new THREE.MeshLambertMaterial({ color:0x2d6030 }));
     grass.rotation.x = -Math.PI/2; grass.receiveShadow = true; cityGroup.add(grass);
 
-    const paved = new THREE.Mesh(new THREE.PlaneGeometry(52, 52), new THREE.MeshLambertMaterial({ color:0x444444 }));
+    // Paved city centre
+    const paved = new THREE.Mesh(new THREE.PlaneGeometry(56, 56), new THREE.MeshLambertMaterial({ color:0x444444 }));
     paved.rotation.x = -Math.PI/2; paved.position.set(0, 0.008, 0); cityGroup.add(paved);
 
-    const roadMat = new THREE.MeshLambertMaterial({ color:0x333333 });
-    [[80,1.4,0,0],[1.4,80,0,0],[80,1.0,0,12],[80,1.0,0,-12],[1.0,80,12,0],[1.0,80,-12,0]].forEach(([w,d,x,z]) => {
+    // Roads (no dashes — clean)
+    const roadMat = new THREE.MeshLambertMaterial({ color:0x2E2E2E });
+    [[88,2.2,0,0],[2.2,88,0,0],[88,1.6,0,13],[88,1.6,0,-13],[1.6,88,13,0],[1.6,88,-13,0]].forEach(([w,d,x,z]) => {
       const m = new THREE.Mesh(new THREE.PlaneGeometry(w,d), roadMat);
       m.rotation.x = -Math.PI/2; m.position.set(x, 0.012, z); cityGroup.add(m);
     });
 
-    const markMat = new THREE.MeshLambertMaterial({ color:0xFFFF88 });
-    for (let i = -10; i <= 10; i++) {
-      [[i*1.9,0,0.08,0.7],[0,i*1.9,0.7,0.08]].forEach(([x,z,w,d]) => {
-        const m = new THREE.Mesh(new THREE.PlaneGeometry(w,d), markMat);
-        m.rotation.x = -Math.PI/2; m.position.set(x, 0.02, z); cityGroup.add(m);
-      });
+    // Sidewalks (lighter strip beside roads)
+    const sidewalkMat = new THREE.MeshLambertMaterial({ color:0x666655 });
+    [[88,0.8,0,1.8],[88,0.8,0,-1.8],[0.8,88,1.8,0],[-0.8,88,-1.8,0]].forEach(([w,d,x,z]) => {
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(w,d), sidewalkMat);
+      m.rotation.x = -Math.PI/2; m.position.set(x, 0.013, z); cityGroup.add(m);
+    });
+
+    // Zone colour tint patches (subtle)
+    const zonePatchCols = { residential:0xFF6633, agricultural:0x44CC44, industrial:0x4477CC,
+      commercial:0xFFCC22, financial:0xFFAA00, knowledge:0x7744EE, advanced:0x22CCEE };
+    Object.entries(ZONE_CENTERS).forEach(([zone, {x, z}]) => {
+      const p = new THREE.Mesh(new THREE.PlaneGeometry(18, 18), new THREE.MeshLambertMaterial({ color:zonePatchCols[zone]||0xFFFFFF, transparent:true, opacity:0.07 }));
+      p.rotation.x = -Math.PI/2; p.position.set(x, 0.009, z); cityGroup.add(p);
+    });
+
+    // Central monument plaza
+    const plazaMat = new THREE.MeshLambertMaterial({ color:0x999988 });
+    const plaza = new THREE.Mesh(new THREE.PlaneGeometry(8, 8), plazaMat);
+    plaza.rotation.x = -Math.PI/2; plaza.position.set(0, 0.015, 0); cityGroup.add(plaza);
+
+    // Obelisk monument (replaces simple fountain)
+    const granMat = new THREE.MeshLambertMaterial({ color:0xBBBBCC });
+    const pedestal = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.4, 0.55, 16), granMat);
+    pedestal.position.set(0, 0.275, 0); pedestal.castShadow = true; cityGroup.add(pedestal);
+    const ring = new THREE.Mesh(new THREE.CylinderGeometry(1.7, 1.8, 0.28, 16), new THREE.MeshLambertMaterial({ color:0xCCCCDD }));
+    ring.position.set(0, 0.69, 0); cityGroup.add(ring);
+    const pool = new THREE.Mesh(new THREE.CylinderGeometry(1.3, 1.3, 0.14, 16), new THREE.MeshLambertMaterial({ color:0x2277BB, transparent:true, opacity:0.85 }));
+    pool.position.set(0, 0.9, 0); cityGroup.add(pool);
+    const obBase = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.7, 1.1), granMat);
+    obBase.position.set(0, 1.25, 0); obBase.castShadow = true; cityGroup.add(obBase);
+    const obShaft = new THREE.Mesh(new THREE.BoxGeometry(0.6, 8.5, 0.6), new THREE.MeshLambertMaterial({ color:0xCCCCDD }));
+    obShaft.position.set(0, 5.85, 0); obShaft.castShadow = true; cityGroup.add(obShaft);
+    const obTip = new THREE.Mesh(new THREE.ConeGeometry(0.46, 1.4, 4), new THREE.MeshLambertMaterial({ color:0xFFD700, emissive:new THREE.Color(0xAA8800), emissiveIntensity:0.6 }));
+    obTip.position.set(0, 10.8, 0); obTip.rotation.y = Math.PI/4; obTip.castShadow = true; cityGroup.add(obTip);
+    // Colonnade of 8 pillars around monument
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * Math.PI * 2;
+      const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.22, 4.2, 8), new THREE.MeshLambertMaterial({ color:0xDDDDCC }));
+      pillar.position.set(Math.cos(a) * 3.0, 2.1, Math.sin(a) * 3.0); pillar.castShadow = true; cityGroup.add(pillar);
+      const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.18, 0.22, 8), new THREE.MeshLambertMaterial({ color:0xEEEEDD }));
+      cap.position.set(Math.cos(a) * 3.0, 4.42, Math.sin(a) * 3.0); cityGroup.add(cap);
     }
 
-    const plaza = new THREE.Mesh(new THREE.PlaneGeometry(4,4), new THREE.MeshLambertMaterial({ color:0x888888 }));
-    plaza.rotation.x = -Math.PI/2; plaza.position.set(0, 0.02, 0); cityGroup.add(plaza);
+    // Zone flag markers
+    const flagColors = { residential:0xFF5522, agricultural:0x33BB33, industrial:0x3366CC,
+      commercial:0xFFCC00, financial:0xFFAA00, knowledge:0x7733EE, advanced:0x11BBDD };
+    Object.entries(ZONE_CENTERS).forEach(([zone, {x, z}]) => {
+      const col = flagColors[zone] || 0xFFFFFF;
+      const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.09, 5.0, 6), new THREE.MeshLambertMaterial({ color:0x888888 }));
+      pole.position.set(x, 2.5, z); cityGroup.add(pole);
+      const flag = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.9, 0.05), new THREE.MeshLambertMaterial({ color:col, emissive:new THREE.Color(col), emissiveIntensity:0.25, side:THREE.DoubleSide }));
+      flag.position.set(x + 0.8, 5.35, z); cityGroup.add(flag);
+    });
 
-    const fontBase = new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.3,0.35,16), new THREE.MeshLambertMaterial({ color:0x777777 }));
-    fontBase.position.set(0,0.175,0); fontBase.castShadow = true; cityGroup.add(fontBase);
-    const water = new THREE.Mesh(new THREE.CylinderGeometry(0.9,0.9,0.18,16), new THREE.MeshLambertMaterial({ color:0x3399CC, emissive:new THREE.Color(0x1133AA), emissiveIntensity:0.4 }));
-    water.position.set(0,0.44,0); cityGroup.add(water);
-
+    // Trees (existing + more outer ring)
     const trunkMat = new THREE.MeshLambertMaterial({ color:0x4A2C0A });
-    const leafColors = [0x228B22,0x2E8B57,0x3CB371,0x006400];
+    const leafColors = [0x228B22,0x2E8B57,0x3CB371,0x006400,0x1A6B1A];
     [[-7,-7],[7,-7],[-7,7],[7,7],[-12,0],[12,0],[0,-12],[0,12],
      [-5,-10],[5,-10],[-10,-5],[10,5],[-10,5],[5,10],[-5,10],[10,-5],
      [-15,4],[-15,-4],[15,4],[15,-4],[4,-15],[4,15],[-4,-15],[-4,15],
-     [-18,0],[18,0],[0,-18],[0,18]].forEach(([tx,tz],i) => {
-      const h = 0.8+(i%4)*0.3;
-      const t = new THREE.Mesh(new THREE.CylinderGeometry(0.13,0.18,h+0.4,6), trunkMat);
-      t.position.set(tx,(h+0.4)/2,tz); t.castShadow = true; cityGroup.add(t);
-      const l = new THREE.Mesh(new THREE.SphereGeometry(0.58+(i%3)*0.14,6,5), new THREE.MeshLambertMaterial({ color:leafColors[i%4] }));
-      l.position.set(tx,h+0.52,tz); l.castShadow = true; cityGroup.add(l);
+     [-18,0],[18,0],[0,-18],[0,18],
+     [-22,8],[-22,-8],[22,8],[22,-8],[8,22],[-8,22],[8,-22],[-8,-22],
+     [-25,0],[25,0],[0,-25],[0,25],[-20,15],[20,15],[-20,-15],[20,-15],
+     [-28,5],[28,5],[-28,-5],[28,-5],[5,-28],[5,28],[-5,-28],[-5,28]
+    ].forEach(([tx,tz],i) => {
+      const h = 1.0+(i%5)*0.35;
+      const t = new THREE.Mesh(new THREE.CylinderGeometry(0.13,0.19,h+0.5,6), trunkMat);
+      t.position.set(tx,(h+0.5)/2,tz); t.castShadow = true; cityGroup.add(t);
+      const l = new THREE.Mesh(new THREE.SphereGeometry(0.65+(i%4)*0.15,6,5), new THREE.MeshLambertMaterial({ color:leafColors[i%5] }));
+      l.position.set(tx,h+0.62,tz); l.castShadow = true; cityGroup.add(l);
     });
 
-    const lampPost = new THREE.MeshLambertMaterial({ color:0x888888 });
-    const lampHead = new THREE.MeshLambertMaterial({ color:0xFFEE88, emissive:new THREE.Color(0xFFCC44), emissiveIntensity:0.8 });
-    [[-3,3],[3,3],[-3,-3],[3,-3],[8,8],[-8,8],[8,-8],[-8,-8]].forEach(([x,z]) => {
-      const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.08,3.5,6), lampPost);
-      pole.position.set(x,1.75,z); cityGroup.add(pole);
-      const head = new THREE.Mesh(new THREE.SphereGeometry(0.18,8,6), lampHead);
-      head.position.set(x,3.6,z); cityGroup.add(head);
+    // Park benches near plaza
+    const benchWood = new THREE.MeshLambertMaterial({ color:0x8B6340 });
+    const benchMetal = new THREE.MeshLambertMaterial({ color:0x555555 });
+    [[5.5,0,5.5,0],[-5.5,0,5.5,Math.PI],[5.5,0,-5.5,Math.PI/2],[-5.5,0,-5.5,-Math.PI/2]].forEach(([bx,by,bz,ry]) => {
+      const seat = new THREE.Mesh(new THREE.BoxGeometry(1.6,0.1,0.45), benchWood);
+      seat.position.set(bx,0.48,bz); seat.rotation.y = ry; cityGroup.add(seat);
+      const back = new THREE.Mesh(new THREE.BoxGeometry(1.6,0.55,0.08), benchWood);
+      back.position.set(bx,0.78,bz + Math.cos(ry)*0.22); back.rotation.y = ry; cityGroup.add(back);
+      [-0.6,0.6].forEach(lx => {
+        const leg = new THREE.Mesh(new THREE.BoxGeometry(0.07,0.45,0.4), benchMetal);
+        leg.position.set(bx + Math.cos(ry+Math.PI/2)*lx, 0.225, bz + Math.sin(ry+Math.PI/2)*lx);
+        leg.rotation.y = ry; cityGroup.add(leg);
+      });
+    });
+
+    // Flower patches around plaza
+    const flowerCols = [0xFF4444,0xFF9900,0xFFFF00,0xFF66AA,0xFF8866];
+    [[8,5],[-8,5],[8,-5],[-8,-5],[5,8],[-5,8],[5,-8],[-5,-8],
+     [9,0],[-9,0],[0,9],[0,-9]].forEach(([fx,fz],i) => {
+      const fm = new THREE.MeshLambertMaterial({ color:flowerCols[i%5], emissive:new THREE.Color(flowerCols[i%5]), emissiveIntensity:0.12 });
+      const fl = new THREE.Mesh(new THREE.SphereGeometry(0.45,6,4), fm);
+      fl.position.set(fx,0.32,fz); cityGroup.add(fl);
+      const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.03,0.03,0.3,5), new THREE.MeshLambertMaterial({ color:0x228B22 }));
+      stem.position.set(fx,0.15,fz); cityGroup.add(stem);
+    });
+
+    // Park grass patches (between roads and outer ring)
+    const parkGrass = new THREE.MeshLambertMaterial({ color:0x3A8040 });
+    [[20,20,10,10],[-20,20,10,10],[20,-20,10,10],[-20,-20,10,10]].forEach(([px,pz,pw,pd]) => {
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(pw,pd), parkGrass);
+      m.rotation.x = -Math.PI/2; m.position.set(px,0.004,pz); cityGroup.add(m);
+    });
+
+    // Lamp posts (more coverage)
+    const lampPostMat = new THREE.MeshLambertMaterial({ color:0x777777 });
+    const lampHeadMat = new THREE.MeshLambertMaterial({ color:0xFFEE88, emissive:new THREE.Color(0xFFCC44), emissiveIntensity:0.9 });
+    [[-3,3],[3,3],[-3,-3],[3,-3],[8,8],[-8,8],[8,-8],[-8,-8],
+     [16,4],[-16,4],[16,-4],[-16,-4],[4,16],[-4,16],[4,-16],[-4,-16]].forEach(([x,z]) => {
+      const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.09,4.0,6), lampPostMat);
+      pole.position.set(x,2.0,z); cityGroup.add(pole);
+      const arm = new THREE.Mesh(new THREE.BoxGeometry(0.8,0.06,0.06), lampPostMat);
+      arm.position.set(x+0.4,4.0,z); cityGroup.add(arm);
+      const head = new THREE.Mesh(new THREE.SphereGeometry(0.2,8,6), lampHeadMat);
+      head.position.set(x+0.8,4.0,z); cityGroup.add(head);
+    });
+
+    // City boundary wall (low decorative perimeter)
+    const wallMat = new THREE.MeshLambertMaterial({ color:0x7A7A6A });
+    [[0,0.25,27,54,0.5,0.5],[0,0.25,-27,54,0.5,0.5],[27,0.25,0,0.5,0.5,54],[-27,0.25,0,0.5,0.5,54]].forEach(([wx,wy,wz,ww,wh,wd]) => {
+      const w = new THREE.Mesh(new THREE.BoxGeometry(ww,wh,wd), wallMat);
+      w.position.set(wx,wy,wz); cityGroup.add(w);
+    });
+    // Gateposts at road intersections with wall
+    [[27,0],[-27,0],[0,27],[0,-27]].forEach(([gx,gz]) => {
+      const gp = new THREE.Mesh(new THREE.BoxGeometry(0.8,1.8,0.8), new THREE.MeshLambertMaterial({ color:0x999988 }));
+      gp.position.set(gx,0.9,gz); gp.castShadow = true; cityGroup.add(gp);
+    });
+  }
+
+  // ── Environment: mountains + clouds (fixed in world space) ────────
+  function _buildEnvironment() {
+    // Distant mountains
+    const mPalette = [0x4A5568,0x556075,0x3D4A5A].map(c => new THREE.MeshLambertMaterial({ color:c }));
+    const snowMat  = new THREE.MeshLambertMaterial({ color:0xEEF2F8, transparent:true, opacity:0.92 });
+    [
+      [155,-95],[-145,-115],[105,-148],[-85,-155],
+      [172,28],[-160,22],[55,-168],[-55,-178],[180,-50],[-175,-55],
+    ].forEach(([mx,mz],i) => {
+      const h = 52 + (i%4)*20;
+      const r = 28 + (i%3)*14;
+      const peak = new THREE.Mesh(new THREE.ConeGeometry(r, h, 7), mPalette[i%3]);
+      peak.position.set(mx, h/2 - 4, mz);
+      scene.add(peak);
+      const snow = new THREE.Mesh(new THREE.ConeGeometry(r*0.4, h*0.25, 7), snowMat);
+      snow.position.set(mx, h - h*0.1, mz);
+      scene.add(snow);
+    });
+
+    // Clouds (static, world-space so they don't spin with city)
+    const cloudMat = new THREE.MeshLambertMaterial({ color:0xFFFFFF, transparent:true, opacity:0.82 });
+    [
+      [42,65,-28],[-52,70,-32],[28,60,58],[-38,68,42],
+      [68,64,18],[-22,74,-55],[5,58,72],[-72,62,5],[50,75,50],[-50,66,-50],
+    ].forEach(([cx,cy,cz]) => {
+      [[0,0,0,3.8],[3.2,-0.4,0.6,2.9],[-2.9,-0.3,0.9,2.5],[1.6,0.9,-1.3,2.2],[-1.1,0.7,1.9,2.0]].forEach(([ox,oy,oz,r]) => {
+        const s = new THREE.Mesh(new THREE.SphereGeometry(r,7,5), cloudMat);
+        s.position.set(cx+ox, cy+oy, cz+oz);
+        scene.add(s);
+      });
     });
   }
 
@@ -748,6 +876,7 @@ const CityScene = (() => {
 
       clock = new THREE.Clock();
       _buildGround();
+      _buildEnvironment();
       rebuildCity();
 
       renderer.domElement.addEventListener('click', e => {

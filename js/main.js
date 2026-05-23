@@ -74,19 +74,34 @@
       }
     });
 
-    // ── Wire reset button (hold 3s) ──
-    let resetTimer = null;
+    // ── Wire reset button (click → confirmation modal) ──
     const btnReset = document.getElementById('btn-reset');
-    btnReset.addEventListener('mousedown', () => {
+    let resetTimer = null;
+
+    function startHold() {
+      btnReset.classList.add('btn-holding');
       resetTimer = setTimeout(() => {
-        Modals.show('🔄 Reset Empire', 'This will permanently delete ALL progress. Are you absolutely sure?', [
-          { label:'YES, RESET EVERYTHING', cls:'btn-danger', action: () => SaveEngine.reset() },
-          { label:'Cancel', cls:'btn-ghost' },
-        ]);
+        btnReset.classList.remove('btn-holding');
+        Modals.show('🔄 Reset Empire',
+          'This will permanently delete <strong>ALL progress</strong> — buildings, resources, research, and achievements. This cannot be undone.',
+          [
+            { label: 'YES, RESET EVERYTHING', cls: 'btn-danger', action: () => SaveEngine.reset() },
+            { label: 'Cancel', cls: 'btn-ghost' },
+          ]
+        );
       }, 3000);
-    });
-    btnReset.addEventListener('mouseup',    () => clearTimeout(resetTimer));
-    btnReset.addEventListener('mouseleave', () => clearTimeout(resetTimer));
+    }
+    function cancelHold() {
+      clearTimeout(resetTimer);
+      btnReset.classList.remove('btn-holding');
+    }
+
+    btnReset.addEventListener('mousedown',   startHold);
+    btnReset.addEventListener('mouseup',     cancelHold);
+    btnReset.addEventListener('mouseleave',  cancelHold);
+    btnReset.addEventListener('touchstart',  e => { e.preventDefault(); startHold(); },  { passive: false });
+    btnReset.addEventListener('touchend',    cancelHold);
+    btnReset.addEventListener('touchcancel', cancelHold);
 
     // ── Initial calculations ──
     Production.recalculate();

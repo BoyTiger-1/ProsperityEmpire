@@ -44,6 +44,48 @@ const BuildingEngine = {
     return true;
   },
 
+  getSellValue(bldId, qty = 1) {
+    const def = BUILDINGS[bldId];
+    if (!def) return {};
+    const owned = GS.buildings[bldId] || 0;
+    if (owned <= 0) return {};
+    qty = Math.min(qty, owned);
+    const scale = def.scaling || CFG.COST_SCALE;
+    const value = {};
+    for (const [res, base] of Object.entries(def.baseCost)) {
+      let total = 0;
+      for (let i = 0; i < qty; i++) {
+        total += base * Math.pow(scale, owned - 1 - i);
+      }
+      value[res] = Math.floor(total * 0.5);
+    }
+    return value;
+  },
+
+  sell(bldId, qty = 1) {
+    const owned = GS.buildings[bldId] || 0;
+    if (owned <= 0) {
+      Notifications.show('❌ Nothing to sell', 'You have no buildings of this type.', 'error');
+      return false;
+    }
+    qty = Math.min(qty, owned);
+    const refund = this.getSellValue(bldId, qty);
+    for (const [res, amt] of Object.entries(refund)) {
+      if (GS.resources[res]) GS.resources[res].amount += amt;
+    }
+    GS.buildings[bldId] -= qty;
+    GS.stats.totalBuildings = Math.max(0, GS.stats.totalBuildings - qty);
+    Production.recalculate();
+    PopulationEngine.recalculate();
+    const def = BUILDINGS[bldId];
+    const refundStr = Object.entries(refund).map(([r, v]) =>
+      `${RESOURCE_META[r]?.emoji || ''} ${FMT.num(v)} ${RESOURCE_META[r]?.name || r}`
+    ).join(', ');
+    Notifications.show(`🔨 Sold ${qty > 1 ? qty + '× ' : ''}${def.name}`, `Refunded: ${refundStr}`, 'info');
+    AchievementEngine.check();
+    return true;
+  },
+
   buy(bldId, qty = 1) {
     if (!this.isUnlocked(bldId)) {
       Notifications.show('🔒 Locked', 'Unlock requirements not met.', 'error');

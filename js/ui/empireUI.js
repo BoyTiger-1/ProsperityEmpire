@@ -64,12 +64,22 @@ const EmpireUI = {
     document.getElementById('bp-buy1')?.addEventListener('click',  () => this._buyFromPanel(1));
     document.getElementById('bp-buy10')?.addEventListener('click', () => this._buyFromPanel(10));
 
+    // Building panel sell buttons
+    document.getElementById('bp-sell1')?.addEventListener('click',  () => this._sellFromPanel(1));
+    document.getElementById('bp-sell5')?.addEventListener('click',  () => this._sellFromPanel(5));
+
     Tabs.register('empire', () => this.render());
   },
 
   _buyFromPanel(qty) {
     if (!this._activeBldId) return;
     for (let i = 0; i < qty; i++) BuildingEngine.buy(this._activeBldId);
+    this.showBuildingPanel(this._activeBldId);
+  },
+
+  _sellFromPanel(qty) {
+    if (!this._activeBldId) return;
+    BuildingEngine.sell(this._activeBldId, qty);
     this.showBuildingPanel(this._activeBldId);
   },
 
@@ -115,6 +125,23 @@ const EmpireUI = {
     const btn10 = document.getElementById('bp-buy10');
     if (btn1)  { btn1.disabled  = !can1;  btn1.textContent  = 'BUY ×1'; }
     if (btn10) { btn10.disabled = !can10; btn10.textContent = 'BUY ×10'; }
+
+    // Sell buttons
+    const sell1 = document.getElementById('bp-sell1');
+    const sell5 = document.getElementById('bp-sell5');
+    const refundEl = document.getElementById('bp-sell-refund');
+    const canSell1 = count >= 1;
+    const canSell5 = count >= 5;
+    if (sell1) { sell1.disabled = !canSell1; sell1.textContent = 'SELL ×1'; }
+    if (sell5) { sell5.disabled = !canSell5; sell5.textContent = 'SELL ×5'; }
+    if (refundEl && canSell1) {
+      const rv = BuildingEngine.getSellValue(bldId, 1);
+      refundEl.innerHTML = '↩ ' + Object.entries(rv).map(([r, v]) =>
+        `<span style="color:var(--txt2)">${RESOURCE_META[r]?.emoji || ''} ${FMT.num(v)}</span>`
+      ).join(' ');
+    } else if (refundEl) {
+      refundEl.textContent = '';
+    }
 
     const descEl = document.getElementById('bp-desc');
     if (descEl) descEl.textContent = def.desc || '';

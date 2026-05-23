@@ -206,10 +206,22 @@ button, input, select, a,
   color: var(--txt2); padding: 5px 12px;
   font-family: var(--font-ui); font-size: 11px;
   cursor: pointer; transition: all 0.15s;
+  position: relative; overflow: hidden; user-select: none;
 }
 .btn-hdr:hover { background: var(--bg3); color: var(--txt); border-color: var(--gold); }
 .btn-hdr-danger { border-color: var(--line); color: var(--txt4); }
 .btn-hdr-danger:hover { border-color: var(--red2); color: var(--red3); background: rgba(106,30,24,0.15); }
+/* Hold-to-reset progress fill */
+#btn-reset::after {
+  content: '';
+  position: absolute; left: 0; top: 0; height: 100%; width: 0%;
+  background: rgba(180, 40, 30, 0.45); transition: none;
+  pointer-events: none;
+}
+#btn-reset.btn-holding::after {
+  width: 100%;
+  transition: width 3s linear;
+}
 
 /* ═══════════════════════════════════════════════
    NAVIGATION
@@ -255,6 +267,12 @@ button, input, select, a,
   overflow-y: auto; overflow-x: hidden;
   background: transparent;
   padding: 12px 14px;
+}
+/* Non-empire tabs get a solid opaque background so the 3D city doesn't bleed through */
+.tab-content:not(#tab-empire) {
+  background: rgba(4, 6, 12, 0.96) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 /* ═══════════════════════════════════════════════
@@ -427,6 +445,19 @@ button, input, select, a,
 }
 .bp-buy-btn:hover:not(:disabled) { background: rgba(200,146,42,0.25); border-color: var(--gold2); }
 .bp-buy-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+#bp-sell-row {
+  display: flex; gap: 8px; border-top: 1px solid var(--line); padding-top: 8px;
+}
+#bp-sell-label { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--txt4); margin-bottom: 4px; }
+.bp-sell-btn {
+  flex: 1; padding: 7px 6px;
+  background: rgba(106,30,24,0.12); border: 1px solid rgba(106,30,24,0.35);
+  color: var(--red3); font-family: var(--font-n); font-size: 11px; font-weight: 700;
+  cursor: pointer; transition: all 0.15s; letter-spacing: 0.5px;
+}
+.bp-sell-btn:hover:not(:disabled) { background: rgba(106,30,24,0.25); border-color: var(--red3); }
+.bp-sell-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+#bp-sell-refund { font-size: 10px; color: var(--txt4); text-align: center; }
 #bp-desc  { font-size: 11px; color: var(--txt3); line-height: 1.6; font-style: italic; border-top: 1px solid var(--line); padding-top: 8px; }
 #bp-hint  { font-size: 9px; color: var(--txt4); text-align: center; letter-spacing: 1px; }
 
