@@ -41,16 +41,14 @@ const CityScene = (() => {
 
   function _buildGround() {
     // Vast grass plain
-    cityGroup.add(Object.assign(new THREE.Mesh(
-      new THREE.PlaneGeometry(200, 200),
-      new THREE.MeshLambertMaterial({ color: 0x2d6030 })
-    ), { rotation: { x: -Math.PI/2 }, receiveShadow: true }));
+    const grass = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshLambertMaterial({ color: 0x2d6030 }));
+    grass.rotation.x = -Math.PI/2; grass.receiveShadow = true;
+    cityGroup.add(grass);
 
     // Inner paved district
-    cityGroup.add(Object.assign(new THREE.Mesh(
-      new THREE.PlaneGeometry(50, 50),
-      new THREE.MeshLambertMaterial({ color: 0x444444 })
-    ), { rotation: { x: -Math.PI/2 }, position: { x:0, y:0.008, z:0 } }));
+    const paved = new THREE.Mesh(new THREE.PlaneGeometry(50, 50), new THREE.MeshLambertMaterial({ color: 0x444444 }));
+    paved.rotation.x = -Math.PI/2; paved.position.set(0, 0.008, 0);
+    cityGroup.add(paved);
 
     // Roads
     const roadMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
@@ -77,10 +75,9 @@ const CityScene = (() => {
     }
 
     // Central plaza with fountain
-    cityGroup.add(Object.assign(new THREE.Mesh(
-      new THREE.PlaneGeometry(4,4),
-      new THREE.MeshLambertMaterial({ color: 0x888888 })
-    ), { rotation:{x:-Math.PI/2}, position:{x:0,y:0.02,z:0} }));
+    const plaza = new THREE.Mesh(new THREE.PlaneGeometry(4,4), new THREE.MeshLambertMaterial({ color: 0x888888 }));
+    plaza.rotation.x = -Math.PI/2; plaza.position.set(0, 0.02, 0);
+    cityGroup.add(plaza);
 
     const fontBase = new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.3,0.35,16),
       new THREE.MeshLambertMaterial({ color: 0x777777 }));

@@ -58,9 +58,8 @@
     const loaded = SaveEngine.load();
 
     // ── Header/phase display ──
-    document.getElementById('hdr-phase').textContent    = PHASE_LABELS[GS.phase];
-    document.getElementById('city-emoji').textContent   = CITY_EMOJIS[GS.phase];
-    document.getElementById('empire-name').textContent  = empireName;
+    document.getElementById('hdr-phase').textContent   = PHASE_LABELS[GS.phase];
+    document.getElementById('empire-name').textContent = empireName;
 
     // ── Wire save button ──
     document.getElementById('btn-save').addEventListener('click', () => {

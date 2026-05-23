@@ -187,7 +187,6 @@ function updatePhase() {
     Notifications.show('🎉 New Era!', `Your empire has entered the ${PHASE_LABELS[newPhase]}!`, 'gold', 6000);
     NewsEngine.add('info', `Empire enters the ${PHASE_LABELS[newPhase]}`, 'A new chapter in financial history begins.');
     document.getElementById('hdr-phase').textContent = PHASE_LABELS[newPhase];
-    document.getElementById('city-emoji').textContent = CITY_EMOJIS[newPhase];
     if (old === 'early' && newPhase === 'mid') empireName = 'Prosperous Town';
     if (old === 'mid'   && newPhase === 'late') empireName = 'Industrial City';
     if (old === 'late'  && newPhase === 'advanced') empireName = 'Financial Capital';
