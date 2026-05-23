@@ -180,13 +180,6 @@
       SaveEngine.save();
     }
 
-    // Click power label
-    const cpLabel = document.getElementById('click-power');
-    if (cpLabel) {
-      const eff = GS.clickPower * GS.prestige.permanentMultiplier * (GS.multipliers.clickPower || 1);
-      cpLabel.textContent = '+' + FMT.num(eff, 1) + ' Labor / click';
-    }
-
     requestAnimationFrame(gameLoop);
   }
 

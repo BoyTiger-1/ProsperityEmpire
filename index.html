@@ -92,100 +92,88 @@
   <!-- MAIN CONTENT -->
   <main id="game-main">
 
-    <!-- ─── EMPIRE TAB ─── -->
+    <!-- ─── EMPIRE TAB ─── (full-screen 3D city; overlays only) -->
     <div id="tab-empire" class="tab-content active">
-      <div class="empire-layout">
 
-        <!-- LEFT: resources panel (city is the full-screen backdrop) -->
-        <div class="empire-col empire-col-left">
-
-          <!-- ── CLICK HINT (replaces old click zone) ── -->
-          <div class="city-click-hint" id="city-click-hint">
-            <div class="click-power" id="click-power">⚡ Click anywhere in the city to generate Labour</div>
-            <div class="combo-display" id="combo-display"></div>
-            <div id="click-floats"></div>
-          </div>
-
-          <!-- ── OLD CLICK ZONE (preserved, commented out for later use) ──
-          <div class="click-zone" id="click-zone-old">
-            <div class="city-visual">
-              <div class="city-emoji" id="city-emoji">🏘️</div>
-              <div class="click-label">CLICK TO GENERATE LABOUR</div>
-              <div class="click-power-old">+1 Labour / click</div>
-              <div class="combo-display-old"></div>
-            </div>
-            <div id="click-floats-old"></div>
-          </div>
-          ── END OLD CLICK ZONE ── -->
-
-          <!-- Population bar -->
-          <div class="pop-bar" id="pop-bar">
-            <div class="pop-bar-inner">
-              <span class="pop-label">👥 POPULATION</span>
-              <span class="pop-val" id="pop-val">0</span>
-            </div>
-            <div class="happiness-row">
-              <span class="hap-label">HAPPINESS</span>
-              <div class="hap-bar-wrap"><div class="hap-bar-fill" id="hap-fill"></div></div>
-              <span class="hap-val" id="hap-val">50%</span>
-            </div>
-          </div>
-
-          <!-- Resource rows -->
-          <div id="resource-panel"></div>
+      <!-- LEFT HUD: click hint + population + resources -->
+      <div id="empire-hud-left">
+        <div id="city-click-hint">
+          <div id="click-power">⚡ +1 Labour / click</div>
+          <div id="combo-display"></div>
         </div>
-
-        <!-- CENTRE: production + stats + advisors -->
-        <div class="empire-col empire-col-mid">
-          <div class="newspaper-section" id="production-panel">
-            <div class="section-head">
-              <span class="section-rule"></span>
-              <span class="section-title">PRODUCTION REPORT</span>
-              <span class="section-rule"></span>
-            </div>
-            <div id="production-list"></div>
+        <div class="pop-bar" id="pop-bar">
+          <div class="pop-bar-inner">
+            <span class="pop-label">👥 POPULATION</span>
+            <span class="pop-val" id="pop-val">0</span>
           </div>
+          <div class="happiness-row">
+            <span class="hap-label">HAPPINESS</span>
+            <div class="hap-bar-wrap"><div class="hap-bar-fill" id="hap-fill"></div></div>
+            <span class="hap-val" id="hap-val">50%</span>
+          </div>
+        </div>
+        <div id="resource-panel"></div>
+      </div>
 
-          <div class="newspaper-section" id="milestones-panel">
-            <div class="section-head">
-              <span class="section-rule"></span>
-              <span class="section-title">ACTIVE MILESTONES</span>
-              <span class="section-rule"></span>
-            </div>
+      <!-- EMPIRE INFO TOGGLE (bottom-left fab) -->
+      <button id="btn-empire-info" title="Empire Overview">📊</button>
+
+      <!-- EMPIRE INFO PANEL (slides up from bottom-left) -->
+      <div id="empire-info-panel">
+        <div class="eip-close-row">
+          <span class="eip-title">EMPIRE OVERVIEW</span>
+          <button id="btn-empire-info-close">✕</button>
+        </div>
+        <div class="eip-cols">
+          <div class="eip-col">
+            <div class="eip-section-label">PRODUCTION</div>
+            <div id="production-list"></div>
+            <div class="eip-section-label" style="margin-top:12px">MILESTONES</div>
             <div id="milestones-list"></div>
           </div>
-
-          <div class="newspaper-section" id="stats-panel">
-            <div class="section-head">
-              <span class="section-rule"></span>
-              <span class="section-title">EMPIRE STATISTICS</span>
-              <span class="section-rule"></span>
-            </div>
+          <div class="eip-col">
+            <div class="eip-section-label">STATISTICS</div>
             <div id="stats-list"></div>
-          </div>
-
-          <div class="newspaper-section" id="advisors-panel">
-            <div class="section-head">
-              <span class="section-rule"></span>
-              <span class="section-title">ADVISORY COUNCIL</span>
-              <span class="section-rule"></span>
-            </div>
+            <div class="eip-section-label" style="margin-top:12px">ADVISORS</div>
             <div id="advisors-list"></div>
           </div>
-        </div>
-
-        <!-- RIGHT: The Prosperity Times news feed -->
-        <div class="empire-col empire-col-right" id="news-column">
-          <div class="newspaper-masthead">
-            <div class="news-edition">FIRST EDITION</div>
-            <div class="news-title">The Prosperity Times</div>
+          <div class="eip-col eip-col-news">
+            <div class="eip-section-label">THE PROSPERITY TIMES</div>
             <div class="news-dateline" id="news-dateline">Vol. I — Day 1</div>
-            <div class="news-ornament">✦ ✦ ✦</div>
+            <div id="news-feed"></div>
           </div>
-          <div id="news-feed"></div>
         </div>
-
       </div>
+
+      <!-- BUILDING PANEL (slides in from right when 3D building clicked) -->
+      <div id="building-panel">
+        <button id="bp-close">✕</button>
+        <div id="bp-emoji"></div>
+        <div id="bp-name"></div>
+        <div id="bp-tier"></div>
+        <div id="bp-count"></div>
+        <div id="bp-production"></div>
+        <div id="bp-cost-label">COST</div>
+        <div id="bp-cost"></div>
+        <div id="bp-actions">
+          <button class="bp-buy-btn" id="bp-buy1">BUY ×1</button>
+          <button class="bp-buy-btn" id="bp-buy10">BUY ×10</button>
+        </div>
+        <div id="bp-desc"></div>
+        <div id="bp-hint">← Click any building in the city</div>
+      </div>
+
+      <!-- Click floats (full-screen overlay) -->
+      <div id="click-floats"></div>
+
+      <!-- Hidden elements kept for JS compatibility -->
+      <div style="display:none">
+        <div id="production-panel"></div>
+        <div id="milestones-panel"></div>
+        <div id="stats-panel"></div>
+        <div id="advisors-panel"></div>
+      </div>
+
     </div>
 
     <!-- ─── BUILDINGS TAB ─── -->

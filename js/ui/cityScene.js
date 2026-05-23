@@ -1,4 +1,4 @@
-/* ── CITY SCENE — Full-screen Three.js city backdrop ── */
+/* ── CITY SCENE — Full-screen Three.js city ── */
 const CityScene = (() => {
   let renderer, scene, camera, clock;
   let cityGroup;
@@ -9,6 +9,19 @@ const CityScene = (() => {
   let rotAngle = 0;
   let lastBuildSig = '';
 
+  // Camera animation
+  const CAM_DEFAULT_POS  = { x:0,  y:42, z:58 };
+  const CAM_DEFAULT_LOOK = { x:0,  y:4,  z:0  };
+  let camTarget   = null;   // null = use default orbit
+  let lookTarget  = { x:0, y:4, z:0 };
+  const lookCur   = new THREE.Vector3(0, 4, 0);
+  let rotPaused   = false;
+
+  // Selection
+  let selectedGroup = null;
+  let raycaster, mouse;
+
+  // Building definitions (colour / size per type)
   const BLD = {
     hut:         { w:1.0, h:1.0, d:1.0, color:0x8B6914, roof:0x5D3E10 },
     cottage:     { w:1.2, h:1.6, d:1.2, color:0xCD853F, roof:0x8B4513 },
@@ -40,33 +53,26 @@ const CityScene = (() => {
   }
 
   function _buildGround() {
-    // Vast grass plain
-    const grass = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshLambertMaterial({ color: 0x2d6030 }));
+    const grass = new THREE.Mesh(new THREE.PlaneGeometry(200,200), new THREE.MeshLambertMaterial({color:0x2d6030}));
     grass.rotation.x = -Math.PI/2; grass.receiveShadow = true;
     cityGroup.add(grass);
 
-    // Inner paved district
-    const paved = new THREE.Mesh(new THREE.PlaneGeometry(50, 50), new THREE.MeshLambertMaterial({ color: 0x444444 }));
-    paved.rotation.x = -Math.PI/2; paved.position.set(0, 0.008, 0);
+    const paved = new THREE.Mesh(new THREE.PlaneGeometry(50,50), new THREE.MeshLambertMaterial({color:0x444444}));
+    paved.rotation.x = -Math.PI/2; paved.position.set(0,0.008,0);
     cityGroup.add(paved);
 
-    // Roads
-    const roadMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
+    const roadMat = new THREE.MeshLambertMaterial({color:0x333333});
     [
-      [80, 1.4, 0, 0, 0],
-      [1.4, 80, 0, 0, 0],
-      [80, 1.0, 0, 0, 12],
-      [80, 1.0, 0, 0,-12],
-      [1.0, 80, 0, 12, 0],
-      [1.0, 80, 0,-12, 0],
-    ].forEach(([w,d,_,x,z]) => {
+      [80,1.4,0,0,0],[1.4,80,0,0,0],
+      [80,1.0,0,0,12],[80,1.0,0,0,-12],
+      [1.0,80,0,12,0],[1.0,80,0,-12,0],
+    ].forEach(([w,d,,x,z]) => {
       const m = new THREE.Mesh(new THREE.PlaneGeometry(w,d), roadMat);
       m.rotation.x = -Math.PI/2; m.position.set(x,0.012,z);
       cityGroup.add(m);
     });
 
-    // Road markings
-    const markMat = new THREE.MeshLambertMaterial({ color: 0xFFFF88 });
+    const markMat = new THREE.MeshLambertMaterial({color:0xFFFF88});
     for (let i = -10; i <= 10; i++) {
       [[i*1.9,0,0.08,0.7],[0,i*1.9,0.7,0.08]].forEach(([x,z,w,d]) => {
         const m = new THREE.Mesh(new THREE.PlaneGeometry(w,d), markMat);
@@ -74,21 +80,19 @@ const CityScene = (() => {
       });
     }
 
-    // Central plaza with fountain
-    const plaza = new THREE.Mesh(new THREE.PlaneGeometry(4,4), new THREE.MeshLambertMaterial({ color: 0x888888 }));
-    plaza.rotation.x = -Math.PI/2; plaza.position.set(0, 0.02, 0);
+    const plaza = new THREE.Mesh(new THREE.PlaneGeometry(4,4), new THREE.MeshLambertMaterial({color:0x888888}));
+    plaza.rotation.x = -Math.PI/2; plaza.position.set(0,0.02,0);
     cityGroup.add(plaza);
 
     const fontBase = new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.3,0.35,16),
-      new THREE.MeshLambertMaterial({ color: 0x777777 }));
+      new THREE.MeshLambertMaterial({color:0x777777}));
     fontBase.position.set(0,0.175,0); fontBase.castShadow=true; cityGroup.add(fontBase);
     const water = new THREE.Mesh(new THREE.CylinderGeometry(0.9,0.9,0.18,16),
-      new THREE.MeshLambertMaterial({ color:0x3399CC, emissive:0x1133AA, emissiveIntensity:0.4 }));
+      new THREE.MeshLambertMaterial({color:0x3399CC,emissive:0x1133AA,emissiveIntensity:0.4}));
     water.position.set(0,0.44,0); cityGroup.add(water);
 
-    // Trees
-    const trunkMat = new THREE.MeshLambertMaterial({ color:0x4A2C0A });
-    const leafColors = [0x228B22, 0x2E8B57, 0x3CB371, 0x006400];
+    const trunkMat = new THREE.MeshLambertMaterial({color:0x4A2C0A});
+    const leafColors = [0x228B22,0x2E8B57,0x3CB371,0x006400];
     const treePos = [
       [-7,-7],[7,-7],[-7,7],[7,7],[-12,0],[12,0],[0,-12],[0,12],
       [-5,-10],[5,-10],[-10,-5],[10,5],[-10,5],[5,10],[-5,10],[10,-5],
@@ -96,7 +100,7 @@ const CityScene = (() => {
       [-18,0],[18,0],[0,-18],[0,18],[-13,-9],[13,9],[-9,-13],[9,13],
     ];
     treePos.forEach(([tx,tz],i) => {
-      const h = 0.8 + (i%4)*0.3;
+      const h = 0.8+(i%4)*0.3;
       const t = new THREE.Mesh(new THREE.CylinderGeometry(0.13,0.18,h+0.4,6),trunkMat);
       t.position.set(tx,(h+0.4)/2,tz); t.castShadow=true; cityGroup.add(t);
       const l = new THREE.Mesh(new THREE.SphereGeometry(0.6+(i%3)*0.15,6,5),
@@ -104,13 +108,12 @@ const CityScene = (() => {
       l.position.set(tx,h+0.55,tz); l.castShadow=true; cityGroup.add(l);
     });
 
-    // Street lamps
-    const lampPost = new THREE.MeshLambertMaterial({ color:0x888888 });
-    const lampHead = new THREE.MeshLambertMaterial({ color:0xFFEE88, emissive:0xFFCC44, emissiveIntensity:0.8 });
+    const lampPost = new THREE.MeshLambertMaterial({color:0x888888});
+    const lampHead = new THREE.MeshLambertMaterial({color:0xFFEE88,emissive:0xFFCC44,emissiveIntensity:0.8});
     [[-3,3],[3,3],[-3,-3],[3,-3],[8,8],[-8,8],[8,-8],[-8,-8]].forEach(([x,z]) => {
-      const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.08,3.5,6), lampPost);
+      const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.08,3.5,6),lampPost);
       pole.position.set(x,1.75,z); cityGroup.add(pole);
-      const head = new THREE.Mesh(new THREE.SphereGeometry(0.18,8,6), lampHead);
+      const head = new THREE.Mesh(new THREE.SphereGeometry(0.18,8,6),lampHead);
       head.position.set(x,3.6,z); cityGroup.add(head);
     });
   }
@@ -127,23 +130,20 @@ const CityScene = (() => {
     body.position.y = h/2; body.castShadow=true; body.receiveShadow=true; g.add(body);
 
     if (h >= 5) {
-      // Skyscraper: ledge + windows
       const ledge = new THREE.Mesh(new THREE.BoxGeometry(w*1.12,0.25,d*1.12),
         new THREE.MeshLambertMaterial({color:roof}));
       ledge.position.y = h+0.125; ledge.castShadow=true; g.add(ledge);
       const winMat = new THREE.MeshLambertMaterial({color:0xADD8FF,emissive:0x2244AA,emissiveIntensity:0.5});
       const floors = Math.floor(h/1.6);
       for (let fl=0; fl<floors; fl++) {
-        [[0,d/2+0.01,0],[0,-d/2-0.01,Math.PI]].forEach(([wx,wz,ry])=>{
+        [[0,d/2+0.01,0],[0,-d/2-0.01,Math.PI]].forEach(([wx,wz,ry]) => {
           const win = new THREE.Mesh(new THREE.PlaneGeometry(w*0.32,0.55),winMat);
           win.position.set(wx,0.9+fl*1.6,wz); win.rotation.y=ry; g.add(win);
-          // Side windows
           const swin = new THREE.Mesh(new THREE.PlaneGeometry(d*0.25,0.5),winMat);
-          swin.position.set(ry===0?w/2+0.01:-w/2-0.01, 0.9+fl*1.6, 0);
+          swin.position.set(ry===0?w/2+0.01:-w/2-0.01,0.9+fl*1.6,0);
           swin.rotation.y = ry===0?Math.PI/2:-Math.PI/2; g.add(swin);
         });
       }
-      // Antenna
       const ant = new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.06,h*0.25,6),
         new THREE.MeshLambertMaterial({color:0x666666}));
       ant.position.y = h+h*0.125+0.25; g.add(ant);
@@ -151,7 +151,6 @@ const CityScene = (() => {
       const cone = new THREE.Mesh(new THREE.ConeGeometry(Math.max(w,d)*0.78,h*0.4,4),
         new THREE.MeshLambertMaterial({color:roof}));
       cone.position.y = h+h*0.2; cone.rotation.y=Math.PI/4; cone.castShadow=true; g.add(cone);
-      // Chimney
       if (h > 3) {
         const chim = new THREE.Mesh(new THREE.CylinderGeometry(0.12,0.15,0.8,6),
           new THREE.MeshLambertMaterial({color:0x555555}));
@@ -163,7 +162,7 @@ const CityScene = (() => {
       slab.position.y = h+0.09; g.add(slab);
     }
 
-    g.userData = { pOff:(idx*0.618)%(Math.PI*2) };
+    g.userData.pOff = (idx*0.618)%(Math.PI*2);
     return g;
   }
 
@@ -172,47 +171,134 @@ const CityScene = (() => {
     buildingMeshes = [];
     const toPlace = [];
     if (typeof GS !== 'undefined') {
-      for (const [id,def] of Object.entries(BLD)) {
-        const cnt = GS.buildings[id]||0;
+      for (const [id, def] of Object.entries(BLD)) {
+        const cnt = GS.buildings[id] || 0;
         if (!cnt) continue;
-        for (let i=0; i<Math.min(cnt,7); i++) toPlace.push({def,idx:toPlace.length});
+        for (let i = 0; i < Math.min(cnt,7); i++) toPlace.push({def, id, idx:toPlace.length});
       }
     }
-    if (!toPlace.length) toPlace.push({def:BLD.hut,idx:0});
+    if (!toPlace.length) toPlace.push({def:BLD.hut, id:'hut', idx:0});
     const positions = _spiralGrid(toPlace.length);
-    toPlace.forEach(({def,idx},i) => {
-      const [px,pz] = positions[i]||[(i%8)*4-16,Math.floor(i/8)*4];
-      const g = _makeBuilding(def,px,pz,idx);
-      cityGroup.add(g); buildingMeshes.push(g);
+    toPlace.forEach(({def, id, idx}, i) => {
+      const [px,pz] = positions[i] || [(i%8)*4-16, Math.floor(i/8)*4];
+      const g = _makeBuilding(def, px, pz, idx);
+      g.userData.buildingId = id;   // ← enables raycasting identification
+      cityGroup.add(g);
+      buildingMeshes.push(g);
     });
     lastBuildSig = _getBuildSig();
   }
 
   function _getBuildSig() {
     if (typeof GS === 'undefined') return '';
-    return Object.entries(GS.buildings).map(([k,v])=>k+v).join('|');
+    return Object.entries(GS.buildings).map(([k,v]) => k+v).join('|');
   }
 
+  // ── Selection ──────────────────────────────────────────
+  function _selectBuilding(group, e) {
+    // Deselect previous
+    if (selectedGroup && selectedGroup !== group) _unhighlight(selectedGroup);
+
+    selectedGroup = group;
+    rotPaused = true;
+
+    // Where in world space is this group?
+    const wp = new THREE.Vector3();
+    group.getWorldPosition(wp);
+
+    // Zoom camera toward the building, slightly offset
+    const dist = wp.length();
+    const frac = Math.max(0.25, 1 - dist/40);
+    camTarget  = { x: wp.x * frac, y: 14 + group.userData.buildingHeight * 0.5, z: wp.z * frac + 18 };
+    lookTarget = { x: wp.x * 0.5,  y: 3,  z: wp.z * 0.5 };
+
+    _highlight(group);
+    clickPulse = 1.0;
+
+    if (typeof EmpireUI !== 'undefined') EmpireUI.showBuildingPanel(group.userData.buildingId, e);
+  }
+
+  function _clearSelection() {
+    if (selectedGroup) { _unhighlight(selectedGroup); selectedGroup = null; }
+    rotPaused  = false;
+    camTarget  = null;
+    lookTarget = { x:0, y:4, z:0 };
+    if (typeof EmpireUI !== 'undefined') EmpireUI.hideBuildingPanel();
+  }
+
+  function _highlight(group) {
+    // Scale the building up slightly
+    group.userData._targetScale = 1.22;
+    // Add golden emissive to body meshes
+    group.traverse(child => {
+      if (child.isMesh && child.geometry.type !== 'PlaneGeometry') {
+        if (child.material && child.material.emissive !== undefined) {
+          child.material.emissive.set(0x443300);
+          child.material.emissiveIntensity = 0.55;
+        }
+      }
+    });
+  }
+
+  function _unhighlight(group) {
+    group.userData._targetScale = 1.0;
+    group.traverse(child => {
+      if (child.isMesh && child.material && child.material.emissive !== undefined) {
+        child.material.emissive.set(0x000000);
+        child.material.emissiveIntensity = 0;
+      }
+    });
+  }
+
+  // ── Animate ────────────────────────────────────────────
   function _animate() {
     if (!animating) return;
     requestAnimationFrame(_animate);
     const dt = clock.getDelta();
 
-    rotAngle += dt * 0.08;
-    cityGroup.rotation.y = rotAngle;
+    // City rotation (pause when building selected)
+    if (!rotPaused) {
+      rotAngle += dt * 0.08;
+      cityGroup.rotation.y = rotAngle;
+    }
 
+    // Click pulse
     if (clickPulse > 0) {
       clickPulse = Math.max(0, clickPulse - dt * 2.5);
       pulseLight.intensity = clickPulse * 4;
       for (const m of buildingMeshes) {
-        const b = Math.max(0, Math.sin(m.userData.pOff+(1-clickPulse)*Math.PI*3))*clickPulse;
+        const b = Math.max(0, Math.sin(m.userData.pOff + (1-clickPulse)*Math.PI*3)) * clickPulse;
         m.position.y = b * 2;
       }
     } else {
-      if (pulseLight.intensity > 0) pulseLight.intensity = Math.max(0, pulseLight.intensity-dt*4);
-      for (const m of buildingMeshes) if (m.position.y!==0) m.position.y=0;
+      if (pulseLight.intensity > 0) pulseLight.intensity = Math.max(0, pulseLight.intensity - dt*4);
+      for (const m of buildingMeshes) if (m.position.y !== 0) m.position.y = 0;
     }
 
+    // Building scale lerp (highlight selected)
+    for (const m of buildingMeshes) {
+      const tgt = m.userData._targetScale || 1.0;
+      const cur = m.scale.x;
+      const next = cur + (tgt - cur) * Math.min(1, dt * 6);
+      m.scale.setScalar(next);
+    }
+
+    // Camera lerp
+    if (camTarget) {
+      camera.position.x += (camTarget.x - camera.position.x) * Math.min(1, dt * 3);
+      camera.position.y += (camTarget.y - camera.position.y) * Math.min(1, dt * 3);
+      camera.position.z += (camTarget.z - camera.position.z) * Math.min(1, dt * 3);
+    } else {
+      camera.position.x += (CAM_DEFAULT_POS.x - camera.position.x) * Math.min(1, dt * 3);
+      camera.position.y += (CAM_DEFAULT_POS.y - camera.position.y) * Math.min(1, dt * 3);
+      camera.position.z += (CAM_DEFAULT_POS.z - camera.position.z) * Math.min(1, dt * 3);
+    }
+    lookCur.x += (lookTarget.x - lookCur.x) * Math.min(1, dt * 3);
+    lookCur.y += (lookTarget.y - lookCur.y) * Math.min(1, dt * 3);
+    lookCur.z += (lookTarget.z - lookCur.z) * Math.min(1, dt * 3);
+    camera.lookAt(lookCur);
+
+    // Rebuild city if buildings changed
     const sig = _getBuildSig();
     if (sig !== lastBuildSig) rebuildCity();
 
@@ -224,6 +310,9 @@ const CityScene = (() => {
       const container = document.getElementById(containerId);
       if (!container || typeof THREE === 'undefined') return;
 
+      raycaster = new THREE.Raycaster();
+      mouse     = new THREE.Vector2();
+
       const W = window.innerWidth, H = window.innerHeight;
 
       scene = new THREE.Scene();
@@ -231,10 +320,10 @@ const CityScene = (() => {
       scene.fog = new THREE.FogExp2(0xA8D8F0, 0.012);
 
       camera = new THREE.PerspectiveCamera(42, W/H, 0.1, 300);
-      camera.position.set(0, 42, 58);
+      camera.position.set(CAM_DEFAULT_POS.x, CAM_DEFAULT_POS.y, CAM_DEFAULT_POS.z);
       camera.lookAt(0, 4, 0);
 
-      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer = new THREE.WebGLRenderer({antialias:true});
       renderer.setSize(W, H);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.shadowMap.enabled = true;
@@ -249,26 +338,52 @@ const CityScene = (() => {
 
       scene.add(new THREE.HemisphereLight(0xC8E8FF, 0x448844, 0.6));
       const sun = new THREE.DirectionalLight(0xFFFCE8, 1.3);
-      sun.position.set(15, 30, 20); sun.castShadow = true;
-      sun.shadow.mapSize.set(2048, 2048);
+      sun.position.set(15,30,20); sun.castShadow = true;
+      sun.shadow.mapSize.set(2048,2048);
       sun.shadow.camera.left = sun.shadow.camera.bottom = -30;
       sun.shadow.camera.right = sun.shadow.camera.top = 30;
       sun.shadow.camera.far = 90; sun.shadow.bias = -0.002;
       scene.add(sun);
 
       pulseLight = new THREE.PointLight(0xFFAA33, 0, 40);
-      pulseLight.position.set(0, 8, 0);
+      pulseLight.position.set(0,8,0);
       scene.add(pulseLight);
 
       clock = new THREE.Clock();
       _buildGround();
       rebuildCity();
 
-      // Click on city (empire tab) → generate labour
-      renderer.domElement.addEventListener('click', (e) => {
+      // ── Click handler: raycast for buildings first ──
+      renderer.domElement.addEventListener('click', e => {
         if (typeof Tabs !== 'undefined' && Tabs.current !== 'empire') return;
+
+        // Normalised device coords
+        const rect = renderer.domElement.getBoundingClientRect();
+        mouse.x =  ((e.clientX - rect.left) / rect.width)  * 2 - 1;
+        mouse.y = -((e.clientY - rect.top)  / rect.height) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+
+        // Gather all child meshes from building groups
+        const checkMeshes = [];
+        buildingMeshes.forEach(g => g.traverse(c => { if (c.isMesh) checkMeshes.push(c); }));
+
+        const hits = raycaster.intersectObjects(checkMeshes, false);
+        if (hits.length > 0) {
+          // Walk up the hierarchy to find the group with buildingId
+          let obj = hits[0].object;
+          while (obj && obj !== scene) {
+            if (obj.userData && obj.userData.buildingId) {
+              _selectBuilding(obj, e);
+              return;
+            }
+            obj = obj.parent;
+          }
+        }
+
+        // No building hit → generate labour + clear selection
         if (typeof EmpireUI !== 'undefined') EmpireUI._handleClick(e);
         clickPulse = 1.0;
+        _clearSelection();
       });
 
       window.addEventListener('resize', () => {
@@ -282,6 +397,7 @@ const CityScene = (() => {
     },
 
     triggerPulse() { clickPulse = 1.0; },
+    clearSelection: _clearSelection,
     rebuildCity,
     destroy() { animating = false; if (renderer) renderer.dispose(); },
   };
