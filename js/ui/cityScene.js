@@ -604,36 +604,36 @@ const CityScene = (() => {
     const grass = new THREE.Mesh(new THREE.PlaneGeometry(260, 260), new THREE.MeshLambertMaterial({ color:0x2d6030 }));
     grass.rotation.x = -Math.PI/2; grass.receiveShadow = true; cityGroup.add(grass);
 
-    // Paved city centre
+    // Paved city centre — y=0.04 (well above grass at 0)
     const paved = new THREE.Mesh(new THREE.PlaneGeometry(56, 56), new THREE.MeshLambertMaterial({ color:0x444444 }));
-    paved.rotation.x = -Math.PI/2; paved.position.set(0, 0.008, 0); cityGroup.add(paved);
+    paved.rotation.x = -Math.PI/2; paved.position.set(0, 0.04, 0); cityGroup.add(paved);
 
-    // Roads (no dashes — clean)
+    // Roads — y=0.08
     const roadMat = new THREE.MeshLambertMaterial({ color:0x2E2E2E });
     [[88,2.2,0,0],[2.2,88,0,0],[88,1.6,0,13],[88,1.6,0,-13],[1.6,88,13,0],[1.6,88,-13,0]].forEach(([w,d,x,z]) => {
       const m = new THREE.Mesh(new THREE.PlaneGeometry(w,d), roadMat);
-      m.rotation.x = -Math.PI/2; m.position.set(x, 0.012, z); cityGroup.add(m);
+      m.rotation.x = -Math.PI/2; m.position.set(x, 0.08, z); cityGroup.add(m);
     });
 
-    // Sidewalks (lighter strip beside roads)
+    // Sidewalks — y=0.10
     const sidewalkMat = new THREE.MeshLambertMaterial({ color:0x666655 });
     [[88,0.8,0,1.8],[88,0.8,0,-1.8],[0.8,88,1.8,0],[-0.8,88,-1.8,0]].forEach(([w,d,x,z]) => {
       const m = new THREE.Mesh(new THREE.PlaneGeometry(w,d), sidewalkMat);
-      m.rotation.x = -Math.PI/2; m.position.set(x, 0.013, z); cityGroup.add(m);
+      m.rotation.x = -Math.PI/2; m.position.set(x, 0.10, z); cityGroup.add(m);
     });
 
-    // Zone colour tint patches (subtle)
+    // Zone colour tint patches — y=0.05 (between grass and paved)
     const zonePatchCols = { residential:0xFF6633, agricultural:0x44CC44, industrial:0x4477CC,
       commercial:0xFFCC22, financial:0xFFAA00, knowledge:0x7744EE, advanced:0x22CCEE };
     Object.entries(ZONE_CENTERS).forEach(([zone, {x, z}]) => {
       const p = new THREE.Mesh(new THREE.PlaneGeometry(18, 18), new THREE.MeshLambertMaterial({ color:zonePatchCols[zone]||0xFFFFFF, transparent:true, opacity:0.07 }));
-      p.rotation.x = -Math.PI/2; p.position.set(x, 0.009, z); cityGroup.add(p);
+      p.rotation.x = -Math.PI/2; p.position.set(x, 0.05, z); cityGroup.add(p);
     });
 
-    // Central monument plaza
+    // Central monument plaza — y=0.12
     const plazaMat = new THREE.MeshLambertMaterial({ color:0x999988 });
     const plaza = new THREE.Mesh(new THREE.PlaneGeometry(8, 8), plazaMat);
-    plaza.rotation.x = -Math.PI/2; plaza.position.set(0, 0.015, 0); cityGroup.add(plaza);
+    plaza.rotation.x = -Math.PI/2; plaza.position.set(0, 0.12, 0); cityGroup.add(plaza);
 
     // Obelisk monument (replaces simple fountain)
     const granMat = new THREE.MeshLambertMaterial({ color:0xBBBBCC });
@@ -713,11 +713,11 @@ const CityScene = (() => {
       stem.position.set(fx,0.15,fz); cityGroup.add(stem);
     });
 
-    // Park grass patches (between roads and outer ring)
+    // Park grass patches — y=0.02 (just above main grass at 0)
     const parkGrass = new THREE.MeshLambertMaterial({ color:0x3A8040 });
     [[20,20,10,10],[-20,20,10,10],[20,-20,10,10],[-20,-20,10,10]].forEach(([px,pz,pw,pd]) => {
       const m = new THREE.Mesh(new THREE.PlaneGeometry(pw,pd), parkGrass);
-      m.rotation.x = -Math.PI/2; m.position.set(px,0.004,pz); cityGroup.add(m);
+      m.rotation.x = -Math.PI/2; m.position.set(px,0.02,pz); cityGroup.add(m);
     });
 
     // Lamp posts (more coverage)
