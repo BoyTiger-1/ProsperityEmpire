@@ -24,8 +24,8 @@ const PopulationEngine = {
     const foodNeeded = GS.population * 0.002; // 0.002 food/sec per person
     const foodSurplus = foodRate - foodNeeded;
 
-    const growthRate = foodSurplus > 0 ? 0.01 : -0.005;
-    const targetPop = foodSurplus > 0 ? maxPop : GS.population * 0.9;
+    const growthRate = foodSurplus >= 0 ? 0.01 : -0.005;
+    const targetPop = foodSurplus >= 0 ? maxPop : GS.population * 0.9;
     GS.population = Math.max(0, Math.min(GS.maxPopulation, GS.population + (targetPop - GS.population) * growthRate));
     GS.population = Math.round(GS.population);
   },
@@ -37,7 +37,7 @@ const PopulationEngine = {
     const foodNeeded = GS.population * 0.002;
     const surplus = foodRate - foodNeeded;
 
-    let growthPerSec = surplus > 0
+    let growthPerSec = surplus >= 0
       ? Math.min(2, GS.maxPopulation * 0.001 + 0.1)
       : -Math.min(5, GS.population * 0.002 + 0.1);
 
