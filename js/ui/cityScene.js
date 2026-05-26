@@ -622,12 +622,12 @@ const CityScene = (() => {
       m.rotation.x = -Math.PI/2; m.position.set(x, 0.10, z); cityGroup.add(m);
     });
 
-    // Zone colour tint patches — y=0.05 (between grass and paved)
+    // Zone colour tint patches — y=0.10 (clear of paved at 0.04)
     const zonePatchCols = { residential:0xFF6633, agricultural:0x44CC44, industrial:0x4477CC,
       commercial:0xFFCC22, financial:0xFFAA00, knowledge:0x7744EE, advanced:0x22CCEE };
     Object.entries(ZONE_CENTERS).forEach(([zone, {x, z}]) => {
       const p = new THREE.Mesh(new THREE.PlaneGeometry(18, 18), new THREE.MeshLambertMaterial({ color:zonePatchCols[zone]||0xFFFFFF, transparent:true, opacity:0.07 }));
-      p.rotation.x = -Math.PI/2; p.position.set(x, 0.05, z); cityGroup.add(p);
+      p.rotation.x = -Math.PI/2; p.position.set(x, 0.10, z); cityGroup.add(p);
     });
 
     // Central monument plaza — y=0.12
@@ -713,11 +713,11 @@ const CityScene = (() => {
       stem.position.set(fx,0.15,fz); cityGroup.add(stem);
     });
 
-    // Park grass patches — y=0.02 (just above main grass at 0)
+    // Park grass patches — y=0.04 (clear of base grass at 0)
     const parkGrass = new THREE.MeshLambertMaterial({ color:0x3A8040 });
     [[20,20,10,10],[-20,20,10,10],[20,-20,10,10],[-20,-20,10,10]].forEach(([px,pz,pw,pd]) => {
       const m = new THREE.Mesh(new THREE.PlaneGeometry(pw,pd), parkGrass);
-      m.rotation.x = -Math.PI/2; m.position.set(px,0.02,pz); cityGroup.add(m);
+      m.rotation.x = -Math.PI/2; m.position.set(px,0.04,pz); cityGroup.add(m);
     });
 
     // Lamp posts (more coverage)
