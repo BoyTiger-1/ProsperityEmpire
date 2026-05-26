@@ -171,6 +171,42 @@ const CityScene = (() => {
     });
   }
 
+  // ── Primitive era building (used for all buildings in early phase) ──
+  const PRIM_WALLS = [0xAA9977, 0x9B8B6F, 0xBBAA88, 0x8B7355, 0xC4A880, 0x957A5A, 0xB09878];
+  const PRIM_ROOFS = [0x6B4C1A, 0x7A5520, 0x5A3E10, 0x8B6320, 0x4A3308, 0x6D5015];
+
+  function _buildPrimitive(g, id) {
+    const bld = BLD[id] || { w:1.2, h:1.5, d:1.2 };
+    const w = Math.max(0.9, bld.w * 0.85);
+    const h = Math.max(0.8, bld.h * 0.65);
+    const d = Math.max(0.9, bld.d * 0.85);
+    const seed = id.split('').reduce((s, c, i) => s + c.charCodeAt(0) * (i+1), 0);
+    const wallMat = new THREE.MeshLambertMaterial({ color: PRIM_WALLS[seed % PRIM_WALLS.length] });
+    const roofMat = new THREE.MeshLambertMaterial({ color: PRIM_ROOFS[seed % PRIM_ROOFS.length] });
+    const doorMat = new THREE.MeshLambertMaterial({ color: 0x2D1E06 });
+
+    // Stone/mud body
+    const body = new THREE.Mesh(new THREE.BoxGeometry(w, h * 0.72, d), wallMat);
+    body.position.y = h * 0.36; body.castShadow = true; g.add(body);
+
+    // Thatched pyramid roof
+    const roofR = Math.max(w, d) * 0.70;
+    const roof = new THREE.Mesh(new THREE.ConeGeometry(roofR, h * 0.46, 4), roofMat);
+    roof.position.y = h * 0.72 + h * 0.23; roof.rotation.y = Math.PI/4; roof.castShadow = true; g.add(roof);
+
+    // Rough wooden door
+    const door = new THREE.Mesh(new THREE.BoxGeometry(w * 0.22, h * 0.38, 0.06), doorMat);
+    door.position.set(0, h * 0.19, d * 0.46); g.add(door);
+
+    // Tall buildings get a stone tower on top
+    if (h >= 2.5) {
+      const tw = new THREE.Mesh(new THREE.BoxGeometry(w*0.5, h*0.38, d*0.5), wallMat);
+      tw.position.y = h * 0.72 + h * 0.19; tw.castShadow = true; g.add(tw);
+      const tr = new THREE.Mesh(new THREE.ConeGeometry(w*0.38, h*0.28, 4), roofMat);
+      tr.position.y = h * 0.72 + h * 0.38 + h * 0.14; tr.rotation.y = Math.PI/4; g.add(tr);
+    }
+  }
+
   // ── Building-specific geometry ─────────────────────────────────
 
   function _buildHut(g) {
@@ -520,9 +556,14 @@ const CityScene = (() => {
     const s = (idx+1)*1234567;
     g.position.set(x+((s%100)/100-0.5)*0.5, 0, z+(((s*7)%100)/100-0.5)*0.5);
     g.rotation.y = ((s%80)/80-0.5)*0.8;
-    const fn = BUILD_FNS[id];
-    if (fn) fn(g);
-    else _buildGeneric(g, BLD[id] || { w:1.2, h:1.5, d:1.2, color:0x888888, roof:0x555555 });
+    const phase = (typeof GS !== 'undefined') ? GS.phase : 'early';
+    if (phase === 'early') {
+      _buildPrimitive(g, id);
+    } else {
+      const fn = BUILD_FNS[id];
+      if (fn) fn(g);
+      else _buildGeneric(g, BLD[id] || { w:1.2, h:1.5, d:1.2, color:0x888888, roof:0x555555 });
+    }
     _applyEraStyle(g);
     g.userData.pOff = (idx*0.618)%(Math.PI*2);
     return g;
@@ -664,9 +705,8 @@ const CityScene = (() => {
   }
 
   function _animatePedestrians(dt) {
-    const popScale = (typeof GS !== 'undefined' && GS.population > 0)
-      ? Math.min(1, GS.population / 20) : 0.3;
-    const visCount = Math.max(3, Math.floor(pedestrianGroups.length * popScale));
+    // Pedestrian count matches buildings on screen — more buildings = busier city
+    const visCount = Math.min(pedestrianGroups.length, Math.max(2, buildingMeshes.length));
     const t = Date.now() * 0.001;
     pedestrianGroups.forEach((ped, i) => {
       ped.g.visible = i < visCount;
@@ -716,14 +756,6 @@ const CityScene = (() => {
     [[88,0.8,0,1.8],[88,0.8,0,-1.8],[0.8,88,1.8,0],[-0.8,88,-1.8,0]].forEach(([w,d,x,z]) => {
       const m = new THREE.Mesh(new THREE.PlaneGeometry(w,d), sidewalkMat);
       m.rotation.x = -Math.PI/2; m.position.set(x, 0.10, z); cityGroup.add(m);
-    });
-
-    // Zone colour tint patches — y=0.18 (above sidewalks at 0.10, no z-fight)
-    const zonePatchCols = { residential:0xFF6633, agricultural:0x44CC44, industrial:0x4477CC,
-      commercial:0xFFCC22, financial:0xFFAA00, knowledge:0x7744EE, advanced:0x22CCEE };
-    Object.entries(ZONE_CENTERS).forEach(([zone, {x, z}]) => {
-      const p = new THREE.Mesh(new THREE.PlaneGeometry(18, 18), new THREE.MeshLambertMaterial({ color:zonePatchCols[zone]||0xFFFFFF, transparent:true, opacity:0.07 }));
-      p.rotation.x = -Math.PI/2; p.position.set(x, 0.18, z); cityGroup.add(p);
     });
 
     // Central monument plaza — y=0.12
