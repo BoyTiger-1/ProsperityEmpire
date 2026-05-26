@@ -17,6 +17,9 @@ const GS = {
   // Buildings owned
   buildings: {},
 
+  // Worker allocations per building
+  workerAlloc: {},   // buildingId → workers manually assigned
+
   // Technologies unlocked
   techs: {},
 
@@ -149,6 +152,17 @@ const PHASE_LABELS = {
   advanced: 'Financial Empire',
 };
 
+const BUILDING_WORKERS = {
+  farm:2, lumberMill:2, quarry:3, market:2, workshop:3,
+  coalMine:4, textileMill:5, tradingPost:4, library:2,
+  fishery:2, school:3, warehouse:4, factory:8, powerPlant:6,
+  university:6, bank:5, steelMill:10, mint:5, harbor:8,
+  insurance:4, oilRefinery:8, hospital:8, airport:10,
+  stockExchange:8, globalTradeHub:12, researchInstitute:10,
+  centralBank:15, techPark:12, solarFarm:3, cryptoFarm:4,
+  investmentFirm:8, mediaEmpire:10, spacePort:25,
+};
+
 const CITY_EMOJIS = {
   early:    '🏘️',
   mid:      '🏭',
@@ -191,5 +205,6 @@ function updatePhase() {
     if (old === 'mid'   && newPhase === 'late') empireName = 'Industrial City';
     if (old === 'late'  && newPhase === 'advanced') empireName = 'Financial Capital';
     document.getElementById('empire-name').textContent = empireName;
+    if (typeof CityScene !== 'undefined') CityScene.rebuildCity();
   }
 }

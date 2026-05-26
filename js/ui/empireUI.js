@@ -68,6 +68,12 @@ const EmpireUI = {
     document.getElementById('bp-sell1')?.addEventListener('click',  () => this._sellFromPanel(1));
     document.getElementById('bp-sell5')?.addEventListener('click',  () => this._sellFromPanel(5));
 
+    // Building panel worker buttons
+    document.getElementById('bp-wk-m10')?.addEventListener('click', () => this._adjustWorkers(-10));
+    document.getElementById('bp-wk-m1')?.addEventListener('click',  () => this._adjustWorkers(-1));
+    document.getElementById('bp-wk-p1')?.addEventListener('click',  () => this._adjustWorkers(1));
+    document.getElementById('bp-wk-p10')?.addEventListener('click', () => this._adjustWorkers(10));
+
     Tabs.register('empire', () => this.render());
   },
 
@@ -81,6 +87,25 @@ const EmpireUI = {
     if (!this._activeBldId) return;
     BuildingEngine.sell(this._activeBldId, qty);
     this.showBuildingPanel(this._activeBldId);
+  },
+
+  _adjustWorkers(delta) {
+    if (!this._activeBldId) return;
+    const bldId = this._activeBldId;
+    const count = GS.buildings[bldId] || 0;
+    const maxW = (BUILDING_WORKERS[bldId] || 0) * count;
+    if (!maxW) return;
+
+    const current = GS.workerAlloc[bldId] ?? maxW;
+    const totalAllocated = Object.values(GS.workerAlloc).reduce((s,v) => s+v, 0)
+      + (GS.workerAlloc[bldId] === undefined ? maxW : 0); // include this building's default
+    const available = GS.population - (totalAllocated - current);
+
+    let newVal = current + delta;
+    newVal = Math.max(0, Math.min(maxW, newVal, current + available));
+    GS.workerAlloc[bldId] = newVal;
+    Production.recalculate();
+    this.showBuildingPanel(bldId);
   },
 
   // ── Called by CityScene when a 3D building is clicked ──
@@ -141,6 +166,23 @@ const EmpireUI = {
       ).join(' ');
     } else if (refundEl) {
       refundEl.textContent = '';
+    }
+
+    // Worker allocation section
+    const wkRow = document.getElementById('bp-workers-row');
+    const wkVal = document.getElementById('bp-wk-val');
+    const wkEff = document.getElementById('bp-wk-eff');
+    const maxW = (BUILDING_WORKERS[bldId] || 0) * count;
+    if (wkRow) {
+      if (maxW > 0) {
+        wkRow.style.display = '';
+        const allocated = GS.workerAlloc[bldId] ?? maxW;
+        const eff = Math.round(Math.min(1, allocated / maxW) * 100);
+        if (wkVal) wkVal.textContent = `${allocated} / ${maxW}`;
+        if (wkEff) wkEff.textContent = `${eff}% efficiency · ${GS.population} pop available`;
+      } else {
+        wkRow.style.display = 'none';
+      }
     }
 
     const descEl = document.getElementById('bp-desc');

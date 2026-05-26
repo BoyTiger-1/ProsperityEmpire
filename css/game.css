@@ -461,6 +461,30 @@ button, input, select, a,
 .bp-sell-btn:hover:not(:disabled) { background: rgba(106,30,24,0.25); border-color: var(--red3); }
 .bp-sell-btn:disabled { opacity: 0.38; cursor: not-allowed; }
 #bp-sell-refund { font-size: 10px; color: var(--txt4); text-align: center; }
+#bp-workers-row {
+  margin: 8px 0 4px; padding: 8px; border-radius: 4px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(200,146,42,0.2);
+}
+#bp-wk-label {
+  font-family: var(--font-n); font-size: 9px; color: var(--txt3);
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px;
+}
+#bp-wk-ctrl {
+  display: flex; align-items: center; gap: 4px; margin-bottom: 4px;
+}
+#bp-wk-val {
+  flex: 1; text-align: center; font-family: var(--font-n);
+  font-size: 13px; font-weight: 700; color: var(--gold2);
+}
+.bp-wk-btn {
+  background: rgba(200,146,42,0.15); border: 1px solid rgba(200,146,42,0.3);
+  color: var(--gold2); font-family: var(--font-n); font-size: 11px;
+  padding: 2px 7px; border-radius: 3px; cursor: pointer;
+}
+.bp-wk-btn:hover { background: rgba(200,146,42,0.28); }
+#bp-wk-eff {
+  font-size: 10px; color: var(--txt3); text-align: center;
+}
 #bp-desc  { font-size: 11px; color: var(--txt3); line-height: 1.6; font-style: italic; border-top: 1px solid var(--line); padding-top: 8px; }
 #bp-hint  { font-size: 9px; color: var(--txt4); text-align: center; letter-spacing: 1px; }
 

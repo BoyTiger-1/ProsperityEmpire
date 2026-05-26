@@ -3,6 +3,7 @@ const CityScene = (() => {
   let renderer, scene, camera, clock;
   let cityGroup, pulseLight;
   let buildingMeshes = [];
+  let pedestrianGroups = [];
   let animating = false;
   let clickPulse = 0;
   let rotAngle = 0;
@@ -62,6 +63,15 @@ const CityScene = (() => {
     codex: 'knowledge', world: 'commercial', prestige: 'financial',
     achievements: 'residential',
   };
+
+  // Road waypoints for pedestrian pathfinding (local cityGroup space)
+  const ROAD_WPS = [
+    {x:0,z:0},{x:14,z:0},{x:-14,z:0},{x:0,z:14},{x:0,z:-14},
+    {x:27,z:0},{x:-27,z:0},{x:0,z:27},{x:0,z:-27},
+    {x:13,z:13},{x:-13,z:13},{x:13,z:-13},{x:-13,z:-13},
+    {x:14,z:13},{x:-14,z:13},{x:14,z:-13},{x:-14,z:-13},
+    {x:13,z:14},{x:-13,z:14},{x:13,z:-14},{x:-13,z:-14},
+  ];
 
   // Fallback BLD data for generic buildings
   const BLD = {
@@ -139,6 +149,26 @@ const CityScene = (() => {
     if (typeof g === 'undefined') { g = ry; ry = pz; pz = 0; }
     const m = new THREE.Mesh(new THREE.ConeGeometry(r, h, seg), mat(col));
     m.position.set(px || 0, py, pz || 0); if (ry) m.rotation.y = ry; m.castShadow = true; g.add(m); return m;
+  }
+
+  // ── Era-based atmospheric tinting ────────────────────────────────
+  function _applyEraStyle(g) {
+    const phase = (typeof GS !== 'undefined') ? GS.phase : 'early';
+    // Subtle emissive tint per era — only affects meshes with no existing glow
+    const ERA = {
+      early:    { col:0x1A0800, int:0.10 }, // warm amber-sepia (fire-lit, ancient)
+      mid:      { col:0x060200, int:0.04 }, // very slight warm (industrial age)
+      late:     { col:0x000A18, int:0.06 }, // cool steel-blue (modern glass)
+      advanced: { col:0x00141A, int:0.09 }, // cyan-chrome (financial empire)
+    };
+    const tint = ERA[phase];
+    if (!tint) return;
+    g.traverse(c => {
+      if (!c.isMesh || !c.material || !c.material.emissive) return;
+      if ((c.material.emissiveIntensity || 0) > 0.15) return; // preserve existing glows
+      c.material.emissive.setHex(tint.col);
+      c.material.emissiveIntensity = tint.int;
+    });
   }
 
   // ── Building-specific geometry ─────────────────────────────────
@@ -493,6 +523,7 @@ const CityScene = (() => {
     const fn = BUILD_FNS[id];
     if (fn) fn(g);
     else _buildGeneric(g, BLD[id] || { w:1.2, h:1.5, d:1.2, color:0x888888, roof:0x555555 });
+    _applyEraStyle(g);
     g.userData.pOff = (idx*0.618)%(Math.PI*2);
     return g;
   }
@@ -553,9 +584,9 @@ const CityScene = (() => {
     const θ = rotTarget;
     const wx = zc.x * Math.cos(θ) + zc.z * Math.sin(θ);
     const wz = -zc.x * Math.sin(θ) + zc.z * Math.cos(θ);
-    // Tight zoom: bring camera close to landmark, low angle for drama
-    camTarget  = { x: wx * 0.45, y: 16, z: wz * 0.3 + 24 };
-    lookTarget = { x: wx * 0.8,  y: 6,  z: wz * 0.7 };
+    // Pull back enough to see the full landmark building, nice 3/4 overhead angle
+    camTarget  = { x: wx * 0.3, y: 24, z: wz * 0.22 + 40 };
+    lookTarget = { x: wx * 0.6, y: 4,  z: wz * 0.6 };
   }
 
   // ── Selection ────────────────────────────────────────────────────
@@ -596,6 +627,69 @@ const CityScene = (() => {
     group.traverse(c => {
       if (c.isMesh && c.material?.emissive) {
         c.material.emissive.set(0x000000); c.material.emissiveIntensity = 0;
+      }
+    });
+  }
+
+  // ── Pedestrian system ─────────────────────────────────────────────
+  const PED_SKIN  = [0xFFDBAA,0xD4956E,0x8D5524,0xF1C27D,0xC68642];
+  const PED_CLOTH = [0x2244AA,0xAA2222,0x228844,0xCC8800,0x884488,0x555577,0x336655,0x993322];
+
+  function _buildPedestrians() {
+    const count = 22;
+    for (let i = 0; i < count; i++) {
+      const g = new THREE.Group();
+      const wp = ROAD_WPS[i % ROAD_WPS.length];
+      g.position.set(wp.x + (Math.random()-0.5)*1.5, 0.08, wp.z + (Math.random()-0.5)*1.5);
+      // Body
+      const body = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.10, 0.13, 0.58, 6),
+        new THREE.MeshLambertMaterial({ color: PED_CLOTH[i % PED_CLOTH.length] })
+      );
+      body.position.y = 0.32; body.castShadow = true; g.add(body);
+      // Head
+      const head = new THREE.Mesh(
+        new THREE.SphereGeometry(0.13, 6, 4),
+        new THREE.MeshLambertMaterial({ color: PED_SKIN[i % PED_SKIN.length] })
+      );
+      head.position.y = 0.74; head.castShadow = true; g.add(head);
+      cityGroup.add(g);
+      pedestrianGroups.push({
+        g,
+        targetIdx: (i * 3 + 5) % ROAD_WPS.length,
+        speed: 1.2 + (i * 0.19) % 1.8,
+        bobPhase: i * 0.9,
+      });
+    }
+  }
+
+  function _animatePedestrians(dt) {
+    const popScale = (typeof GS !== 'undefined' && GS.population > 0)
+      ? Math.min(1, GS.population / 20) : 0.3;
+    const visCount = Math.max(3, Math.floor(pedestrianGroups.length * popScale));
+    const t = Date.now() * 0.001;
+    pedestrianGroups.forEach((ped, i) => {
+      ped.g.visible = i < visCount;
+      if (!ped.g.visible) return;
+      const target = ROAD_WPS[ped.targetIdx];
+      const dx = target.x - ped.g.position.x;
+      const dz = target.z - ped.g.position.z;
+      const dist = Math.sqrt(dx*dx + dz*dz);
+      if (dist < 0.4) {
+        // Arrived — pick next waypoint (prefer nearby ones for realistic movement)
+        const candidates = [
+          (ped.targetIdx + 1) % ROAD_WPS.length,
+          (ped.targetIdx + 2) % ROAD_WPS.length,
+          Math.floor(Math.random() * ROAD_WPS.length),
+        ];
+        ped.targetIdx = candidates[Math.floor(Math.random() * candidates.length)];
+      } else {
+        const step = ped.speed * dt;
+        ped.g.position.x += (dx / dist) * step;
+        ped.g.position.z += (dz / dist) * step;
+        ped.g.rotation.y = Math.atan2(dx, dz);
+        // Walking bob
+        ped.g.position.y = 0.08 + Math.abs(Math.sin(t * ped.speed * 4 + ped.bobPhase)) * 0.04;
       }
     });
   }
@@ -1029,6 +1123,9 @@ const CityScene = (() => {
     lookCur.z += (lookTarget.z - lookCur.z) * Math.min(1, dt*3);
     camera.lookAt(lookCur);
 
+    // Pedestrians
+    _animatePedestrians(dt);
+
     const sig = _getBuildSig();
     if (sig !== lastBuildSig) rebuildCity();
 
@@ -1080,6 +1177,7 @@ const CityScene = (() => {
       clock = new THREE.Clock();
       _buildGround();
       _buildLandmarks();
+      _buildPedestrians();
       _buildEnvironment();
       rebuildCity();
 

@@ -28,11 +28,17 @@ const Production = {
       const def = BUILDINGS[bldId];
       if (!def) continue;
 
+      // Worker efficiency multiplier
+      const maxW = (BUILDING_WORKERS[bldId] || 0) * count;
+      const workerEff = maxW > 0
+        ? Math.min(1, (GS.workerAlloc[bldId] ?? maxW) / maxW)
+        : 1;
+
       // Production
       if (def.produces) {
         for (const [res, rate] of Object.entries(def.produces)) {
           if (GS.resources[res]) {
-            GS.resources[res].perSec += rate * count * this.getMultiplier(res);
+            GS.resources[res].perSec += rate * count * workerEff * this.getMultiplier(res);
           }
         }
       }
@@ -43,7 +49,7 @@ const Production = {
           if (GS.resources[res]) {
             // Labor efficiency reduces labor consumption
             const laborMod = (res === 'labor') ? (1 / (GS.multipliers.laborEfficiency || 1)) : 1;
-            GS.resources[res].perSec -= rate * count * laborMod;
+            GS.resources[res].perSec -= rate * count * workerEff * laborMod;
           }
         }
       }

@@ -9,6 +9,7 @@ const SaveEngine = {
         savedAt: Date.now(),
         resources: {},
         buildings: GS.buildings,
+        workerAlloc: GS.workerAlloc,
         techs: GS.techs,
         portfolio: GS.portfolio,
         prestige: GS.prestige,
@@ -60,6 +61,7 @@ const SaveEngine = {
         if (GS.resources[id]) GS.resources[id].amount = amount || 0;
       }
       GS.buildings    = data.buildings || {};
+      GS.workerAlloc  = data.workerAlloc || {};
       GS.techs        = data.techs || {};
       GS.portfolio    = data.portfolio || { stocks:{}, bonds:{}, commodities:{} };
       GS.prestige     = data.prestige || GS.prestige;
