@@ -11,21 +11,22 @@ A browser-based financial civilisation idle game where you build an empire from 
 1. [Overview](#overview)
 2. [How to Play](#how-to-play)
 3. [Resources](#resources)
-4. [Buildings](#buildings)
-5. [Technologies (Research)](#technologies-research)
-6. [Policies](#policies)
-7. [Markets](#markets)
-8. [Academy & Learning System](#academy--learning-system)
-9. [Codex — Financial Encyclopedia](#codex--financial-encyclopedia)
-10. [Global Events](#global-events)
-11. [Rival Nations](#rival-nations)
-12. [Prestige System](#prestige-system)
-13. [Achievements](#achievements)
-14. [3D City View](#3d-city-view)
-15. [News Feed](#news-feed)
-16. [Controls & Keyboard Shortcuts](#controls--keyboard-shortcuts)
-17. [Saving & Resetting](#saving--resetting)
-18. [Self-Hosting](#self-hosting)
+4. [Population](#population)
+5. [Buildings](#buildings)
+6. [Technologies (Research)](#technologies-research)
+7. [Policies](#policies)
+8. [Markets](#markets)
+9. [Academy & Learning System](#academy--learning-system)
+10. [Codex — Financial Encyclopedia](#codex--financial-encyclopedia)
+11. [Global Events](#global-events)
+12. [Rival Nations](#rival-nations)
+13. [Prestige System](#prestige-system)
+14. [Achievements](#achievements)
+15. [3D City View](#3d-city-view)
+16. [News Feed](#news-feed)
+17. [Controls & Keyboard Shortcuts](#controls--keyboard-shortcuts)
+18. [Saving & Resetting](#saving--resetting)
+19. [Self-Hosting](#self-hosting)
 
 ---
 
@@ -40,11 +41,12 @@ The game doubles as a financial education tool — every mechanic maps to a real
 1. Click the city crest to generate Labour
 2. Spend Labour (and other resources) to construct buildings
 3. Buildings passively generate resources every second
-4. Research technologies to unlock new buildings and multipliers
-5. Enact policies to shape your empire's economic doctrine
-6. Answer finance questions at the Academy to earn bonus resources
-7. Trade stocks, bonds, commodities, and currencies on the Markets
-8. Accumulate Influence to Prestige and carry permanent bonuses into a new run
+4. Grow and manage your **population** — citizens provide Labour and drive the economy
+5. Research technologies to unlock new buildings and multipliers
+6. Enact policies to shape your empire's economic doctrine
+7. Answer finance questions at the Academy to earn bonus resources
+8. Trade stocks, bonds, commodities, and currencies on the Markets
+9. Accumulate Influence to Prestige and carry permanent bonuses into a new run
 
 ---
 
@@ -102,6 +104,61 @@ There are 10 resources in the game. Each has a current amount and a per-second (
 Resources are produced passively by buildings. Some buildings also **consume** resources per second (e.g. a Factory consumes Coal and Energy to run). If you run out of a consumed resource, that building stops producing.
 
 Starting capital is **150 Capital** on a fresh run.
+
+---
+
+## Population
+
+Population is a core mechanic that drives your workforce. Citizens are housed in residential buildings and their numbers grow or shrink based on several factors.
+
+### Housing
+
+Build residential structures to increase your maximum population capacity:
+
+| Building | Population Capacity |
+|----------|-------------------|
+| Hut | +5 |
+| Cottage | +10 |
+| House | +20 |
+| Apartment | +50 |
+| Tenement | +80 |
+| Residential Block | +150 |
+| Suburb | +300 |
+
+### Population Growth & Decline
+
+Population grows toward its maximum when food supply meets demand, and shrinks when food is scarce.
+
+- Each citizen consumes **0.002 Food/sec**
+- When food supply equals or exceeds demand, population grows at up to **+2/sec**
+- When food is insufficient, population falls at up to **−5/sec**
+- **Hospitals** boost natural growth and significantly reduce death rate
+- **High happiness (>68%)** attracts immigrants, adding extra growth per second
+- **Low happiness (<30%)** accelerates emigration
+
+A live **growth rate indicator** (e.g. `+1.2/s`) is shown in the population bar.
+
+### Housing Stress
+
+- **85% capacity** — Housing Shortage notification fires; expansion recommended
+- **100% capacity** — Housing Crisis; population stops growing and may decline
+
+### Worker Allocation
+
+Each building type has a maximum worker slot count. You can allocate your population to specific buildings to control which ones operate at full efficiency. Under-staffed buildings produce proportionally less.
+
+### City Vitals
+
+Four metrics track your civilisation's health and directly affect production multipliers and happiness:
+
+| Metric | Source | Effect |
+|--------|--------|--------|
+| **Housing Stress** | Population / max capacity | High stress reduces happiness |
+| **Pollution** | Industrial buildings (factories, mines, etc.) | >50% reduces production; >75% happiness hit |
+| **Education** | Schools, libraries, universities | >20% gives +5% production; up to +20% at >70% |
+| **Crime Rate** | Overcrowding + low happiness − education | >60% gives −8% production penalty |
+
+Solar farms, hospitals, and schools actively reduce pollution and crime. Education is the main crime reducer. All four vitals are shown in the Empire info panel and the stats screen.
 
 ---
 
@@ -395,6 +452,8 @@ Questions get harder as you progress:
 - **Mid phase** — intermediate: compound interest, elasticity, inflation, monetary policy
 - **Late phase** — advanced: derivatives, central banking, portfolio theory, macroeconomics
 
+The question bank contains **745+ questions** covering population economics, fiscal policy, behavioural finance, international trade, financial crises, and more.
+
 ### Streak Bonuses
 
 Answering multiple questions correctly in a row builds a streak multiplier. Higher streaks give larger resource rewards.
@@ -422,11 +481,37 @@ The **Codex** tab is an in-game financial encyclopedia with full articles on eco
 
 Each article is a full-length educational piece with formulas, examples, and real-world analogies — not just definitions.
 
+### Extended Content (recent additions)
+
+Articles have been expanded with deeper coverage of:
+
+- **Inflation** — hyperinflation mechanics, deflation traps, the Fisher equation, stagflation
+- **Unemployment** — Okun's Law, the Great Depression, structural vs cyclical vs frictional unemployment
+- **Fiscal Policy** — the Laffer Curve, fiscal-monetary coordination, crowding out, multiplier effects
+- **Trade Policy** — currency wars, WTO dispute mechanisms, comparative advantage in practice, trade blocs
+
 ---
 
 ## Global Events
 
 Random events fire periodically and temporarily modify production. They appear in the top notification area with a countdown timer. Events are tied to your game phase.
+
+### 3D Visual Effects
+
+When a global event triggers, the 3D city reacts in real time with matching particle effects and atmospheric changes:
+
+| Event Type | Visual Effect |
+|-----------|--------------|
+| Economic boom / harvest | Golden upward burst particles |
+| Drought / famine | Orange-red falling embers from the sky |
+| Disease / plague | Green mist rising from the ground |
+| Storm / flood | Blue-white rain particles falling |
+| Fire / energy crisis | Bright red-orange rising sparks |
+| Trade boom | Cyan radial ring burst |
+| Nuclear / tech events | Purple-white flash and glow |
+| Market crash | Red flash with deep fog |
+
+The sky colour and fog atmosphere also shift to match the event's mood for its duration, then fade back to normal.
 
 ### Positive Events
 
@@ -464,6 +549,26 @@ Random events fire periodically and temporarily modify production. They appear i
 | Market Crash 📉 | −60% Capital | 120s |
 | Energy Crisis 🔋 | −60% Energy | 60s |
 | General Strike ✊ | −50% Labour | 90s |
+| Great Plague 🦠 | −15% population, −50% Labour & Food | 120s |
+| Famine 🌾 | −10% population, −80% Food | 90s |
+| War Draft ⚔️ | −12% population, −40% Labour | 60s |
+| Emigration Crisis 🚶 | −18% population (if happiness < 50) | — |
+
+### Population Events (Direct Impact)
+
+These events directly change your population count rather than just modifying production rates:
+
+| Event | Population Effect | Other Effect |
+|-------|------------------|-------------|
+| Migration Wave 🚶 | +up to 40 citizens | ×2 Labour for 120s |
+| Baby Boom 👶 | +20% population | ×1.3 Food for 90s |
+| Refugee Flux 🚶 | +60 citizens | +20% Labour |
+| Pandemic 🦠 | −8% population | — |
+| Great Plague 🦠 | −15% population | −50% Labour & Food |
+| Famine 🌾 | −10% population | −80% Food |
+| War Draft ⚔️ | −12% population | −40% Labour |
+| Emigration Crisis 🚶 | −18% population | Triggers only if happiness < 50 |
+| Birth Rate Policy 📋 | Choice event — see below | — |
 
 ### Choice Events (Neutral)
 
@@ -477,6 +582,7 @@ Some events give you a decision to make, with limited time to choose:
 | Foreign Aid Request 🤲 | Donate 1,000C or Decline | +50 Influence if donated |
 | Research Grant 🔬 | Match grant (−500C) or Decline | ×3 Knowledge for 120s if matched |
 | Major Investment Offer 🏦 | Accept or Decline | 50/50: 5,000C or 500C |
+| Birth Rate Policy 📋 | Incentivise or Restrict | +15% or −10% population growth rate |
 
 ---
 
@@ -724,6 +830,16 @@ Achievements for owning specific quantities of individual building types, e.g.:
 
 The Empire tab features a live 3D city that grows as your empire advances, rendered with Three.js.
 
+### Era-Aware Architecture
+
+Buildings and landmarks change appearance based on your current game phase:
+
+- **Early phase** — primitive stone structures: rough-column treasury, stone temple library, ancient forge with clay chimneys, wooden-post bazaar, great hall with battlements, stone watchtower with torch fire
+- **Mid phase** — industrial-era brick and concrete buildings replace the stone primitives
+- **Late phase** — modern glass towers, tech campuses, and advanced infrastructure
+
+The entire city rebuilds its landmark layer automatically when you transition between eras.
+
 ### City Zones
 
 The city is divided into 7 economic zones, each with colour-coded buildings:
@@ -740,6 +856,7 @@ The city is divided into 7 economic zones, each with colour-coded buildings:
 
 ### City Features
 
+- **Era-aware landmarks** — 7 landmark structures that evolve from primitive stone to modern architecture
 - **Central monument** — granite obelisk with gold tip, surrounded by an 8-pillar colonnade and reflecting pool
 - **Zone flag markers** — coloured flags at each zone's centre for navigation
 - **Roads and sidewalks** — layered road network with boundary walls and gateposts
@@ -748,6 +865,11 @@ The city is divided into 7 economic zones, each with colour-coded buildings:
 - **Park areas** — park benches, flower patches, and grass areas in the central plaza
 - **Distant mountains** — 10 snow-capped mountain peaks visible on the horizon
 - **Clouds** — 10 animated cloud clusters floating above the city
+- **Pedestrians** — Citizens walk around the city streets; the number of visible pedestrians scales with your actual population (1 pedestrian per 5 citizens)
+
+### Nav-Bar Camera
+
+Each navigation tab zooms the camera to a representative landmark building for that section of the game — giving a sense of place as you switch between tabs.
 
 ### Camera Controls
 
@@ -755,6 +877,10 @@ The city is divided into 7 economic zones, each with colour-coded buildings:
 - **Click the background** — camera returns to overview position
 - **Drag to rotate** — orbit the city view
 - The 3D city is always visible behind the game UI on all tabs
+
+### Event Visual Effects
+
+See the [Global Events](#global-events) section for the full list of atmospheric and particle effects that trigger in the city when events fire.
 
 ---
 
