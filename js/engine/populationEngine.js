@@ -31,17 +31,33 @@ const PopulationEngine = {
   },
 
   tick(dt) {
-    // Small population drift per second
     if (GS.maxPopulation <= 0) { GS.population = 0; return; }
 
     const foodRate = GS.resources.food.perSec;
     const foodNeeded = GS.population * 0.002;
     const surplus = foodRate - foodNeeded;
 
-    const growthPerSec = surplus > 0
+    let growthPerSec = surplus > 0
       ? Math.min(2, GS.maxPopulation * 0.001 + 0.1)
       : -Math.min(5, GS.population * 0.002 + 0.1);
 
+    // Hospitals reduce death rate and boost natural growth
+    const hospitals = GS.buildings.hospital || 0;
+    if (hospitals > 0) {
+      if (growthPerSec > 0) growthPerSec *= (1 + hospitals * 0.18);
+      else growthPerSec *= Math.max(0.15, 1 - hospitals * 0.12);
+    }
+
+    // Happiness-based immigration: high happiness attracts settlers
+    if (GS.happiness > 68 && GS.population < GS.maxPopulation) {
+      growthPerSec += (GS.happiness - 68) * 0.006;
+    }
+    // Very low happiness accelerates emigration
+    if (GS.happiness < 30 && GS.population > 0) {
+      growthPerSec -= (30 - GS.happiness) * 0.004;
+    }
+
+    GS.popGrowthRate = growthPerSec;
     GS.population = Math.max(0, Math.min(GS.maxPopulation, GS.population + growthPerSec * dt));
     GS.population = Math.round(GS.population);
 
@@ -71,6 +87,11 @@ const PopulationEngine = {
     if (GS.taxRate > 0.25) target -= 10;
     else if (GS.taxRate < 0.1) target += 5;
 
+    // Healthcare from hospitals boosts happiness
+    const hospitals = GS.buildings.hospital || 0;
+    if (hospitals >= 3) target += 12;
+    else if (hospitals >= 1) target += 5;
+
     // Clamp target
     target = Math.max(10, Math.min(95, target));
 
@@ -88,6 +109,13 @@ const PopulationEngine = {
 
     const hapVal = document.getElementById('hap-val');
     if (hapVal) hapVal.textContent = GS.happiness.toFixed(0) + '%';
+
+    const rateEl = document.getElementById('pop-rate');
+    if (rateEl && GS.popGrowthRate !== undefined) {
+      const r = GS.popGrowthRate;
+      rateEl.textContent = (r >= 0 ? '+' : '') + r.toFixed(1) + '/s';
+      rateEl.style.color = r > 0 ? '#7ecb7e' : r < 0 ? '#cc4444' : '#aaa';
+    }
   },
 
   // Happiness multiplier applied to production

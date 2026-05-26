@@ -57,11 +57,15 @@ const GLOBAL_EVENTS = [
   },
   {
     id:'migrationWave', name:'Migration Wave', type:'positive', emoji:'🚶',
-    desc:'Skilled workers immigrate to your empire, boosting Labor supply.',
-    effect:'×2 Labor production for 120 seconds.',
+    desc:'Skilled workers immigrate to your empire, boosting Labor supply and population.',
+    effect:'×2 Labor for 120s. Gain up to +40 population immediately.',
     duration:120,
     trigger:{ minPhase:'early' },
-    apply: gs => { gs.eventMods.labor = (gs.eventMods.labor||1)*2; },
+    apply: gs => {
+      gs.eventMods.labor = (gs.eventMods.labor||1)*2;
+      const gain = Math.min(40, Math.max(0, gs.maxPopulation - gs.population));
+      gs.population = Math.min(gs.maxPopulation, gs.population + gain);
+    },
     revert: gs => { gs.eventMods.labor = (gs.eventMods.labor||2)/2; },
   },
   {
@@ -131,11 +135,15 @@ const GLOBAL_EVENTS = [
   },
   {
     id:'pandemic', name:'Disease Outbreak', type:'negative', emoji:'🦠',
-    desc:'A disease spreads through your population. Labor force shrinks.',
-    effect:'-60% Labor production for 120 seconds.',
+    desc:'A disease spreads through your population. People die and labor force shrinks.',
+    effect:'-60% Labor for 120s. Lose up to 8% of population.',
     duration:120,
     trigger:{ minPhase:'early' },
-    apply: gs => { gs.eventMods.labor = (gs.eventMods.labor||1)*0.4; },
+    apply: gs => {
+      gs.eventMods.labor = (gs.eventMods.labor||1)*0.4;
+      const loss = Math.floor(gs.population * 0.08);
+      gs.population = Math.max(0, gs.population - loss);
+    },
     revert: gs => { gs.eventMods.labor = (gs.eventMods.labor||0.4)/0.4; },
   },
   {
@@ -332,5 +340,105 @@ const GLOBAL_EVENTS = [
     winReward: gs => { gs.resources.capital.amount += 5000; gs.stats.totalCapitalEarned += 5000; },
     acceptReward: gs => { gs.resources.capital.amount += 500; gs.stats.totalCapitalEarned += 500; },
     choices:['Accept Investment (variable return)','Decline'],
+  },
+
+  // ════ POPULATION EVENTS ════
+  {
+    id:'greatPlague', name:'Great Plague', type:'negative', emoji:'💀',
+    desc:'A devastating plague sweeps through your empire. Population plummets.',
+    effect:'-15% population immediately. -50% Labor & Food for 150s.',
+    duration:150,
+    trigger:{ minPhase:'early' },
+    apply: gs => {
+      const loss = Math.floor(gs.population * 0.15);
+      gs.population = Math.max(1, gs.population - loss);
+      gs.eventMods.labor = (gs.eventMods.labor||1)*0.5;
+      gs.eventMods.food  = (gs.eventMods.food||1)*0.5;
+    },
+    revert: gs => {
+      gs.eventMods.labor = (gs.eventMods.labor||0.5)/0.5;
+      gs.eventMods.food  = (gs.eventMods.food||0.5)/0.5;
+    },
+  },
+  {
+    id:'babyBoom', name:'Baby Boom', type:'positive', emoji:'👶',
+    desc:'A period of peace and prosperity triggers a population surge!',
+    effect:'+20% population (up to housing cap). ×1.3 Food for 90s.',
+    duration:90,
+    trigger:{ minPhase:'early' },
+    apply: gs => {
+      const gain = Math.min(Math.floor(gs.population * 0.20), gs.maxPopulation - gs.population);
+      gs.population = Math.min(gs.maxPopulation, gs.population + Math.max(0, gain));
+      gs.eventMods.food = (gs.eventMods.food||1)*1.3;
+    },
+    revert: gs => { gs.eventMods.food = (gs.eventMods.food||1.3)/1.3; },
+  },
+  {
+    id:'famine', name:'Famine', type:'negative', emoji:'🌾',
+    desc:'Crop failures and drought cause famine. Citizens starve and flee.',
+    effect:'-10% population. -80% Food for 90 seconds.',
+    duration:90,
+    trigger:{ minPhase:'early' },
+    apply: gs => {
+      const loss = Math.floor(gs.population * 0.10);
+      gs.population = Math.max(0, gs.population - loss);
+      gs.eventMods.food = (gs.eventMods.food||1)*0.2;
+    },
+    revert: gs => { gs.eventMods.food = (gs.eventMods.food||0.2)/0.2; },
+  },
+  {
+    id:'refugeeFlux', name:'Refugee Influx', type:'positive', emoji:'🏘️',
+    desc:'Refugees from a distant war seek safety in your empire.',
+    effect:'Gain +60 population (up to housing cap). +20% Labour for 60s.',
+    duration:60,
+    trigger:{ minPhase:'mid' },
+    apply: gs => {
+      const gain = Math.min(60, Math.max(0, gs.maxPopulation - gs.population));
+      gs.population += gain;
+      gs.eventMods.labor = (gs.eventMods.labor||1)*1.2;
+    },
+    revert: gs => { gs.eventMods.labor = (gs.eventMods.labor||1.2)/1.2; },
+  },
+  {
+    id:'warDraft', name:'Wartime Draft', type:'negative', emoji:'⚔️',
+    desc:'A neighboring conflict pulls citizens away from productive work.',
+    effect:'-12% population. -40% Labor for 90 seconds.',
+    duration:90,
+    trigger:{ minPhase:'mid' },
+    apply: gs => {
+      const loss = Math.floor(gs.population * 0.12);
+      gs.population = Math.max(0, gs.population - loss);
+      gs.eventMods.labor = (gs.eventMods.labor||1)*0.6;
+    },
+    revert: gs => { gs.eventMods.labor = (gs.eventMods.labor||0.6)/0.6; },
+  },
+  {
+    id:'emigrationCrisis', name:'Emigration Crisis', type:'negative', emoji:'🚪',
+    desc:'Low happiness drives citizens to leave your empire in search of better lives.',
+    effect:'-18% population if happiness < 50. -30% Capital.',
+    duration:60,
+    trigger:{ minPhase:'early' },
+    apply: gs => {
+      if (gs.happiness < 50) {
+        const loss = Math.floor(gs.population * 0.18);
+        gs.population = Math.max(0, gs.population - loss);
+      }
+      gs.eventMods.capital = (gs.eventMods.capital||1)*0.7;
+    },
+    revert: gs => { gs.eventMods.capital = (gs.eventMods.capital||0.7)/0.7; },
+  },
+  {
+    id:'birthRatePolicy', name:'Pro-Natalist Policy', type:'neutral', emoji:'👨‍👩‍👧',
+    desc:'Implement a pro-natalist policy? Investment boosts long-term population.',
+    effect:'Spend 800 Capital → gain up to +50 population over housing cap.',
+    duration:20,
+    trigger:{ minPhase:'mid' },
+    isChoice:true,
+    acceptCost:800,
+    acceptReward: gs => {
+      const gain = Math.min(50, Math.max(0, gs.maxPopulation - gs.population));
+      gs.population += gain;
+    },
+    choices:['Implement Policy (−800 Capital)','Decline'],
   },
 ];

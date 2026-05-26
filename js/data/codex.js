@@ -529,7 +529,11 @@ const CODEX_DATA = {
       <h3>Automatic Stabilisers</h3>
       <p>Built-in mechanisms that automatically cushion economic swings without requiring new legislation. In recessions: unemployment benefits automatically rise, tax revenue automatically falls (as incomes and profits fall), providing fiscal stimulus. In booms: the opposite. These prevent fiscal policy from amplifying the cycle, stabilising the economy passively and immediately.</p>
       <h3>Debt Sustainability</h3>
-      <p>Governments can run deficits indefinitely if they can sustain debt at a reasonable cost. Debt sustainability requires r &lt; g — the interest rate on debt must be below the GDP growth rate. When r > g, debt/GDP grows explosively without a primary surplus. Japan has maintained debt above 200% of GDP for decades; whether this is sustainable depends on whether the BoJ can maintain low yields indefinitely.</p>`,
+      <p>Governments can run deficits indefinitely if they can sustain debt at a reasonable cost. Debt sustainability requires r &lt; g — the interest rate on debt must be below the GDP growth rate. When r > g, debt/GDP grows explosively without a primary surplus. Japan has maintained debt above 200% of GDP for decades; whether this is sustainable depends on whether the BoJ can maintain low yields indefinitely.</p>
+      <h3>The Laffer Curve: Tax Rates and Revenue</h3>
+      <p>At 0% tax rate, government collects zero revenue. At 100%, nobody works (all earnings confiscated) — again zero revenue. In between lies a revenue-maximising rate. Arthur Laffer's napkin sketch (1974) formalized this: tax cuts above the revenue-maximising rate can <em>increase</em> tax revenue by stimulating economic activity. This argument was used to justify Reagan's 1981 tax cuts and Trump's 2017 Tax Cuts and Jobs Act. In practice, most economists believe the US is well below the revenue-maximising rate — making pure "supply-side" self-financing claims empirically dubious, though supply-side effects on growth are real.</p>
+      <h3>Fiscal vs. Monetary Policy: Coordination and Conflict</h3>
+      <p>Optimal macroeconomic management requires coordination between fiscal and monetary authorities. The Weimar Germany hyperinflation resulted from the Reichsbank printing money to finance government deficits — a cautionary tale of fiscal dominance over monetary policy. Modern central bank independence is designed to prevent this. However, when both fiscal and monetary policy push in the same direction — as during COVID (massive fiscal stimulus + QE) — the combined force can overshoot. The 2021-23 inflation surge in developed economies partly reflects this coordination challenge.</p>`,
     },
     {
       id:'inflation', cat:'macro', title:'Inflation',
@@ -548,7 +552,11 @@ const CODEX_DATA = {
       <ul>
         <li><strong>Winners</strong>: Debtors (repay with cheaper money), owners of real assets (property, equities hedge inflation long-term), governments (inflate away real value of nominal debt).</li>
         <li><strong>Losers</strong>: Savers holding cash or fixed-rate deposits, creditors with fixed-rate loans, workers on fixed nominal wages, pensioners on fixed nominal incomes.</li>
-      </ul>`,
+      </ul>
+      <h3>Hyperinflation</h3>
+      <p>When inflation exceeds ~50% per month, money loses its function as a store of value and medium of exchange. Historical hyperinflations share a common cause: governments monetising deficits — printing money to pay obligations. Weimar Germany (1923): prices doubled every 3.7 days at the peak; workers were paid twice daily and immediately spent wages before prices rose further. Zimbabwe (2008): monthly inflation reached 79.6 billion percent; the government printed 100-trillion-dollar notes. Venezuela (2018): 1,000,000% annual inflation. These are not abstract economic phenomena — they destroy savings, destabilise societies, and often end in political upheaval or currency reform.</p>
+      <h3>Deflation: The Opposite Problem</h3>
+      <p>Deflation (falling prices) sounds beneficial but is economically dangerous. If prices fall today, consumers and businesses delay purchases — expecting cheaper prices tomorrow. This depresses demand, causes firms to cut output and employment, further reducing demand. Japan experienced "deflationary stagnation" for decades after the 1990 asset bubble burst. Central banks have asymmetric tools: raising rates to fight inflation is relatively mechanical; escaping entrenched deflation (zero lower bound problem) is genuinely hard.</p>`,
     },
     {
       id:'unemployment', cat:'macro', title:'Unemployment',
@@ -564,7 +572,11 @@ const CODEX_DATA = {
       <h3>Unemployment Rate Measurement</h3>
       <p>The official unemployment rate measures those actively seeking work as a percentage of the labour force. It understates true labour market weakness because it excludes: the "discouraged" — those who have given up looking; the "underemployed" — part-timers who want full-time work; the "hidden unemployed" — those claiming sickness benefits or in early retirement in a weak market. The U-6 measure in the US attempts to capture broader labour underutilisation.</p>
       <h3>The Phillips Curve and NAIRU</h3>
-      <p>A.W. Phillips (1958) documented an inverse relationship between unemployment and wage inflation. Policymakers believed they could exploit this trade-off — accept more inflation for less unemployment. The stagflation of the 1970s destroyed this simple trade-off: unemployment and inflation rose simultaneously, refuting the stable Phillips Curve. Milton Friedman and Edmund Phelps (independently) predicted this would happen: there is a Natural Rate of Unemployment (NAIRU) where inflation is stable. Trying to push unemployment below the NAIRU through stimulus just generates accelerating inflation.</p>`,
+      <p>A.W. Phillips (1958) documented an inverse relationship between unemployment and wage inflation. Policymakers believed they could exploit this trade-off — accept more inflation for less unemployment. The stagflation of the 1970s destroyed this simple trade-off: unemployment and inflation rose simultaneously, refuting the stable Phillips Curve. Milton Friedman and Edmund Phelps (independently) predicted this would happen: there is a Natural Rate of Unemployment (NAIRU) where inflation is stable. Trying to push unemployment below the NAIRU through stimulus just generates accelerating inflation.</p>
+      <h3>Okun's Law: Unemployment and GDP</h3>
+      <p>Arthur Okun (1962) observed that for every 1% rise in the unemployment rate above its natural rate, GDP falls approximately 2% below its potential. This relationship — known as Okun's Law — provides a practical link between the labor market and economic output. If unemployment rises from 4% to 6% (2 percentage points), GDP is approximately 4% below what the economy could produce at full employment. The rule is approximate and varies across countries and time, but remains a useful benchmark for estimating the output cost of high unemployment.</p>
+      <h3>The Great Depression and Mass Unemployment</h3>
+      <p>US unemployment reached 25% in 1933 — one in four workers without a job. Industrial output collapsed 47% from 1929-33. Bank failures destroyed savings; international trade collapsed 65% as countries erected tariff barriers (Smoot-Hawley). The Depression fundamentally changed economics: Keynes's <em>General Theory</em> (1936) argued markets do not automatically return to full employment — government intervention was necessary. The lesson that deflation + bank failures + policy inaction create devastating feedback loops directly shaped the aggressive policy responses to 2008 and 2020.</p>`,
     },
     {
       id:'trade_policy', cat:'macro', title:'International Trade and Policy',
@@ -581,7 +593,11 @@ const CODEX_DATA = {
       </ul>
       <h3>Trade Balance and Current Account</h3>
       <div class="codex-formula">Current Account = (X − M) + Net Income + Net Transfers</div>
-      <p>A current account deficit means the country is importing more than it exports, financed by foreign capital inflows (capital account surplus). This is not inherently problematic — the US has run persistent deficits for decades, financed by foreigners wanting to hold dollar assets. Problems arise if foreign creditors lose confidence and withdraw financing suddenly.</p>`,
+      <p>A current account deficit means the country is importing more than it exports, financed by foreign capital inflows (capital account surplus). This is not inherently problematic — the US has run persistent deficits for decades, financed by foreigners wanting to hold dollar assets. Problems arise if foreign creditors lose confidence and withdraw financing suddenly.</p>
+      <h3>Currency Wars and Exchange Rate Manipulation</h3>
+      <p>When a country deliberately weakens its currency (through printing money or market intervention), its exports become cheaper in foreign markets and imports more expensive — improving the trade balance. This is termed "competitive devaluation" or "beggar-thy-neighbour" policy. In the 1930s, countries successively devalued currencies in a global race to the bottom that contracted world trade. The IMF was created in 1944 partly to prevent this. China was accused of currency manipulation through most of the 2000s-2010s, maintaining an artificially weak yuan to support export competitiveness.</p>
+      <h3>The WTO and Rules-Based Trade</h3>
+      <p>The World Trade Organisation (WTO, 1995) replaced GATT with a more comprehensive rules-based system covering goods, services, and intellectual property. 164 member nations commit to Most Favoured Nation (MFN) treatment — trade preferences given to any one country must be extended to all. The WTO's dispute settlement mechanism adjudicates trade disputes between members. However, the US effectively paralysed the WTO Appellate Body from 2019 by blocking appointments — a major challenge to the multilateral trade system that underpins globalisation.</p>`,
     },
 
     // ── ADVANCED FINANCE ──

@@ -4,6 +4,8 @@ const CityScene = (() => {
   let cityGroup, pulseLight;
   let buildingMeshes = [];
   let pedestrianGroups = [];
+  let landmarkGroups = [];
+  let effectGroups = [];
   let animating = false;
   let clickPulse = 0;
   let rotAngle = 0;
@@ -576,6 +578,7 @@ const CityScene = (() => {
       selectedGroup = null;
       if (typeof EmpireUI !== 'undefined') EmpireUI.hideBuildingPanel();
     }
+    _buildLandmarks();
     for (const m of buildingMeshes) cityGroup.remove(m);
     buildingMeshes = [];
 
@@ -607,7 +610,7 @@ const CityScene = (() => {
 
   function _getBuildSig() {
     if (typeof GS === 'undefined') return '';
-    return Object.entries(GS.buildings).map(([k,v])=>k+v).join('|');
+    return GS.phase + '|' + Object.entries(GS.buildings).map(([k,v])=>k+v).join('|');
   }
 
   // ── Zone zoom (called from tabs) ────────────────────────────────
@@ -705,8 +708,8 @@ const CityScene = (() => {
   }
 
   function _animatePedestrians(dt) {
-    // Pedestrian count matches buildings on screen — more buildings = busier city
-    const visCount = Math.min(pedestrianGroups.length, Math.max(2, buildingMeshes.length));
+    const pop = (typeof GS !== 'undefined') ? GS.population : 0;
+    const visCount = Math.min(pedestrianGroups.length, Math.floor(pop / 5));
     const t = Date.now() * 0.001;
     pedestrianGroups.forEach((ped, i) => {
       ped.g.visible = i < visCount;
@@ -909,6 +912,10 @@ const CityScene = (() => {
 
   // ── Landmark buildings — one iconic structure per zone ───────────
   function _buildLandmarks() {
+    for (const g of landmarkGroups) cityGroup.remove(g);
+    landmarkGroups = [];
+    const phase = (typeof GS !== 'undefined') ? GS.phase : 'early';
+    if (phase === 'early') { _buildLandmarksPrimitive(); return; }
     // ── Financial zone [15,5]: Treasury Tower ──────────────────────
     {
       const g = new THREE.Group();
@@ -929,7 +936,7 @@ const CityScene = (() => {
       // Needle spire
       const spire = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.18, 5.5, 6), goldMat);
       spire.position.y = 12.2; spire.castShadow = true; g.add(spire);
-      cityGroup.add(g);
+      cityGroup.add(g); landmarkGroups.push(g);
     }
     // ── Knowledge zone [0,-18]: Grand Academy ──────────────────────
     {
@@ -956,7 +963,7 @@ const CityScene = (() => {
       // Finial
       const fin = new THREE.Mesh(new THREE.ConeGeometry(0.22, 2.2, 6), new THREE.MeshLambertMaterial({ color:0xFFD700 }));
       fin.position.y = 10.6; fin.castShadow = true; g.add(fin);
-      cityGroup.add(g);
+      cityGroup.add(g); landmarkGroups.push(g);
     }
     // ── Industrial zone [-15,-12]: Grand Foundry ───────────────────
     {
@@ -984,7 +991,7 @@ const CityScene = (() => {
         const tip = new THREE.Mesh(new THREE.ConeGeometry(0.32, 0.55, 8), glowMat);
         tip.position.set(cx, 13.15 + i*0.8, 0); g.add(tip);
       });
-      cityGroup.add(g);
+      cityGroup.add(g); landmarkGroups.push(g);
     }
     // ── Commercial zone [14,-12]: Grand Exchange ───────────────────
     {
@@ -1015,7 +1022,7 @@ const CityScene = (() => {
       // Spire
       const spire = new THREE.Mesh(new THREE.ConeGeometry(0.3, 3.0, 8), darkMat);
       spire.position.set(0, 13.75, 0); spire.castShadow = true; g.add(spire);
-      cityGroup.add(g);
+      cityGroup.add(g); landmarkGroups.push(g);
     }
     // ── Residential zone [13,12]: Town Hall ────────────────────────
     {
@@ -1046,7 +1053,7 @@ const CityScene = (() => {
       // Spire cap
       const spire = new THREE.Mesh(new THREE.ConeGeometry(0.4, 2.8, 8), whiteMat);
       spire.position.set(0, 12.6, 0); spire.castShadow = true; g.add(spire);
-      cityGroup.add(g);
+      cityGroup.add(g); landmarkGroups.push(g);
     }
     // ── Agricultural zone [-14,10]: Great Windmill ─────────────────
     {
@@ -1074,7 +1081,7 @@ const CityScene = (() => {
         sail.position.set(ax*2.0, 7.5 + az*2.0, 1.05);
         sail.rotation.z = angle; g.add(sail);
       });
-      cityGroup.add(g);
+      cityGroup.add(g); landmarkGroups.push(g);
     }
     // ── Advanced zone [-6,-27]: Observatory ────────────────────────
     {
@@ -1104,8 +1111,170 @@ const CityScene = (() => {
       // Satellite dish
       const dish = new THREE.Mesh(new THREE.SphereGeometry(0.65, 8, 6, 0, Math.PI*2, 0, Math.PI/2), steelMat);
       dish.position.set(0.9, 13.0, 0); dish.rotation.z = -Math.PI/3; g.add(dish);
-      cityGroup.add(g);
+      cityGroup.add(g); landmarkGroups.push(g);
     }
+  }
+
+  // ── Primitive era landmarks (early phase) ─────────────────────────
+  function _buildLandmarksPrimitive() {
+    const stoneMat = new THREE.MeshLambertMaterial({ color:0xAA9977 });
+    const dkStone  = new THREE.MeshLambertMaterial({ color:0x7A6B55 });
+    const woodMat  = new THREE.MeshLambertMaterial({ color:0x7B5330 });
+    const fireMat  = new THREE.MeshLambertMaterial({ color:0xFF6600, emissive:new THREE.Color(0xFF4400), emissiveIntensity:1.0 });
+    const sailMat  = new THREE.MeshLambertMaterial({ color:0xF5F0E0, side:THREE.DoubleSide });
+
+    const _addLandmark = (zone, buildFn) => {
+      const g = new THREE.Group();
+      g.position.set(ZONE_CENTERS[zone].x, 0, ZONE_CENTERS[zone].z);
+      buildFn(g);
+      cityGroup.add(g); landmarkGroups.push(g);
+    };
+
+    // Financial: Stone Treasury with rough columns
+    _addLandmark('financial', g => {
+      const base1 = new THREE.Mesh(new THREE.BoxGeometry(6.0,0.7,5.2), stoneMat);
+      base1.position.y = 0.35; base1.castShadow = true; g.add(base1);
+      const base2 = new THREE.Mesh(new THREE.BoxGeometry(4.8,0.55,4.0), stoneMat);
+      base2.position.y = 0.88; g.add(base2);
+      const hall = new THREE.Mesh(new THREE.BoxGeometry(4.0,5.0,3.0), stoneMat);
+      hall.position.y = 3.93; hall.castShadow = true; g.add(hall);
+      [[-1.5,1.6],[1.5,1.6],[-1.5,-1.6],[1.5,-1.6]].forEach(([cx,cz]) => {
+        const col = new THREE.Mesh(new THREE.CylinderGeometry(0.28,0.36,6.0,6), dkStone);
+        col.position.set(cx,3.43,cz); col.castShadow = true; g.add(col);
+      });
+      const roof = new THREE.Mesh(new THREE.BoxGeometry(4.8,0.55,3.8), dkStone);
+      roof.position.y = 6.7; g.add(roof);
+      const spire = new THREE.Mesh(new THREE.CylinderGeometry(0.12,0.3,3.5,5), stoneMat);
+      spire.position.y = 9.4; spire.castShadow = true; g.add(spire);
+    });
+
+    // Knowledge: Stone Library Temple
+    _addLandmark('knowledge', g => {
+      const base = new THREE.Mesh(new THREE.BoxGeometry(6.5,0.7,6.0), stoneMat);
+      base.position.y = 0.35; base.castShadow = true; g.add(base);
+      const hall = new THREE.Mesh(new THREE.BoxGeometry(5.0,5.5,4.5), stoneMat);
+      hall.position.y = 3.75; hall.castShadow = true; g.add(hall);
+      const roofPeak = new THREE.Mesh(new THREE.CylinderGeometry(0.2,3.5,2.8,4), dkStone);
+      roofPeak.position.y = 7.4; roofPeak.rotation.y = Math.PI/4; g.add(roofPeak);
+      [-1.5,-0.5,0.5,1.5].forEach(cx => {
+        const col = new THREE.Mesh(new THREE.CylinderGeometry(0.22,0.3,6.2,7), dkStone);
+        col.position.set(cx,3.1,2.4); col.castShadow = true; g.add(col);
+      });
+    });
+
+    // Industrial: Stone Forge with fire
+    _addLandmark('industrial', g => {
+      const body = new THREE.Mesh(new THREE.BoxGeometry(5.5,3.5,4.0), stoneMat);
+      body.position.y = 1.75; body.castShadow = true; g.add(body);
+      const roof = new THREE.Mesh(new THREE.BoxGeometry(5.8,0.45,4.3), dkStone);
+      roof.position.y = 3.73; g.add(roof);
+      [-1.4,0,1.4].forEach((cx,i) => {
+        const ch = new THREE.Mesh(new THREE.CylinderGeometry(0.38,0.48,4.5+i*0.5,8), stoneMat);
+        ch.position.set(cx,6.0+i*0.25,0); ch.castShadow = true; g.add(ch);
+        const fire = new THREE.Mesh(new THREE.ConeGeometry(0.32,0.9,8), fireMat);
+        fire.position.set(cx,8.45+i*0.5,0); g.add(fire);
+      });
+    });
+
+    // Commercial: Ancient Bazaar with awning
+    _addLandmark('commercial', g => {
+      const plat = new THREE.Mesh(new THREE.BoxGeometry(5.5,0.5,4.5), stoneMat);
+      plat.position.y = 0.25; g.add(plat);
+      [[-1.8,-1.6],[1.8,-1.6],[-1.8,1.6],[1.8,1.6]].forEach(([px,pz]) => {
+        const post = new THREE.Mesh(new THREE.CylinderGeometry(0.15,0.2,5.2,6), woodMat);
+        post.position.set(px,3.1,pz); g.add(post);
+      });
+      const awning = new THREE.Mesh(new THREE.BoxGeometry(4.2,0.14,3.4), new THREE.MeshLambertMaterial({color:0xCDAA77,side:THREE.DoubleSide}));
+      awning.position.set(0,5.7,0); g.add(awning);
+      const well = new THREE.Mesh(new THREE.CylinderGeometry(0.55,0.6,1.2,10), stoneMat);
+      well.position.set(0,1.1,0); g.add(well);
+      const tower = new THREE.Mesh(new THREE.BoxGeometry(1.5,7.5,1.5), dkStone);
+      tower.position.set(0,4.25,-1.8); tower.castShadow = true; g.add(tower);
+      const capC = new THREE.Mesh(new THREE.ConeGeometry(1.0,1.8,4), dkStone);
+      capC.position.set(0,8.65,-1.8); capC.rotation.y = Math.PI/4; g.add(capC);
+    });
+
+    // Residential: Stone Great Hall with battlements
+    _addLandmark('residential', g => {
+      const body = new THREE.Mesh(new THREE.BoxGeometry(5.5,4.5,4.0), stoneMat);
+      body.position.y = 2.25; body.castShadow = true; g.add(body);
+      const roofH = new THREE.Mesh(new THREE.CylinderGeometry(0.2,3.5,2.2,4), dkStone);
+      roofH.position.y = 5.6; roofH.rotation.y = Math.PI/4; g.add(roofH);
+      const btower = new THREE.Mesh(new THREE.BoxGeometry(1.6,7.0,1.6), stoneMat);
+      btower.position.set(0,4.5,0); btower.castShadow = true; g.add(btower);
+      for (let i=0;i<4;i++){
+        const a=i*Math.PI/2;
+        const m=new THREE.Mesh(new THREE.BoxGeometry(0.42,0.7,0.42),dkStone);
+        m.position.set(Math.cos(a)*0.82,8.6,Math.sin(a)*0.82); g.add(m);
+      }
+      const bell = new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.48,0.55,8), new THREE.MeshLambertMaterial({color:0xB8860B}));
+      bell.position.set(0,8.15,0); g.add(bell);
+    });
+
+    // Agricultural: Traditional Windmill
+    _addLandmark('agricultural', g => {
+      const tower = new THREE.Mesh(new THREE.CylinderGeometry(0.9,1.4,8.5,10), stoneMat);
+      tower.position.y = 4.25; tower.castShadow = true; g.add(tower);
+      const cap = new THREE.Mesh(new THREE.ConeGeometry(1.0,2.0,10), woodMat);
+      cap.position.y = 9.5; cap.castShadow = true; g.add(cap);
+      const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.25,0.25,0.8,8), woodMat);
+      hub.rotation.z = Math.PI/2; hub.position.set(0,7.5,1.05); g.add(hub);
+      [[0,1],[1,0],[0,-1],[-1,0]].forEach(([ax,az],i) => {
+        const angle = i*Math.PI/2;
+        const arm = new THREE.Mesh(new THREE.BoxGeometry(0.12,4.0,0.12), woodMat);
+        arm.position.set(ax*2.0,7.5+az*2.0,1.05);
+        arm.rotation.z = angle; arm.castShadow = true; g.add(arm);
+        const sail = new THREE.Mesh(new THREE.PlaneGeometry(0.9,3.5), sailMat);
+        sail.position.set(ax*2.0,7.5+az*2.0,1.05);
+        sail.rotation.z = angle; g.add(sail);
+      });
+    });
+
+    // Advanced: Stone Watchtower with torch
+    _addLandmark('advanced', g => {
+      const tower = new THREE.Mesh(new THREE.CylinderGeometry(1.1,1.4,10.0,10), stoneMat);
+      tower.position.y = 5.0; tower.castShadow = true; g.add(tower);
+      for (let i=0;i<8;i++){
+        const a=(i/8)*Math.PI*2;
+        const m=new THREE.Mesh(new THREE.BoxGeometry(0.55,1.0,0.55), stoneMat);
+        m.position.set(Math.cos(a)*1.2,10.7,Math.sin(a)*1.2); g.add(m);
+      }
+      const top = new THREE.Mesh(new THREE.CylinderGeometry(1.3,1.1,0.4,10), dkStone);
+      top.position.y = 10.2; g.add(top);
+      const torchPole = new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.08,2.0,6), woodMat);
+      torchPole.position.set(0,12.0,0); g.add(torchPole);
+      const torchFire = new THREE.Mesh(new THREE.ConeGeometry(0.28,0.8,8), fireMat);
+      torchFire.position.set(0,13.4,0); g.add(torchFire);
+    });
+  }
+
+  // ── Event particle effects ─────────────────────────────────────────
+  function triggerEventEffect(type) {
+    if (!scene) return;
+    const COUNT = 60;
+    const positions = new Float32Array(COUNT * 3);
+    const velocities = [];
+    for (let i = 0; i < COUNT; i++) {
+      positions[i*3]   = (Math.random()-0.5)*4;
+      positions[i*3+1] = 2;
+      positions[i*3+2] = (Math.random()-0.5)*4;
+      velocities.push({
+        x: (Math.random()-0.5)*5,
+        y: Math.random()*12 + 4,
+        z: (Math.random()-0.5)*5,
+      });
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const colMap = { positive:0xFFD700, negative:0xFF2200, neutral:0x66BBFF };
+    const pMat = new THREE.PointsMaterial({ color:colMap[type]||0xFFFFFF, size:0.9, transparent:true, opacity:1.0 });
+    const particles = new THREE.Points(geo, pMat);
+    scene.add(particles);
+    const lCol = { positive:0xFFAA00, negative:0xFF2200, neutral:0x4499FF }[type] || 0xFFFFFF;
+    const light = new THREE.PointLight(lCol, 8, 70);
+    light.position.set(0, 8, 0);
+    scene.add(light);
+    effectGroups.push({ particles, light, velocities, age:0, maxAge:3.5 });
   }
 
   // ── Animate ───────────────────────────────────────────────────────
@@ -1157,6 +1326,27 @@ const CityScene = (() => {
 
     // Pedestrians
     _animatePedestrians(dt);
+
+    // Event particle effects
+    effectGroups = effectGroups.filter(eff => {
+      eff.age += dt;
+      if (eff.age >= eff.maxAge) {
+        scene.remove(eff.particles); scene.remove(eff.light);
+        eff.particles.geometry.dispose(); return false;
+      }
+      const t = eff.age / eff.maxAge;
+      const pos = eff.particles.geometry.attributes.position.array;
+      for (let i = 0; i < eff.velocities.length; i++) {
+        pos[i*3]   += eff.velocities[i].x * dt;
+        pos[i*3+1] += eff.velocities[i].y * dt;
+        pos[i*3+2] += eff.velocities[i].z * dt;
+        eff.velocities[i].y -= 9 * dt;
+      }
+      eff.particles.geometry.attributes.position.needsUpdate = true;
+      eff.particles.material.opacity = Math.max(0, 1 - t * 1.3);
+      eff.light.intensity = 8 * (1 - t);
+      return true;
+    });
 
     const sig = _getBuildSig();
     if (sig !== lastBuildSig) rebuildCity();
@@ -1248,6 +1438,7 @@ const CityScene = (() => {
     triggerPulse() { clickPulse = 1.0; },
     clearSelection: _clearSelection,
     rebuildCity,
+    triggerEventEffect,
     destroy() { animating = false; if (renderer) renderer.dispose(); },
   };
 })();
