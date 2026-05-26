@@ -681,7 +681,7 @@ const CityScene = (() => {
   const PED_CLOTH = [0x2244AA,0xAA2222,0x228844,0xCC8800,0x884488,0x555577,0x336655,0x993322];
 
   function _buildPedestrians() {
-    const count = 22;
+    const count = 60;
     for (let i = 0; i < count; i++) {
       const g = new THREE.Group();
       const wp = ROAD_WPS[i % ROAD_WPS.length];

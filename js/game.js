@@ -49,7 +49,7 @@ const GS = {
   lastClickTime: 0,
 
   // Population & happiness
-  population: 0,
+  population: 10,
   maxPopulation: 0,
   happiness: 60,       // 0–100
   taxRate: 0.15,       // 15% default
