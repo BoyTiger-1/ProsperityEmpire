@@ -679,48 +679,61 @@ const CityScene = (() => {
   // ── Pedestrian system ─────────────────────────────────────────────
   const PED_SKIN  = [0xFFDBAA,0xD4956E,0x8D5524,0xF1C27D,0xC68642];
   const PED_CLOTH = [0x2244AA,0xAA2222,0x228844,0xCC8800,0x884488,0x555577,0x336655,0x993322];
+  // Shared geometries — reused across all pedestrians
+  const _PED_BODY_GEO = new THREE.CylinderGeometry(0.10, 0.13, 0.58, 6);
+  const _PED_HEAD_GEO = new THREE.SphereGeometry(0.13, 6, 4);
+
+  function _spawnPedestrian() {
+    const g = new THREE.Group();
+    const wp = ROAD_WPS[Math.floor(Math.random() * ROAD_WPS.length)];
+    g.position.set(wp.x + (Math.random()-0.5)*2, 0.08, wp.z + (Math.random()-0.5)*2);
+    const body = new THREE.Mesh(
+      _PED_BODY_GEO,
+      new THREE.MeshLambertMaterial({ color: PED_CLOTH[Math.floor(Math.random() * PED_CLOTH.length)] })
+    );
+    body.position.y = 0.32; body.castShadow = true; g.add(body);
+    const head = new THREE.Mesh(
+      _PED_HEAD_GEO,
+      new THREE.MeshLambertMaterial({ color: PED_SKIN[Math.floor(Math.random() * PED_SKIN.length)] })
+    );
+    head.position.y = 0.74; head.castShadow = true; g.add(head);
+    cityGroup.add(g);
+    pedestrianGroups.push({
+      g,
+      targetIdx: Math.floor(Math.random() * ROAD_WPS.length),
+      speed: 1.2 + Math.random() * 1.8,
+      bobPhase: Math.random() * Math.PI * 2,
+    });
+  }
 
   function _buildPedestrians() {
-    const count = 60;
-    for (let i = 0; i < count; i++) {
-      const g = new THREE.Group();
-      const wp = ROAD_WPS[i % ROAD_WPS.length];
-      g.position.set(wp.x + (Math.random()-0.5)*1.5, 0.08, wp.z + (Math.random()-0.5)*1.5);
-      // Body
-      const body = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.10, 0.13, 0.58, 6),
-        new THREE.MeshLambertMaterial({ color: PED_CLOTH[i % PED_CLOTH.length] })
-      );
-      body.position.y = 0.32; body.castShadow = true; g.add(body);
-      // Head
-      const head = new THREE.Mesh(
-        new THREE.SphereGeometry(0.13, 6, 4),
-        new THREE.MeshLambertMaterial({ color: PED_SKIN[i % PED_SKIN.length] })
-      );
-      head.position.y = 0.74; head.castShadow = true; g.add(head);
-      cityGroup.add(g);
-      pedestrianGroups.push({
-        g,
-        targetIdx: (i * 3 + 5) % ROAD_WPS.length,
-        speed: 1.2 + (i * 0.19) % 1.8,
-        bobPhase: i * 0.9,
-      });
-    }
+    // Seed with current population at init
+    const initCount = (typeof GS !== 'undefined') ? Math.round(GS.population) : 0;
+    for (let i = 0; i < initCount; i++) _spawnPedestrian();
   }
 
   function _animatePedestrians(dt) {
-    const pop = (typeof GS !== 'undefined') ? GS.population : 0;
-    const visCount = Math.min(pedestrianGroups.length, Math.floor(pop / 5));
+    const popTarget = (typeof GS !== 'undefined') ? Math.round(GS.population) : 0;
+
+    // Spawn up to 10 per frame so large population jumps don't hitch
+    const toAdd = Math.min(10, popTarget - pedestrianGroups.length);
+    for (let i = 0; i < toAdd; i++) _spawnPedestrian();
+
+    // Remove excess (population decline / event deaths)
+    while (pedestrianGroups.length > popTarget) {
+      const ped = pedestrianGroups.pop();
+      cityGroup.remove(ped.g);
+      ped.g.children.forEach(c => { if (c.material) c.material.dispose(); });
+    }
+
+    // Animate every pedestrian
     const t = Date.now() * 0.001;
-    pedestrianGroups.forEach((ped, i) => {
-      ped.g.visible = i < visCount;
-      if (!ped.g.visible) return;
-      const target = ROAD_WPS[ped.targetIdx];
-      const dx = target.x - ped.g.position.x;
-      const dz = target.z - ped.g.position.z;
+    pedestrianGroups.forEach(ped => {
+      const wp = ROAD_WPS[ped.targetIdx];
+      const dx = wp.x - ped.g.position.x;
+      const dz = wp.z - ped.g.position.z;
       const dist = Math.sqrt(dx*dx + dz*dz);
       if (dist < 0.4) {
-        // Arrived — pick next waypoint (prefer nearby ones for realistic movement)
         const candidates = [
           (ped.targetIdx + 1) % ROAD_WPS.length,
           (ped.targetIdx + 2) % ROAD_WPS.length,
@@ -732,7 +745,6 @@ const CityScene = (() => {
         ped.g.position.x += (dx / dist) * step;
         ped.g.position.z += (dz / dist) * step;
         ped.g.rotation.y = Math.atan2(dx, dz);
-        // Walking bob
         ped.g.position.y = 0.08 + Math.abs(Math.sin(t * ped.speed * 4 + ped.bobPhase)) * 0.04;
       }
     });
