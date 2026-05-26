@@ -36,8 +36,8 @@
 
   --txt:     #e8e0d0;
   --txt2:    #b8a888;
-  --txt3:    #786848;
-  --txt4:    #484030;
+  --txt3:    #a09268;
+  --txt4:    #726450;
 
   --font-h:  'Playfair Display', Georgia, serif;
   --font-n:  'Courier Prime', 'Courier New', monospace;
@@ -322,8 +322,14 @@ button, input, select, a,
   border: 1px solid rgba(200,146,42,0.25); border-top: 2px solid var(--gold);
   padding: 8px 11px; user-select: none;
 }
-#click-power {
-  font-family: var(--font-n); font-size: 11px; color: var(--gold); letter-spacing: 1px;
+#city-click-cta {
+  font-family: var(--font-n); font-size: 11px; color: var(--gold2); letter-spacing: 3px;
+  text-transform: uppercase; text-align: center;
+  animation: cta-pulse 2.5s ease-in-out infinite;
+}
+@keyframes cta-pulse {
+  0%, 100% { opacity: 0.45; }
+  50%       { opacity: 1; }
 }
 #combo-display {
   font-family: var(--font-h); font-size: 13px; font-weight: 700; color: var(--gold3);

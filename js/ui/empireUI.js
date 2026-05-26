@@ -405,11 +405,6 @@ const EmpireUI = {
   render() {
     this.renderResourcePanel();
     PopulationEngine.updatePopBar();
-    const cpLabel = document.getElementById('click-power');
-    if (cpLabel) {
-      const eff = GS.clickPower * GS.prestige.permanentMultiplier * (GS.multipliers.clickPower || 1);
-      cpLabel.textContent = `⚡ +${FMT.num(eff, 1)} Labour / click`;
-    }
     // Refresh info panel if open
     const infoPanel = document.getElementById('empire-info-panel');
     if (infoPanel && infoPanel.classList.contains('eip-open')) {

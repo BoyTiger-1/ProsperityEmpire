@@ -112,7 +112,8 @@ const CityScene = (() => {
     const out = [];
     for (let i = 0; out.length < count && i < 500; i++) {
       const wx = cen.x + gx * step, wz = cen.z + gz * step;
-      if (Math.sqrt(wx*wx + wz*wz) > 4.5) out.push([wx, wz]);
+      // i > 0: skip zone centre — reserved for landmark building
+      if (i > 0 && Math.sqrt(wx*wx + wz*wz) > 4.5) out.push([wx, wz]);
       gx += D[dir][0]; gz += D[dir][1]; segCnt++;
       if (segCnt === seg) { segCnt = 0; dir = (dir+1)%4; turns++; if (turns%2===0) seg++; }
     }
@@ -552,8 +553,9 @@ const CityScene = (() => {
     const θ = rotTarget;
     const wx = zc.x * Math.cos(θ) + zc.z * Math.sin(θ);
     const wz = -zc.x * Math.sin(θ) + zc.z * Math.cos(θ);
-    camTarget  = { x: wx * 0.1, y: 28, z: Math.max(wz * 0.35, 0) + 42 };
-    lookTarget = { x: wx * 0.45, y: 5, z: wz * 0.62 };
+    // Tight zoom: bring camera close to landmark, low angle for drama
+    camTarget  = { x: wx * 0.45, y: 16, z: wz * 0.3 + 24 };
+    lookTarget = { x: wx * 0.8,  y: 6,  z: wz * 0.7 };
   }
 
   // ── Selection ────────────────────────────────────────────────────
@@ -622,12 +624,12 @@ const CityScene = (() => {
       m.rotation.x = -Math.PI/2; m.position.set(x, 0.10, z); cityGroup.add(m);
     });
 
-    // Zone colour tint patches — y=0.10 (clear of paved at 0.04)
+    // Zone colour tint patches — y=0.18 (above sidewalks at 0.10, no z-fight)
     const zonePatchCols = { residential:0xFF6633, agricultural:0x44CC44, industrial:0x4477CC,
       commercial:0xFFCC22, financial:0xFFAA00, knowledge:0x7744EE, advanced:0x22CCEE };
     Object.entries(ZONE_CENTERS).forEach(([zone, {x, z}]) => {
       const p = new THREE.Mesh(new THREE.PlaneGeometry(18, 18), new THREE.MeshLambertMaterial({ color:zonePatchCols[zone]||0xFFFFFF, transparent:true, opacity:0.07 }));
-      p.rotation.x = -Math.PI/2; p.position.set(x, 0.10, z); cityGroup.add(p);
+      p.rotation.x = -Math.PI/2; p.position.set(x, 0.18, z); cityGroup.add(p);
     });
 
     // Central monument plaza — y=0.12
@@ -713,9 +715,9 @@ const CityScene = (() => {
       stem.position.set(fx,0.15,fz); cityGroup.add(stem);
     });
 
-    // Park grass patches — y=0.04 (clear of base grass at 0)
+    // Park grass patches — y=0.04, outside paved area (±28) so no z-fight with paved
     const parkGrass = new THREE.MeshLambertMaterial({ color:0x3A8040 });
-    [[20,20,10,10],[-20,20,10,10],[20,-20,10,10],[-20,-20,10,10]].forEach(([px,pz,pw,pd]) => {
+    [[32,32,10,10],[-32,32,10,10],[32,-32,10,10],[-32,-32,10,10]].forEach(([px,pz,pw,pd]) => {
       const m = new THREE.Mesh(new THREE.PlaneGeometry(pw,pd), parkGrass);
       m.rotation.x = -Math.PI/2; m.position.set(px,0.04,pz); cityGroup.add(m);
     });
@@ -777,6 +779,207 @@ const CityScene = (() => {
         scene.add(s);
       });
     });
+  }
+
+  // ── Landmark buildings — one iconic structure per zone ───────────
+  function _buildLandmarks() {
+    // ── Financial zone [15,5]: Treasury Tower ──────────────────────
+    {
+      const g = new THREE.Group();
+      g.position.set(ZONE_CENTERS.financial.x, 0, ZONE_CENTERS.financial.z);
+      const ivoryStoneMat  = new THREE.MeshLambertMaterial({ color:0xF2EFE0 });
+      const goldMat        = new THREE.MeshLambertMaterial({ color:0xFFD700, emissive:new THREE.Color(0xAA8800), emissiveIntensity:0.55 });
+      // Base
+      const base = new THREE.Mesh(new THREE.BoxGeometry(3.6, 8.5, 3.6), ivoryStoneMat);
+      base.position.y = 4.25; base.castShadow = true; g.add(base);
+      // 4 corner columns
+      [[-1.5,-1.5],[1.5,-1.5],[-1.5,1.5],[1.5,1.5]].forEach(([cx,cz]) => {
+        const col = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.28, 9.5, 8), ivoryStoneMat);
+        col.position.set(cx, 4.75, cz); col.castShadow = true; g.add(col);
+      });
+      // Gold dome
+      const dome = new THREE.Mesh(new THREE.SphereGeometry(1.8, 12, 8, 0, Math.PI*2, 0, Math.PI/2), goldMat);
+      dome.position.y = 8.5; g.add(dome);
+      // Needle spire
+      const spire = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.18, 5.5, 6), goldMat);
+      spire.position.y = 12.2; spire.castShadow = true; g.add(spire);
+      cityGroup.add(g);
+    }
+    // ── Knowledge zone [0,-18]: Grand Academy ──────────────────────
+    {
+      const g = new THREE.Group();
+      g.position.set(ZONE_CENTERS.knowledge.x, 0, ZONE_CENTERS.knowledge.z);
+      const stoneMat = new THREE.MeshLambertMaterial({ color:0xD8D0C0 });
+      const blueMat  = new THREE.MeshLambertMaterial({ color:0x4466CC, emissive:new THREE.Color(0x223388), emissiveIntensity:0.4 });
+      // Stepped base
+      const step1 = new THREE.Mesh(new THREE.BoxGeometry(5.0, 0.6, 5.0), stoneMat);
+      step1.position.y = 0.3; step1.castShadow = true; g.add(step1);
+      const step2 = new THREE.Mesh(new THREE.BoxGeometry(4.0, 0.5, 4.0), stoneMat);
+      step2.position.y = 0.85; step2.castShadow = true; g.add(step2);
+      // Main hall
+      const hall = new THREE.Mesh(new THREE.BoxGeometry(3.2, 6.5, 3.2), stoneMat);
+      hall.position.y = 4.6; hall.castShadow = true; g.add(hall);
+      // 4 columns (front facade)
+      [-1.1,-0.37,0.37,1.1].forEach(cx => {
+        const col = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.26, 7.2, 8), stoneMat);
+        col.position.set(cx, 3.6, 1.8); col.castShadow = true; g.add(col);
+      });
+      // Blue dome
+      const dome = new THREE.Mesh(new THREE.SphereGeometry(1.65, 12, 8, 0, Math.PI*2, 0, Math.PI/2), blueMat);
+      dome.position.y = 7.9; g.add(dome);
+      // Finial
+      const fin = new THREE.Mesh(new THREE.ConeGeometry(0.22, 2.2, 6), new THREE.MeshLambertMaterial({ color:0xFFD700 }));
+      fin.position.y = 10.6; fin.castShadow = true; g.add(fin);
+      cityGroup.add(g);
+    }
+    // ── Industrial zone [-15,-12]: Grand Foundry ───────────────────
+    {
+      const g = new THREE.Group();
+      g.position.set(ZONE_CENTERS.industrial.x, 0, ZONE_CENTERS.industrial.z);
+      const ironMat    = new THREE.MeshLambertMaterial({ color:0x3A3A4A });
+      const brickMat   = new THREE.MeshLambertMaterial({ color:0x7A5535 });
+      const glowMat    = new THREE.MeshLambertMaterial({ color:0xFF6600, emissive:new THREE.Color(0xFF4400), emissiveIntensity:0.9 });
+      // Wide main building
+      const body = new THREE.Mesh(new THREE.BoxGeometry(5.0, 5.5, 3.5), brickMat);
+      body.position.y = 2.75; body.castShadow = true; g.add(body);
+      // Iron roof band
+      const roof = new THREE.Mesh(new THREE.BoxGeometry(5.2, 0.4, 3.7), ironMat);
+      roof.position.y = 5.7; g.add(roof);
+      // 3 chimneys with torus rings and glowing tops
+      [-1.4, 0, 1.4].forEach((cx, i) => {
+        const chimney = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.35, 7.0 + i*0.8, 8), ironMat);
+        chimney.position.set(cx, 9.25 + i*0.4, 0); chimney.castShadow = true; g.add(chimney);
+        // Torus rings
+        [3.0, 5.5].forEach(ry => {
+          const ring = new THREE.Mesh(new THREE.TorusGeometry(0.38, 0.07, 6, 12), ironMat);
+          ring.position.set(cx, ry, 0); ring.rotation.x = Math.PI/2; g.add(ring);
+        });
+        // Glowing cone top
+        const tip = new THREE.Mesh(new THREE.ConeGeometry(0.32, 0.55, 8), glowMat);
+        tip.position.set(cx, 13.15 + i*0.8, 0); g.add(tip);
+      });
+      cityGroup.add(g);
+    }
+    // ── Commercial zone [14,-12]: Grand Exchange ───────────────────
+    {
+      const g = new THREE.Group();
+      g.position.set(ZONE_CENTERS.commercial.x, 0, ZONE_CENTERS.commercial.z);
+      const sandMat  = new THREE.MeshLambertMaterial({ color:0xD4A85A });
+      const darkMat  = new THREE.MeshLambertMaterial({ color:0x333322 });
+      const clockMat = new THREE.MeshLambertMaterial({ color:0xEEEEDD, emissive:new THREE.Color(0x888866), emissiveIntensity:0.3 });
+      // Main arcade building
+      const body = new THREE.Mesh(new THREE.BoxGeometry(4.5, 5.0, 3.0), sandMat);
+      body.position.y = 2.5; body.castShadow = true; g.add(body);
+      // 4 facade arch columns
+      [-1.35,-0.45,0.45,1.35].forEach(cx => {
+        const col = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.22, 5.4, 7), sandMat);
+        col.position.set(cx, 2.7, 1.6); col.castShadow = true; g.add(col);
+        // Arch cap
+        const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.18, 0.25, 7), sandMat);
+        cap.position.set(cx, 5.5, 1.6); g.add(cap);
+      });
+      // Pediment frieze
+      const ped = new THREE.Mesh(new THREE.BoxGeometry(4.6, 0.5, 0.2), sandMat);
+      ped.position.set(0, 5.8, 1.6); g.add(ped);
+      // Clock tower
+      const tower = new THREE.Mesh(new THREE.BoxGeometry(1.2, 6.5, 1.2), sandMat);
+      tower.position.set(0, 8.75, 0); tower.castShadow = true; g.add(tower);
+      const clockFace = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 0.12, 16), clockMat);
+      clockFace.rotation.z = Math.PI/2; clockFace.position.set(0.72, 11.0, 0); g.add(clockFace);
+      // Spire
+      const spire = new THREE.Mesh(new THREE.ConeGeometry(0.3, 3.0, 8), darkMat);
+      spire.position.set(0, 13.75, 0); spire.castShadow = true; g.add(spire);
+      cityGroup.add(g);
+    }
+    // ── Residential zone [13,12]: Town Hall ────────────────────────
+    {
+      const g = new THREE.Group();
+      g.position.set(ZONE_CENTERS.residential.x, 0, ZONE_CENTERS.residential.z);
+      const brickMat  = new THREE.MeshLambertMaterial({ color:0xCC5533 });
+      const whiteMat  = new THREE.MeshLambertMaterial({ color:0xEEEEDD });
+      const goldMat   = new THREE.MeshLambertMaterial({ color:0xFFD700, emissive:new THREE.Color(0xAA8800), emissiveIntensity:0.5 });
+      // Main body
+      const body = new THREE.Mesh(new THREE.BoxGeometry(4.0, 5.0, 3.2), brickMat);
+      body.position.y = 2.5; body.castShadow = true; g.add(body);
+      // 4 white portico columns
+      [-1.1,-0.37,0.37,1.1].forEach(cx => {
+        const col = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.22, 5.5, 8), whiteMat);
+        col.position.set(cx, 2.75, 1.7); col.castShadow = true; g.add(col);
+      });
+      // Pediment
+      const ped = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 2.3, 1.2, 4), whiteMat);
+      ped.position.set(0, 6.1, 1.0); ped.rotation.y = Math.PI/4; g.add(ped);
+      // Central bell tower
+      const tower = new THREE.Mesh(new THREE.BoxGeometry(1.4, 5.0, 1.4), brickMat);
+      tower.position.set(0, 7.5, 0); tower.castShadow = true; g.add(tower);
+      const belfry = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.75, 1.2, 8), whiteMat);
+      belfry.position.set(0, 10.6, 0); g.add(belfry);
+      // Golden bell
+      const bell = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.5, 0.55, 8), goldMat);
+      bell.position.set(0, 10.9, 0); g.add(bell);
+      // Spire cap
+      const spire = new THREE.Mesh(new THREE.ConeGeometry(0.4, 2.8, 8), whiteMat);
+      spire.position.set(0, 12.6, 0); spire.castShadow = true; g.add(spire);
+      cityGroup.add(g);
+    }
+    // ── Agricultural zone [-14,10]: Great Windmill ─────────────────
+    {
+      const g = new THREE.Group();
+      g.position.set(ZONE_CENTERS.agricultural.x, 0, ZONE_CENTERS.agricultural.z);
+      const stoneMat = new THREE.MeshLambertMaterial({ color:0xBBAA88 });
+      const woodMat  = new THREE.MeshLambertMaterial({ color:0x7B5330 });
+      const sailMat  = new THREE.MeshLambertMaterial({ color:0xF5F0E0, side:THREE.DoubleSide });
+      // Stone tower (tapered cylinder)
+      const tower = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 1.4, 8.5, 10), stoneMat);
+      tower.position.y = 4.25; tower.castShadow = true; g.add(tower);
+      // Conical cap
+      const cap = new THREE.Mesh(new THREE.ConeGeometry(1.0, 2.0, 10), woodMat);
+      cap.position.y = 9.5; cap.castShadow = true; g.add(cap);
+      // Hub
+      const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 0.8, 8), woodMat);
+      hub.rotation.z = Math.PI/2; hub.position.set(0, 7.5, 1.05); g.add(hub);
+      // 4 arms + sail planes
+      [[0,1],[1,0],[0,-1],[-1,0]].forEach(([ax,az], i) => {
+        const angle = i * Math.PI/2;
+        const arm = new THREE.Mesh(new THREE.BoxGeometry(0.12, 4.0, 0.12), woodMat);
+        arm.position.set(ax*2.0, 7.5 + az*2.0, 1.05);
+        arm.rotation.z = angle; arm.castShadow = true; g.add(arm);
+        const sail = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 3.5), sailMat);
+        sail.position.set(ax*2.0, 7.5 + az*2.0, 1.05);
+        sail.rotation.z = angle; g.add(sail);
+      });
+      cityGroup.add(g);
+    }
+    // ── Advanced zone [-6,-27]: Observatory ────────────────────────
+    {
+      const g = new THREE.Group();
+      g.position.set(ZONE_CENTERS.advanced.x, 0, ZONE_CENTERS.advanced.z);
+      const darkMat  = new THREE.MeshLambertMaterial({ color:0x222233 });
+      const steelMat = new THREE.MeshLambertMaterial({ color:0x8899BB });
+      const glassMat = new THREE.MeshLambertMaterial({ color:0x44AAFF, transparent:true, opacity:0.55, emissive:new THREE.Color(0x1155AA), emissiveIntensity:0.5 });
+      // Narrow tower
+      const tower = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 1.0, 11.0, 10), darkMat);
+      tower.position.y = 5.5; tower.castShadow = true; g.add(tower);
+      // 3 structural fins
+      [0, 120, 240].forEach(deg => {
+        const fin = new THREE.Mesh(new THREE.BoxGeometry(2.4, 7.0, 0.12), steelMat);
+        fin.position.set(0, 5.5, 0);
+        fin.rotation.y = deg * Math.PI/180; fin.castShadow = true; g.add(fin);
+      });
+      // Observatory ring
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(1.6, 0.22, 8, 20), steelMat);
+      ring.position.y = 11.2; ring.rotation.x = Math.PI/2; g.add(ring);
+      // Glass dome (half-sphere)
+      const dome = new THREE.Mesh(new THREE.SphereGeometry(1.6, 12, 8, 0, Math.PI*2, 0, Math.PI/2), glassMat);
+      dome.position.y = 11.2; g.add(dome);
+      // Antenna
+      const ant = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.06, 5.5, 6), steelMat);
+      ant.position.y = 14.75; ant.castShadow = true; g.add(ant);
+      // Satellite dish
+      const dish = new THREE.Mesh(new THREE.SphereGeometry(0.65, 8, 6, 0, Math.PI*2, 0, Math.PI/2), steelMat);
+      dish.position.set(0.9, 13.0, 0); dish.rotation.z = -Math.PI/3; g.add(dish);
+      cityGroup.add(g);
+    }
   }
 
   // ── Animate ───────────────────────────────────────────────────────
@@ -876,6 +1079,7 @@ const CityScene = (() => {
 
       clock = new THREE.Clock();
       _buildGround();
+      _buildLandmarks();
       _buildEnvironment();
       rebuildCity();
 
