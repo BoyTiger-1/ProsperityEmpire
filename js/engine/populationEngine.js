@@ -61,8 +61,52 @@ const PopulationEngine = {
     GS.population = Math.max(0, Math.min(GS.maxPopulation, GS.population + growthPerSec * dt));
     GS.population = Math.round(GS.population);
 
+    this.updateCityMetrics();
     this.updateHappiness(dt);
     this.updatePopBar();
+  },
+
+  updateCityMetrics() {
+    const b = GS.buildings;
+    // Pollution: industrial buildings generate it, clean buildings reduce it
+    const polSrc = { coalMine:4, factory:7, steelMill:11, powerPlant:8, oilRefinery:9, cryptoFarm:5, textileMill:3 };
+    const polSink = { solarFarm:6, hospital:2, school:1, university:2 };
+    let rawPol = 0;
+    for (const [id, v] of Object.entries(polSrc)) rawPol += (b[id]||0) * v;
+    for (const [id, v] of Object.entries(polSink)) rawPol -= (b[id]||0) * v;
+    GS.pollution = Math.max(0, Math.min(100, rawPol));
+
+    // Education: from learning/knowledge buildings
+    const eduSrc = { school:5, library:8, university:20, researchInstitute:30, techPark:15, mediaEmpire:8 };
+    let rawEdu = 0;
+    for (const [id, v] of Object.entries(eduSrc)) rawEdu += (b[id]||0) * v;
+    GS.educationLevel = Math.min(100, rawEdu);
+
+    // Crime: from overcrowding + low happiness, reduced by education
+    const popRatio = GS.maxPopulation > 0 ? GS.population / GS.maxPopulation : 0;
+    const crimeOvr = Math.max(0, popRatio - 0.72) * 110;
+    const crimeUnhap = Math.max(0, 45 - GS.happiness) * 0.7;
+    const crimeEduRed = GS.educationLevel * 0.25;
+    GS.crimeRate = Math.max(0, Math.min(100, crimeOvr + crimeUnhap - crimeEduRed));
+
+    // Housing stress
+    GS.housingStress = GS.maxPopulation > 0 ? (GS.population / GS.maxPopulation) * 100 : 0;
+
+    // Housing crisis notifications
+    if (GS.housingStress >= 100 && GS.maxPopulation > 0 && !GS._housingCrisisNotified) {
+      GS._housingCrisisNotified = true;
+      if (typeof Notifications !== 'undefined')
+        Notifications.show('🏘️ Housing Crisis!', 'Population has reached maximum capacity. Build more housing or people will leave!', 'error', 6000);
+    } else if (GS.housingStress < 95) {
+      GS._housingCrisisNotified = false;
+    }
+    if (GS.housingStress >= 85 && GS.housingStress < 100 && !GS._housingShortageNotified) {
+      GS._housingShortageNotified = true;
+      if (typeof Notifications !== 'undefined')
+        Notifications.show('🏠 Housing Shortage', 'Nearly full! Expand housing to keep growing.', 'warning', 5000);
+    } else if (GS.housingStress < 80) {
+      GS._housingShortageNotified = false;
+    }
   },
 
   updateHappiness(dt) {
@@ -91,6 +135,25 @@ const PopulationEngine = {
     const hospitals = GS.buildings.hospital || 0;
     if (hospitals >= 3) target += 12;
     else if (hospitals >= 1) target += 5;
+
+    // Pollution penalty
+    if (GS.pollution > 75) target -= 20;
+    else if (GS.pollution > 50) target -= 10;
+    else if (GS.pollution > 25) target -= 5;
+
+    // Crime penalty
+    if (GS.crimeRate > 60) target -= 18;
+    else if (GS.crimeRate > 35) target -= 8;
+    else if (GS.crimeRate > 20) target -= 3;
+
+    // Education bonus
+    if (GS.educationLevel > 70) target += 12;
+    else if (GS.educationLevel > 40) target += 6;
+    else if (GS.educationLevel > 20) target += 3;
+
+    // Housing overcrowding penalty (beyond what's in overpopulation check)
+    if (GS.housingStress > 95) target -= 12;
+    else if (GS.housingStress > 85) target -= 5;
 
     // Clamp target
     target = Math.max(10, Math.min(95, target));

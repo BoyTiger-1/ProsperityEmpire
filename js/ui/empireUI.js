@@ -51,6 +51,7 @@ const EmpireUI = {
         const open = infoPanel.classList.toggle('eip-open');
         if (open) {
           this.renderProduction(); this.renderStats();
+          this.renderCityVitals();
           this.renderAdvisors();  this.renderMilestones();
           if (typeof NewsUI !== 'undefined') NewsUI.render();
         }
@@ -283,8 +284,10 @@ const EmpireUI = {
       `CAPITAL ${FMT.rate(GS.resources.capital.perSec)}`,
       `LABOUR ${FMT.num(GS.resources.labor.amount, 0)}`,
       `KNOWLEDGE ${FMT.num(GS.resources.knowledge.amount, 0)}`,
-      `POPULATION ${FMT.num(GS.population, 0)}`,
+      `POPULATION ${FMT.num(GS.population, 0)} / ${FMT.num(GS.maxPopulation, 0)}`,
       `HAPPINESS ${GS.happiness.toFixed(0)}%`,
+      `POLLUTION ${(GS.pollution||0).toFixed(0)}%`,
+      `EDUCATION ${(GS.educationLevel||0).toFixed(0)}%`,
       `PHASE: ${PHASE_LABELS[GS.phase]}`,
       `BUILDINGS: ${Object.values(GS.buildings).reduce((a,v)=>a+v,0)}`,
       `TECHS: ${Object.keys(GS.techs).length}`,
@@ -348,7 +351,12 @@ const EmpireUI = {
       ['Economic Phase',       PHASE_LABELS[GS.phase]],
       ['Empire Age',           FMT.playtime(GS.session.empireAge * 1000)],
       ['Population',           FMT.num(GS.population,0) + ' / ' + FMT.num(GS.maxPopulation,0)],
+      ['Pop Growth Rate',      ((GS.popGrowthRate||0) >= 0 ? '+' : '') + (GS.popGrowthRate||0).toFixed(1) + '/s'],
       ['Happiness',            GS.happiness.toFixed(0) + '%'],
+      ['Housing Stress',       (GS.housingStress||0).toFixed(0) + '%'],
+      ['Pollution',            (GS.pollution||0).toFixed(0) + '%'],
+      ['Education Level',      (GS.educationLevel||0).toFixed(0) + '%'],
+      ['Crime Rate',           (GS.crimeRate||0).toFixed(0) + '%'],
       ['Tax Rate',             (GS.taxRate*100).toFixed(0) + '%'],
       ['Total Capital Earned', FMT.currency(GS.stats.totalCapitalEarned)],
       ['Buildings Owned',      FMT.num(bldCount,0)],
@@ -358,6 +366,48 @@ const EmpireUI = {
       ['Prestige Count',       GS.prestige.count],
       ['Achievements',         GS.achievements.size + ' / ' + ACHIEVEMENTS_DATA.length],
     ].map(([k,v]) => `<div class="stat-row"><span class="stat-label">${k}</span><span class="stat-val">${v}</span></div>`).join('');
+  },
+
+  renderCityVitals() {
+    const list = document.getElementById('city-vitals-list');
+    if (!list) return;
+    const vitals = [
+      {
+        name: '🏘️ Housing',
+        val: GS.housingStress,
+        fmt: v => v.toFixed(0) + '%',
+        note: v => v >= 100 ? '⚠️ CRISIS' : v >= 85 ? '⚠️ SHORTAGE' : v >= 60 ? '◉ STRAINED' : '✓ STABLE',
+        cls: v => v >= 85 ? 'neg' : v >= 60 ? 'warn' : 'pos',
+      },
+      {
+        name: '💨 Pollution',
+        val: GS.pollution,
+        fmt: v => v.toFixed(0) + '%',
+        note: v => v >= 75 ? '⚠️ SEVERE' : v >= 50 ? '⚠️ HIGH' : v >= 25 ? '◉ MODERATE' : '✓ CLEAN',
+        cls: v => v >= 75 ? 'neg' : v >= 50 ? 'warn' : v >= 25 ? '' : 'pos',
+      },
+      {
+        name: '🎓 Education',
+        val: GS.educationLevel,
+        fmt: v => v.toFixed(0) + '%',
+        note: v => v >= 70 ? '✓ EXCELLENT (+20%)' : v >= 40 ? '✓ GOOD (+10%)' : v >= 20 ? '◉ BASIC (+5%)' : '✗ POOR',
+        cls: v => v >= 40 ? 'pos' : v >= 20 ? '' : 'neg',
+      },
+      {
+        name: '🔒 Crime',
+        val: GS.crimeRate,
+        fmt: v => v.toFixed(0) + '%',
+        note: v => v >= 60 ? '⚠️ HIGH (-8% prod)' : v >= 35 ? '⚠️ MODERATE' : v >= 20 ? '◉ LOW' : '✓ MINIMAL',
+        cls: v => v >= 60 ? 'neg' : v >= 35 ? 'warn' : 'pos',
+      },
+    ];
+    list.innerHTML = vitals.map(v => {
+      const cls = v.cls(v.val);
+      return `<div class="stat-row">
+        <span class="stat-label">${v.name}</span>
+        <span class="stat-val ${cls}">${v.fmt(v.val)} — ${v.note(v.val)}</span>
+      </div>`;
+    }).join('');
   },
 
   renderAdvisors() {
@@ -403,6 +453,16 @@ const EmpireUI = {
       msgs.push({avatar:'🎓', name:'Finance Professor', message:'The Academy has financial questions. Answer them to earn bonus resources and Knowledge Points!'});
     } else if (bldCount > 20 && !GS.policies.free_market && !GS.policies.mixed_economy && !GS.policies.command_economy) {
       msgs.push({avatar:'📜', name:'Policy Adviser', message:'Your empire is large enough for an economic doctrine. Visit Policies to choose your strategy.'});
+    }
+
+    if (GS.pollution > 55) {
+      msgs.push({avatar:'🌿', name:'Environmental Adviser', message:'Pollution is severe — it reduces happiness and production. Build Solar Farms and reduce Coal Mines and Factories to clean up your city.'});
+    } else if (GS.educationLevel < 15 && bldCount > 8) {
+      msgs.push({avatar:'📚', name:'Education Minister', message:'Education is very low. Schools, Libraries, and Universities boost worker productivity by up to +20%. Invest in education now.'});
+    } else if (GS.crimeRate > 55) {
+      msgs.push({avatar:'⚖️', name:'Justice Minister', message:'Crime is dangerously high — it saps happiness and disrupts production. Improve happiness, reduce overcrowding, and build Schools.'});
+    } else if (GS.housingStress > 90) {
+      msgs.push({avatar:'🏠', name:'Housing Minister', message:'Your city is severely overcrowded. Build Cottages, Houses, Apartments, or larger residential buildings immediately.'});
     }
 
     return msgs.slice(0,3);

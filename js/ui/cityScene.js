@@ -6,6 +6,7 @@ const CityScene = (() => {
   let pedestrianGroups = [];
   let landmarkGroups = [];
   let effectGroups = [];
+  let envAnim = null;
   let animating = false;
   let clickPulse = 0;
   let rotAngle = 0;
@@ -1248,33 +1249,99 @@ const CityScene = (() => {
     });
   }
 
+  // ── Per-event effect configs (color, particle pattern, env change) ──
+  const EVENT_FX = {
+    goldRush:           { col:0xFFD700, lCol:0xFFAA00, pat:'burst', sz:1.1, grav:-9 },
+    harvestFestival:    { col:0x88FF44, lCol:0x66CC22, pat:'burst', sz:0.9, grav:-9 },
+    tradeBoom:          { col:0xFFCC22, lCol:0xFFAA00, pat:'ring',  sz:1.0, grav:-5 },
+    inventorVisit:      { col:0x44FFFF, lCol:0x22CCFF, pat:'burst', sz:1.0, grav:-9 },
+    investorConference: { col:0xFFEE00, lCol:0xFFCC00, pat:'burst', sz:1.2, grav:-9 },
+    techBreakthrough:   { col:0x44EEFF, lCol:0x22AAFF, pat:'burst', sz:1.1, grav:-9 },
+    migrationWave:      { col:0xFF9944, lCol:0xFF7722, pat:'ring',  sz:1.0, grav:-4 },
+    bullMarket:         { col:0x44FF44, lCol:0x22DD22, pat:'burst', sz:1.0, grav:-9 },
+    babyBoom:           { col:0xFFAACC, lCol:0xFF88AA, pat:'ring',  sz:0.8, grav:-4 },
+    refugeeFlux:        { col:0xFF9944, lCol:0xFF7722, pat:'ring',  sz:0.9, grav:-4 },
+    techInnovation:     { col:0x44FFDD, lCol:0x22CCAA, pat:'burst', sz:1.0, grav:-9 },
+    touristBoom:        { col:0xFFDD44, lCol:0xFFBB22, pat:'ring',  sz:1.0, grav:-4 },
+    stockRally:         { col:0x44FF88, lCol:0x22DD66, pat:'burst', sz:1.1, grav:-9 },
+    energySurplus:      { col:0xFFFF44, lCol:0xFFDD22, pat:'burst', sz:1.2, grav:-9 },
+    goodWeather:        { col:0x88FFAA, lCol:0x66DD88, pat:'ring',  sz:0.9, grav:-4 },
+    immigrationWave:    { col:0xFFAA44, lCol:0xFF8822, pat:'ring',  sz:0.9, grav:-4 },
+    drought:      { col:0xFF8800, lCol:0xFF6600, pat:'fall',  sz:0.8, grav:-2,  dur:6.0, fogCol:0xD4A040, skyCol:0xC07020 },
+    flood:        { col:0x2277FF, lCol:0x0055DD, pat:'rise',  sz:1.0, grav:-6,  dur:5.0, fogCol:0x4466AA, skyCol:0x223366 },
+    pandemic:     { col:0x44BB44, lCol:0x228822, pat:'mist',  sz:0.6, grav:-0.5,dur:7.0, fogCol:0x334433, skyCol:0x223322 },
+    greatPlague:  { col:0x335533, lCol:0x112211, pat:'mist',  sz:0.5, grav:-0.3,dur:8.0, fogCol:0x1A2210, skyCol:0x0D1108 },
+    famine:       { col:0x886633, lCol:0x664422, pat:'fall',  sz:0.7, grav:-1.5,dur:5.0, fogCol:0x8B7355, skyCol:0x5C4A2A },
+    recession:    { col:0xFF2222, lCol:0xDD0000, pat:'fall',  sz:0.8, grav:-2.5,dur:6.0, fogCol:0x441122, skyCol:0x220811 },
+    bankRun:      { col:0xFF4400, lCol:0xDD2200, pat:'fall',  sz:0.9, grav:-2,  dur:5.0, fogCol:0x442211, skyCol:0x221100 },
+    workerStrike: { col:0xFF6600, lCol:0xFF4400, pat:'ring',  sz:1.1, grav:-4 },
+    powerOutage:  { col:0x777777, lCol:0x333333, pat:'flash', sz:2.0, grav:-5,  dur:3.0, fogCol:0x111111, skyCol:0x080808 },
+    cyberAttack:  { col:0x00FF44, lCol:0x00AA22, pat:'mist',  sz:0.7, grav:-0.5,dur:6.0, fogCol:0x001A00, skyCol:0x002200 },
+    warDraft:     { col:0xFF3300, lCol:0xFF1100, pat:'burst', sz:1.3, grav:-9,  dur:4.0, fogCol:0x5A2A00, skyCol:0x3A1800 },
+    emigrationCrisis:{ col:0xAA4422, lCol:0x882200, pat:'fall', sz:0.8, grav:-2 },
+    supplyShock:  { col:0xFF6633, lCol:0xFF4411, pat:'fall',  sz:0.8, grav:-2 },
+  };
+
   // ── Event particle effects ─────────────────────────────────────────
-  function triggerEventEffect(type) {
+  function triggerEventEffect(type, eventId) {
     if (!scene) return;
-    const COUNT = 60;
+    const dflt = type === 'positive'
+      ? { col:0xFFD700, lCol:0xFFAA00, pat:'burst', sz:1.0, grav:-9 }
+      : type === 'negative'
+      ? { col:0xFF2200, lCol:0xFF0000, pat:'fall',  sz:0.8, grav:-2 }
+      : { col:0x66BBFF, lCol:0x4499FF, pat:'ring',  sz:1.0, grav:-4 };
+    const fx = EVENT_FX[eventId] || dflt;
+
+    const COUNT = fx.pat === 'flash' ? 12 : 60;
     const positions = new Float32Array(COUNT * 3);
     const velocities = [];
     for (let i = 0; i < COUNT; i++) {
-      positions[i*3]   = (Math.random()-0.5)*4;
-      positions[i*3+1] = 2;
-      positions[i*3+2] = (Math.random()-0.5)*4;
-      velocities.push({
-        x: (Math.random()-0.5)*5,
-        y: Math.random()*12 + 4,
-        z: (Math.random()-0.5)*5,
-      });
+      let x, y, z, vx, vy, vz;
+      switch (fx.pat) {
+        case 'fall':
+          x=(Math.random()-0.5)*40; y=18+Math.random()*14; z=(Math.random()-0.5)*40;
+          vx=(Math.random()-0.5)*2; vy=-Math.random()*4-1; vz=(Math.random()-0.5)*2; break;
+        case 'ring': { const a=(i/COUNT)*Math.PI*2+(Math.random()-0.5)*0.5, r=2+Math.random()*4;
+          x=Math.cos(a)*r; y=0.8+Math.random()*0.5; z=Math.sin(a)*r;
+          vx=Math.cos(a)*(4+Math.random()*5); vy=Math.random()*2+0.5; vz=Math.sin(a)*(4+Math.random()*5); break; }
+        case 'mist':
+          x=(Math.random()-0.5)*16; y=Math.random()*3; z=(Math.random()-0.5)*16;
+          vx=(Math.random()-0.5)*1.5; vy=Math.random()*0.5; vz=(Math.random()-0.5)*1.5; break;
+        case 'rise':
+          x=(Math.random()-0.5)*8; y=0; z=(Math.random()-0.5)*8;
+          vx=(Math.random()-0.5)*4; vy=Math.random()*8+3; vz=(Math.random()-0.5)*4; break;
+        case 'flash':
+          x=(Math.random()-0.5)*24; y=Math.random()*18; z=(Math.random()-0.5)*24;
+          vx=(Math.random()-0.5)*3; vy=(Math.random()-0.5)*3; vz=(Math.random()-0.5)*3; break;
+        default:
+          x=(Math.random()-0.5)*4; y=2; z=(Math.random()-0.5)*4;
+          vx=(Math.random()-0.5)*5; vy=Math.random()*12+4; vz=(Math.random()-0.5)*5;
+      }
+      positions[i*3]=x; positions[i*3+1]=y; positions[i*3+2]=z;
+      velocities.push({ x:vx, y:vy, z:vz });
     }
+
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    const colMap = { positive:0xFFD700, negative:0xFF2200, neutral:0x66BBFF };
-    const pMat = new THREE.PointsMaterial({ color:colMap[type]||0xFFFFFF, size:0.9, transparent:true, opacity:1.0 });
+    const pMat = new THREE.PointsMaterial({ color:fx.col, size:(fx.sz||1)*0.9, transparent:true, opacity:1.0 });
     const particles = new THREE.Points(geo, pMat);
     scene.add(particles);
-    const lCol = { positive:0xFFAA00, negative:0xFF2200, neutral:0x4499FF }[type] || 0xFFFFFF;
-    const light = new THREE.PointLight(lCol, 8, 70);
-    light.position.set(0, 8, 0);
+
+    const initInt = fx.pat === 'flash' ? 22 : 8;
+    const light = new THREE.PointLight(fx.lCol, initInt, 80);
+    light.position.set(0, 10, 0);
     scene.add(light);
-    effectGroups.push({ particles, light, velocities, age:0, maxAge:3.5 });
+    effectGroups.push({ particles, light, velocities, grav:fx.grav??-9, initInt, age:0, maxAge:fx.dur||3.5 });
+
+    // Atmospheric environmental change
+    if (fx.fogCol && scene.fog && scene.background) {
+      envAnim = {
+        fogOrig: scene.fog.color.getHex(), skyOrig: scene.background.getHex(),
+        fogTarget: fx.fogCol, skyTarget: fx.skyCol || fx.fogCol,
+        inDur:0.6, holdDur:(fx.dur||3.5)*0.6, outDur:2.5,
+        phase:'in', timer:0,
+      };
+    }
   }
 
   // ── Animate ───────────────────────────────────────────────────────
@@ -1340,13 +1407,32 @@ const CityScene = (() => {
         pos[i*3]   += eff.velocities[i].x * dt;
         pos[i*3+1] += eff.velocities[i].y * dt;
         pos[i*3+2] += eff.velocities[i].z * dt;
-        eff.velocities[i].y -= 9 * dt;
+        eff.velocities[i].y += eff.grav * dt;
       }
       eff.particles.geometry.attributes.position.needsUpdate = true;
-      eff.particles.material.opacity = Math.max(0, 1 - t * 1.3);
-      eff.light.intensity = 8 * (1 - t);
+      eff.particles.material.opacity = Math.max(0, 1 - t * 1.2);
+      eff.light.intensity = (eff.initInt || 8) * Math.max(0, 1 - t * 1.2);
       return true;
     });
+
+    // Environmental atmospheric animation (fog + sky color)
+    if (envAnim) {
+      envAnim.timer += dt;
+      const ea = envAnim;
+      if (ea.phase === 'in') {
+        const t = Math.min(1, ea.timer / ea.inDur);
+        scene.fog.color.lerpColors(new THREE.Color(ea.fogOrig), new THREE.Color(ea.fogTarget), t);
+        scene.background.lerpColors(new THREE.Color(ea.skyOrig), new THREE.Color(ea.skyTarget), t);
+        if (t >= 1) { ea.phase = 'hold'; ea.timer = 0; }
+      } else if (ea.phase === 'hold') {
+        if (ea.timer >= ea.holdDur) { ea.phase = 'out'; ea.timer = 0; }
+      } else {
+        const t = Math.min(1, ea.timer / ea.outDur);
+        scene.fog.color.lerpColors(new THREE.Color(ea.fogTarget), new THREE.Color(ea.fogOrig), t);
+        scene.background.lerpColors(new THREE.Color(ea.skyTarget), new THREE.Color(ea.skyOrig), t);
+        if (t >= 1) envAnim = null;
+      }
+    }
 
     const sig = _getBuildSig();
     if (sig !== lastBuildSig) rebuildCity();

@@ -11,7 +11,15 @@ const Production = {
     if (typeof PopulationEngine !== 'undefined') {
       mul *= PopulationEngine.getHappinessMultiplier();
     }
-    // Cost modifier from policies (negative multiplier on costs, not directly here)
+    // Education bonus: skilled workforce is more productive
+    if (GS.educationLevel > 70) mul *= 1.20;
+    else if (GS.educationLevel > 40) mul *= 1.10;
+    else if (GS.educationLevel > 20) mul *= 1.05;
+    // Pollution penalty: unhealthy workers are less productive
+    if (GS.pollution > 75) mul *= 0.88;
+    else if (GS.pollution > 50) mul *= 0.94;
+    // Crime penalty: crime disrupts commerce
+    if (GS.crimeRate > 60) mul *= 0.92;
     return Math.max(0, mul);
   },
 

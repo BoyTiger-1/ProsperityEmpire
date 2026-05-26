@@ -554,6 +554,9 @@ button, input, select, a,
 .stat-row:last-child { border-bottom: none; }
 .stat-label { color: var(--txt3); font-size: 12px; }
 .stat-val   { font-family: var(--font-n); font-size: 11px; color: var(--gold2); font-weight: 700; }
+.stat-val.pos  { color: var(--green3); }
+.stat-val.neg  { color: #f87171; }
+.stat-val.warn { color: #f59e0b; }
 
 /* Milestones */
 .milestone-item {

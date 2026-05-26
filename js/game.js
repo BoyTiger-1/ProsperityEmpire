@@ -54,6 +54,13 @@ const GS = {
   happiness: 60,       // 0–100
   taxRate: 0.15,       // 15% default
 
+  // City health metrics
+  pollution: 0,        // 0–100, from industry
+  educationLevel: 0,   // 0–100, from schools
+  crimeRate: 0,        // 0–100, from low happiness + overcrowding
+  housingStress: 0,    // 0–100, population vs max capacity
+  popGrowthRate: 0,    // per-second population change
+
   // Active policies
   policies: {},        // { policyId: true }
 

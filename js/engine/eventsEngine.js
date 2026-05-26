@@ -40,7 +40,7 @@ const EventsEngine = {
     const typeClass = { positive:'success', negative:'error', neutral:'info' }[evt.type] || 'info';
     Notifications.show(`${evt.emoji} ${evt.name}`, evt.desc, typeClass, 6000);
     NewsEngine.add('event', `${evt.emoji} ${evt.name}`, evt.desc);
-    if (window.CityScene) CityScene.triggerEventEffect(evt.type);
+    if (window.CityScene) CityScene.triggerEventEffect(evt.type, evt.id);
     if (window.WorldUI) WorldUI.render();
   },
 
