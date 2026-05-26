@@ -1490,4 +1490,276 @@ const QUESTION_BANK = [
     explanation:'Long-short equity: the fund holds undervalued stocks (longs, expected to rise) and short-sells overvalued stocks (expected to fall). The net exposure can be market neutral (equal long and short — pure alpha) or directional (more long or short). The goal is to profit from relative value differences, with reduced dependence on the overall market direction.',
     reward:{ capital:160, knowledge:20 },
   },
+
+  // ══════════════════════════════════════════════
+  // BEHAVIOURAL ECONOMICS — q700–q704
+  // ══════════════════════════════════════════════
+  {
+    id:'q700', phase:'early', concept:'behavioral_economics', difficulty:2,
+    text:'Kahneman and Tversky found that the psychological pain of losing £100 is approximately how much greater than the pleasure of gaining £100?',
+    options:['About 2–2.5 times greater','Exactly equal','About 5 times greater','Losses and gains feel identical in psychology'],
+    answer:'About 2–2.5 times greater',
+    explanation:'Loss aversion, a cornerstone of Prospect Theory, shows that losses loom roughly twice as large as equivalent gains in subjective experience. This explains why investors hold losing stocks too long (to avoid "realising" a loss) and sell winners too early — the asymmetry distorts rational decision-making.',
+    reward:{ capital:20, knowledge:3 },
+  },
+  {
+    id:'q701', phase:'early', concept:'behavioral_economics', difficulty:2,
+    text:'A car salesperson shows you a high-priced model first before revealing a cheaper alternative. Which cognitive bias is being deliberately exploited?',
+    options:['Anchoring — the first number encountered biases all subsequent judgements','Loss aversion — fear of missing out on the luxury model','Herding — following what other buyers chose','Overconfidence — you think you know the true value'],
+    answer:'Anchoring — the first number encountered biases all subsequent judgements',
+    explanation:'Anchoring is the tendency to rely too heavily on the first piece of information encountered (the "anchor"). Experiments show that arbitrary numbers — even random ones — shift subsequent numerical estimates. In negotiation, the first offer anchors the entire discussion. Awareness of the bias helps, but does not fully neutralise it.',
+    reward:{ capital:20, knowledge:3 },
+  },
+  {
+    id:'q702', phase:'mid', concept:'behavioral_economics', difficulty:2,
+    text:'An investor treats £5,000 in gambling winnings differently from £5,000 of salary, spending the windfall carelessly but saving the salary carefully. This is an example of:',
+    options:['Mental accounting — money is labelled by source and treated differently','Loss aversion — gambling gains feel less real','Hyperbolic discounting — future money is undervalued','Anchoring to the original stake'],
+    answer:'Mental accounting — money is labelled by source and treated differently',
+    explanation:'Mental accounting (Richard Thaler, 2017 Nobel laureate) describes how people create separate psychological "accounts" for money based on its source or intended use. Economically, a pound is a pound regardless of origin — but in practice, "windfall" money is spent more freely. This leads to suboptimal outcomes such as spending a tax refund on luxuries while carrying high-interest debt.',
+    reward:{ capital:45, knowledge:6 },
+  },
+  {
+    id:'q703', phase:'mid', concept:'behavioral_economics', difficulty:3,
+    text:'A company switches employees from opt-in pension enrolment to opt-out enrolment, keeping all other terms identical. Participation rates jump from 40% to 90%. This demonstrates:',
+    options:['Status quo bias — people stick with the default option whatever it is','Loss aversion — people fear losing their pension','Herding — most colleagues enrolled so others followed','Overconfidence — employees assumed the default is optimal'],
+    answer:'Status quo bias — people stick with the default option whatever it is',
+    explanation:'Status quo bias is the powerful preference for the current state of affairs. Changing the default from opt-in to opt-out exploits this bias to improve outcomes — a "nudge" in the language of behavioural economists Thaler and Sunstein. The UK\'s automatic enrolment pension reforms in 2012 used exactly this mechanism, dramatically raising pension participation among lower earners.',
+    reward:{ capital:55, knowledge:7 },
+  },
+  {
+    id:'q704', phase:'mid', concept:'behavioral_economics', difficulty:3,
+    text:'Studies consistently show that amateur investors trade far more frequently than is optimal and believe their stock-picking skills exceed those of professionals. What bias best explains this?',
+    options:['Overconfidence bias — people systematically overestimate their own abilities','Recency bias — recent winners seem likely to continue','Confirmation bias — seeking only information that supports existing positions','Hindsight bias — past outcomes seem more predictable in retrospect'],
+    answer:'Overconfidence bias — people systematically overestimate their own abilities',
+    explanation:'Overconfidence is one of the most robust findings in behavioural finance. Barber and Odean (2000) found that the most active traders earned 11.4% per year while the market returned 17.9% — excess trading destroyed returns. Men traded 45% more than women on average and underperformed by 1.4 percentage points. Knowing you are prone to overconfidence is the first step to designing rules that constrain it.',
+    reward:{ capital:50, knowledge:6 },
+  },
+
+  // ══════════════════════════════════════════════
+  // REAL ESTATE FINANCE — q705–q708
+  // ══════════════════════════════════════════════
+  {
+    id:'q705', phase:'mid', concept:'real_estate', difficulty:3,
+    text:'A commercial property generates £120,000 net operating income per year and is purchased for £2,000,000. What is its capitalisation rate?',
+    options:['6% — NOI divided by purchase price','8% — purchase price divided by NOI','12% — NOI times the yield factor','4% — purchase price times a standard factor'],
+    answer:'6% — NOI divided by purchase price',
+    explanation:'Cap rate = Net Operating Income / Property Value × 100. Here: £120,000 / £2,000,000 = 6%. Cap rates are the commercial real estate equivalent of earnings yields — lower rates indicate premium assets or expensive markets (London offices: 4-5%), higher rates indicate higher risk or cheaper markets. Rising interest rates compress property values by making higher cap rates necessary to compete with bonds.',
+    reward:{ capital:50, knowledge:6 },
+  },
+  {
+    id:'q706', phase:'mid', concept:'real_estate', difficulty:2,
+    text:'A Real Estate Investment Trust (REIT) is legally required to distribute what minimum percentage of its taxable income as dividends?',
+    options:['90%','50%','75%','100%'],
+    answer:'90%',
+    explanation:'REITs must distribute at least 90% of taxable income as dividends in exchange for their special tax treatment — they pay no corporate tax on distributed income. This structure passes the tax liability to individual investors and ensures high dividend yields (typically 3-6%). REITs allow ordinary investors to access diversified commercial property (offices, retail, logistics, data centres) with stock-market liquidity.',
+    reward:{ capital:45, knowledge:5 },
+  },
+  {
+    id:'q707', phase:'late', concept:'real_estate', difficulty:3,
+    text:'On a £300,000 mortgage at 4% over 25 years, approximately how much total interest will be paid over the full term?',
+    options:['Around £175,000 — amortisation makes early payments mostly interest','Around £30,000 — only on the declining balance','Around £300,000 — equal to the original loan','Around £50,000 — a small fraction of the principal'],
+    answer:'Around £175,000 — amortisation makes early payments mostly interest',
+    explanation:'Mortgage amortisation front-loads interest payments. In the early years, most of each payment covers interest on the large outstanding balance; only a small amount reduces principal. On a 25-year £300,000 mortgage at 4%, monthly payments are around £1,580 (£474,000 total) — over £170,000 more than the original loan. Making overpayments early saves disproportionate interest because it reduces the principal faster.',
+    reward:{ capital:80, knowledge:10 },
+  },
+  {
+    id:'q708', phase:'late', concept:'real_estate', difficulty:4,
+    text:'An investor buys a £500,000 property with a £100,000 deposit. If the property rises 10% in value, what is the return on equity invested?',
+    options:['50% — leverage amplifies equity returns fivefold','10% — the same as the property appreciation','20% — based on the mortgage portion','5% — leverage reduces the effective return'],
+    answer:'50% — leverage amplifies equity returns fivefold',
+    explanation:'The £50,000 gain on the full £500,000 property represents a 50% return on the £100,000 equity invested — five times the property\'s actual appreciation rate. This is leverage at work: borrowing amplifies both gains and losses relative to equity. A 10% fall would wipe out 50% of equity. Leverage is why property has generated strong wealth for many investors — but also why negative equity devastated overleveraged buyers in 2008.',
+    reward:{ capital:90, knowledge:11 },
+  },
+
+  // ══════════════════════════════════════════════
+  // CORPORATE FINANCE — q709–q712
+  // ══════════════════════════════════════════════
+  {
+    id:'q709', phase:'late', concept:'corporate_finance', difficulty:3,
+    text:'A company finances 60% of its assets with equity (cost 12%) and 40% with debt (cost 5%, tax rate 30%). What is its Weighted Average Cost of Capital (WACC)?',
+    options:['8.6% — blending equity and after-tax debt costs by weight','7.2% — simple average of equity and debt costs','10.4% — weighted by market values before tax','9.0% — equity cost minus the debt benefit'],
+    answer:'8.6% — blending equity and after-tax debt costs by weight',
+    explanation:'WACC = (Equity Weight × Cost of Equity) + (Debt Weight × After-Tax Cost of Debt). After-tax cost of debt = 5% × (1 − 30%) = 3.5%. WACC = (0.60 × 12%) + (0.40 × 3.5%) = 7.2% + 1.4% = 8.6%. WACC is the minimum return a project must earn to create value — it is the hurdle rate for capital budgeting decisions.',
+    reward:{ capital:90, knowledge:11 },
+  },
+  {
+    id:'q710', phase:'late', concept:'corporate_finance', difficulty:4,
+    text:'In a Discounted Cash Flow (DCF) valuation, the "terminal value" typically represents what proportion of the total enterprise value?',
+    options:['60–80% — most value lies beyond the explicit forecast period','20–30% — the near-term cash flows dominate','Exactly 50% — the model splits evenly','10% — terminal value is just a small residual'],
+    answer:'60–80% — most value lies beyond the explicit forecast period',
+    explanation:'The terminal value captures all cash flows beyond the explicit forecast period (typically 5-10 years) and usually represents 60-80% of total DCF value. This creates a significant problem: a small change in the assumed terminal growth rate causes enormous swings in valuation. A company growing at 3% in perpetuity vs. 2% might be worth 20-30% more — making DCF results extremely sensitive to assumptions that are essentially guesses.',
+    reward:{ capital:95, knowledge:12 },
+  },
+  {
+    id:'q711', phase:'late', concept:'corporate_finance', difficulty:3,
+    text:'Why do M&A analysts prefer EV/EBITDA over P/E ratios when comparing acquisition targets?',
+    options:['EV/EBITDA is capital structure neutral — it does not change if a company has more or less debt','P/E ratios are harder to calculate from financial statements','EV/EBITDA is always a larger number, making deals appear cheaper','P/E ratios are only valid for technology companies'],
+    answer:'EV/EBITDA is capital structure neutral — it does not change if a company has more or less debt',
+    explanation:'Enterprise Value includes both equity and debt, and EBITDA is pre-interest — so the EV/EBITDA ratio is unaffected by how a company is financed. Two identical businesses with different capital structures have the same EV/EBITDA but very different P/E ratios (the levered one has higher interest expense, reducing earnings). This makes EV/EBITDA the preferred metric in M&A, where the acquirer typically restructures the target\'s financing anyway.',
+    reward:{ capital:85, knowledge:11 },
+  },
+  {
+    id:'q712', phase:'advanced', concept:'corporate_finance', difficulty:4,
+    text:'Modigliani and Miller\'s capital structure theorem (in a world without taxes and bankruptcy costs) states that:',
+    options:['A firm\'s total value is independent of how it is financed — debt/equity mix is irrelevant','Firms should always maximise debt to reduce equity dilution','The optimal capital structure is always 50% debt, 50% equity','Equity is always cheaper than debt because it carries no interest obligation'],
+    answer:'A firm\'s total value is independent of how it is financed — debt/equity mix is irrelevant',
+    explanation:'The Modigliani-Miller theorem (1958 Nobel Prize) showed that in frictionless markets, capital structure does not affect firm value — shareholders can replicate any leverage decision themselves (homemade leverage). In reality, taxes (interest is tax-deductible, creating the "tax shield") and bankruptcy costs mean capital structure does matter. The trade-off theory balances the tax shield benefit of debt against bankruptcy risk to find an optimal leverage level.',
+    reward:{ capital:130, knowledge:16 },
+  },
+
+  // ══════════════════════════════════════════════
+  // INTERNATIONAL FINANCE — q713–q716
+  // ══════════════════════════════════════════════
+  {
+    id:'q713', phase:'mid', concept:'international_finance', difficulty:2,
+    text:'Purchasing Power Parity (PPP) theory predicts that in the long run, exchange rates will adjust so that:',
+    options:['A basket of identical goods costs the same in different countries when converted to a common currency','Countries with lower wages will always have weaker currencies','Trade surpluses always appreciate a currency','Interest rates and exchange rates move in opposite directions'],
+    answer:'A basket of identical goods costs the same in different countries when converted to a common currency',
+    explanation:'PPP holds that identical goods should cost the same everywhere once converted to a common currency — otherwise arbitrage would equalise prices. If a Big Mac costs $5 in the US and £3 in the UK, PPP implies the dollar/pound rate should be 5/3 ≈ 1.67. Short-run rates deviate enormously from PPP due to capital flows, speculation, and trade barriers, but PPP is a reliable long-run anchor for exchange rate forecasting.',
+    reward:{ capital:45, knowledge:5 },
+  },
+  {
+    id:'q714', phase:'late', concept:'international_finance', difficulty:3,
+    text:'A country\'s Balance of Payments has three accounts. Which account records trade in goods and services?',
+    options:['The Current Account — covering goods, services, income, and transfers','The Capital Account — covering physical infrastructure transfers','The Financial Account — covering portfolio investment flows','The Reserve Account — covering central bank foreign exchange holdings'],
+    answer:'The Current Account — covering goods, services, income, and transfers',
+    explanation:'The Current Account records: trade in goods (visible balance), trade in services (invisible balance), net income from investments abroad, and net transfers. A current account deficit means spending more on imports than earning from exports — financed by capital inflows (foreigners investing in the country). The UK has run persistent current account deficits since the 1980s, offset by London\'s role attracting global financial capital.',
+    reward:{ capital:80, knowledge:10 },
+  },
+  {
+    id:'q715', phase:'late', concept:'international_finance', difficulty:3,
+    text:'A currency peg (fixed exchange rate) requires a central bank to:',
+    options:['Maintain sufficient foreign exchange reserves to defend the pegged rate by buying or selling its currency','Set interest rates independently of the pegged country\'s rates','Print unlimited domestic currency to maintain peg','Restrict all cross-border capital flows permanently'],
+    answer:'Maintain sufficient foreign exchange reserves to defend the pegged rate by buying or selling its currency',
+    explanation:'A currency peg requires the central bank to buy its own currency (selling foreign reserves) when downward pressure develops, or sell domestic currency (accumulating reserves) when upward pressure builds. The Mundell-Fleming "impossible trinity" shows you cannot simultaneously have a fixed exchange rate, free capital flows, and independent monetary policy. Soros\'s 1992 attack on sterling succeeded because the UK\'s reserves were insufficient to defend the ERM peg when markets speculated against it.',
+    reward:{ capital:85, knowledge:11 },
+  },
+  {
+    id:'q716', phase:'late', concept:'international_finance', difficulty:3,
+    text:'What is the primary role of the International Monetary Fund (IMF)?',
+    options:['Providing emergency loans to countries facing balance of payments crises, conditional on economic reforms','Funding long-term infrastructure in developing nations','Setting global interest rates through member country coordination','Regulating multinational corporations and preventing monopolies'],
+    answer:'Providing emergency loans to countries facing balance of payments crises, conditional on economic reforms',
+    explanation:'The IMF, founded at Bretton Woods in 1944, acts as a lender of last resort for countries. When a nation cannot service its external debts or fund imports, the IMF provides loans conditional on structural reforms (fiscal consolidation, deregulation, privatisation) — the controversial "conditionality." Critics argue these conditions can exacerbate recessions; supporters argue they restore credibility and prevent repeat crises.',
+    reward:{ capital:85, knowledge:10 },
+  },
+
+  // ══════════════════════════════════════════════
+  // SUSTAINABLE FINANCE — q717–q719
+  // ══════════════════════════════════════════════
+  {
+    id:'q717', phase:'mid', concept:'sustainable_finance', difficulty:2,
+    text:'When a company includes ESG (Environmental, Social, Governance) factors alongside financial metrics in its investment analysis, what is the primary rationale?',
+    options:['ESG risks are financially material — climate exposure, regulatory fines, and governance failures affect long-run returns','ESG investing guarantees higher returns than traditional approaches','Regulators mandate ESG analysis for all public companies','ESG factors replace traditional financial analysis'],
+    answer:'ESG risks are financially material — climate exposure, regulatory fines, and governance failures affect long-run returns',
+    explanation:'The financial case for ESG rests on materiality: companies with poor environmental practices face regulatory risk and stranded assets; weak governance is associated with capital misallocation and fraud; poor social scores create reputational and talent risks. Studies show that ESG factors, particularly governance, are correlated with long-run shareholder value. However, ESG ratings agencies disagree significantly on scores for the same company, limiting the approach\'s precision.',
+    reward:{ capital:40, knowledge:5 },
+  },
+  {
+    id:'q718', phase:'mid', concept:'sustainable_finance', difficulty:3,
+    text:'A government issues a bond and ring-fences all proceeds for renewable energy projects. This instrument is called:',
+    options:['A green bond — proceeds are contractually committed to environmental projects','A climate warrant — an option on future carbon credits','A sustainability-linked bond — with coupon tied to ESG targets','An impact note — returns linked to measurable social outcomes'],
+    answer:'A green bond — proceeds are contractually committed to environmental projects',
+    explanation:'Green bonds are standard bonds with one key difference: the issuer commits to using proceeds exclusively for climate or environmental projects (renewable energy, energy efficiency, clean transport). The market grew from near-zero in 2012 to over $500 billion annually by 2023. The "Green Bond Principles" (ICMA) provide a voluntary framework for reporting on use of proceeds — though greenwashing remains a concern given limited external verification standards.',
+    reward:{ capital:50, knowledge:6 },
+  },
+  {
+    id:'q719', phase:'late', concept:'sustainable_finance', difficulty:3,
+    text:'In a carbon emissions trading scheme, what economic mechanism keeps total emissions within the environmental cap?',
+    options:['A fixed cap on total permits forces companies to reduce emissions or buy permits from those who reduce more — the price of carbon emerges from this trading','Government fines imposed on every tonne of carbon emitted above industry averages','A global tax on fossil fuels set by international agreement','Voluntary pledges by corporations committed to net-zero targets'],
+    answer:'A fixed cap on total permits forces companies to reduce emissions or buy permits from those who reduce more — the price of carbon emerges from this trading',
+    explanation:'Cap-and-trade systems (like the EU Emissions Trading System) set a hard limit on aggregate emissions and issue a matching number of permits. Companies that reduce emissions below their allocation can sell surplus permits; high-emitters must buy them. The market price of carbon reflects the marginal cost of abatement — directing emission cuts to where they are cheapest. EU carbon prices exceeded €90/tonne in 2023, making coal uneconomic relative to gas and renewables.',
+    reward:{ capital:90, knowledge:11 },
+  },
+
+  // ══════════════════════════════════════════════
+  // INSURANCE ECONOMICS — q720–q722
+  // ══════════════════════════════════════════════
+  {
+    id:'q720', phase:'mid', concept:'insurance_economics', difficulty:3,
+    text:'After buying comprehensive car insurance, a driver begins parking in riskier areas and taking more chances because "the insurer will cover any damage." This illustrates:',
+    options:['Moral hazard — insurance changes behaviour by reducing the personal cost of risk-taking','Adverse selection — risky drivers are more likely to buy insurance','The law of large numbers — aggregate risk remains stable','Principal-agent problem — the driver acts against the insurer\'s interest'],
+    answer:'Moral hazard — insurance changes behaviour by reducing the personal cost of risk-taking',
+    explanation:'Moral hazard arises when insurance (or any guarantee) reduces the insured party\'s incentive to avoid the insured risk. Classic examples: insured homeowners skip maintenance; insured depositors tolerate risky banks; bailed-out financial institutions take excessive risks. Insurers combat moral hazard with deductibles (making the insured bear the first portion of any loss), co-payments, and exclusions for reckless behaviour.',
+    reward:{ capital:50, knowledge:6 },
+  },
+  {
+    id:'q721', phase:'mid', concept:'insurance_economics', difficulty:3,
+    text:'A health insurer sets premiums based on the average population health risk. Healthy people opt out (finding it expensive) while sick people disproportionately enrol. The insurer then raises premiums to cover higher claims — causing more healthy people to leave. This spiral is called:',
+    options:['Adverse selection — higher-risk individuals self-select into insurance pools','Moral hazard — insured patients over-consume healthcare','The lemons problem — sellers of health hide quality information','Crowding out — government insurance displaces private coverage'],
+    answer:'Adverse selection — higher-risk individuals self-select into insurance pools',
+    explanation:'Adverse selection (Akerlof\'s "lemons problem" applied to insurance) occurs because buyers know more about their own risk than the insurer. High-risk individuals eagerly buy; low-risk individuals opt out — leaving the pool riskier than the general population. If unchecked, the spiral results in market collapse (the only buyers are the highest-risk). Solutions: mandatory participation (health mandates), underwriting/risk classification, waiting periods, and no-claims discounts.',
+    reward:{ capital:55, knowledge:7 },
+  },
+  {
+    id:'q722', phase:'late', concept:'insurance_economics', difficulty:3,
+    text:'An "actuarially fair" premium means:',
+    options:['The premium equals the expected loss — the statistical average of claims the insured will generate','The premium is the lowest legally permitted by regulators','The premium is fair to both insurer and policyholder as judged by a court','The premium covers only administrative costs with no profit margin'],
+    answer:'The premium equals the expected loss — the statistical average of claims the insured will generate',
+    explanation:'Actuarial fairness means charging each policyholder exactly their expected loss. A driver with a 5% annual accident probability and £2,000 average claim would pay a £100 actuarially fair premium. In practice, premiums exceed expected loss to cover: administrative costs, profit margins, reserves for unexpected losses, and reinsurance costs. Regulators balance actuarial fairness (discriminating by risk) against social fairness (pooling risks regardless of characteristics like race or gender).',
+    reward:{ capital:85, knowledge:10 },
+  },
+
+  // ══════════════════════════════════════════════
+  // ECONOMIC INDICATORS & INEQUALITY — q723–q725
+  // ══════════════════════════════════════════════
+  {
+    id:'q723', phase:'mid', concept:'economic_indicators', difficulty:2,
+    text:'Which of the following is a LEADING economic indicator — one that tends to change BEFORE the economy turns?',
+    options:['New building permits and manufacturing orders — activity before output appears','Unemployment rate — workers are the last to be hired and fired','GDP growth — measured after economic activity has occurred','Retail sales — reflecting what consumers already spent'],
+    answer:'New building permits and manufacturing orders — activity before output appears',
+    explanation:'Leading indicators signal future economic direction: building permits precede construction activity; new orders precede production; the yield curve\'s slope predicts growth (inverted curve has preceded every US recession since 1950). Lagging indicators — unemployment, CPI, loan delinquencies — confirm trends after they occur. Coincident indicators — GDP, retail sales — move with the cycle. The Conference Board\'s Leading Economic Index combines ten such indicators.',
+    reward:{ capital:45, knowledge:6 },
+  },
+  {
+    id:'q724', phase:'mid', concept:'inequality', difficulty:2,
+    text:'The Gini coefficient measures income inequality on a scale from 0 to 1. What do the extreme values represent?',
+    options:['0 = perfect equality (everyone earns the same); 1 = perfect inequality (one person earns everything)','0 = maximum inequality; 1 = perfect equality','0 = no income in the economy; 1 = a country with only one earner','The ratio of top 10% income to median income'],
+    answer:'0 = perfect equality (everyone earns the same); 1 = perfect inequality (one person earns everything)',
+    explanation:'The Gini coefficient, developed by Italian statistician Corrado Gini in 1912, compresses the entire income distribution into a single number. Scandinavian countries score around 0.25-0.28 (high equality); the US scores around 0.39; Brazil and South Africa exceed 0.50. The coefficient is derived from the Lorenz curve — the area between the actual distribution curve and the line of perfect equality, divided by the total area below that line.',
+    reward:{ capital:45, knowledge:6 },
+  },
+  {
+    id:'q725', phase:'mid', concept:'inequality', difficulty:3,
+    text:'A Lorenz curve that bows further away from the diagonal line of perfect equality indicates:',
+    options:['Greater income inequality — the further from diagonal, the more unequal the distribution','Lower income inequality — distance from diagonal measures economic growth','A larger economy — richer countries have more bowed Lorenz curves','Higher GDP per capita regardless of how income is distributed'],
+    answer:'Greater income inequality — the further from diagonal, the more unequal the distribution',
+    explanation:'The Lorenz curve plots cumulative income share (y-axis) against cumulative population share (x-axis), sorted from poorest to richest. Perfect equality is the 45-degree diagonal. The further the actual curve bows below that diagonal, the more unequal the distribution. The Gini coefficient is literally the ratio of the area between the curve and the diagonal to the total triangular area — so more bowing equals a higher Gini equals more inequality.',
+    reward:{ capital:55, knowledge:7 },
+  },
+
+  // ══════════════════════════════════════════════
+  // DECENTRALISED FINANCE (DeFi) — q726–q729
+  // ══════════════════════════════════════════════
+  {
+    id:'q726', phase:'advanced', concept:'defi', difficulty:4,
+    text:'In DeFi (Decentralised Finance), what replaces the role of a bank or broker in executing financial transactions?',
+    options:['Smart contracts — self-executing code on a blockchain that enforces rules without intermediaries','A decentralised committee of elected validators who manually approve each transaction','Peer-to-peer negotiation between buyers and sellers via encrypted messaging','National regulators who supervise decentralised networks directly'],
+    answer:'Smart contracts — self-executing code on a blockchain that enforces rules without intermediaries',
+    explanation:'Smart contracts are programmes stored on a blockchain that automatically execute when predetermined conditions are met — no bank, lawyer, or broker needed. A DeFi lending protocol coded as a smart contract will automatically liquidate collateral if its value falls below a threshold, release funds when repayment arrives, and distribute interest — all without human intervention, operating 24/7 globally. Ethereum hosts the majority of DeFi smart contracts.',
+    reward:{ capital:130, knowledge:16 },
+  },
+  {
+    id:'q727', phase:'advanced', concept:'defi', difficulty:4,
+    text:'Yield farming in DeFi refers to:',
+    options:['Deploying crypto assets across lending protocols and liquidity pools to maximise returns, often moving between platforms to chase the highest yield','Mining new cryptocurrency by solving computational puzzles with specialised hardware','Staking a single token in a fixed-term deposit to earn protocol governance rewards','Arbitraging price differences between centralised and decentralised exchanges'],
+    answer:'Deploying crypto assets across lending protocols and liquidity pools to maximise returns, often moving between platforms to chase the highest yield',
+    explanation:'Yield farming involves strategically allocating crypto assets to DeFi protocols — lending platforms (Aave, Compound), automated market makers (Uniswap, Curve), and liquidity pools — to earn interest, trading fees, and governance token rewards simultaneously. Returns can be extraordinary in bull markets (hundreds of percent APY) but carry significant risks: smart contract bugs, impermanent loss in liquidity pools, protocol hacks, and token price collapse. The "DeFi summer" of 2020 launched the ecosystem.',
+    reward:{ capital:140, knowledge:17 },
+  },
+  {
+    id:'q728', phase:'advanced', concept:'defi', difficulty:4,
+    text:'A stablecoin pegged to $1 that is backed 1:1 by US dollar deposits held in regulated banks is best described as:',
+    options:['A fiat-collateralised stablecoin — fully backed by real-world currency reserves','An algorithmic stablecoin — maintained by protocol-controlled supply adjustments','A crypto-collateralised stablecoin — backed by excess cryptocurrency collateral','A central bank digital currency — issued by a government monetary authority'],
+    answer:'A fiat-collateralised stablecoin — fully backed by real-world currency reserves',
+    explanation:'Stablecoins maintain price stability through different mechanisms. Fiat-collateralised (USDC, USDT): reserves of real dollars in bank accounts — stable but requires trusting the issuer\'s reserve claims. Crypto-collateralised (DAI): over-collateralised by crypto (e.g., 150% in ETH) — more transparent but capital-inefficient. Algorithmic: supply-demand algorithm with no backing — high risk; Terra/LUNA\'s algorithmic stablecoin collapsed from $40B to near zero in 72 hours in May 2022.',
+    reward:{ capital:135, knowledge:17 },
+  },
+  {
+    id:'q729', phase:'advanced', concept:'defi', difficulty:4,
+    text:'What is "impermanent loss" in the context of DeFi liquidity provision?',
+    options:['The loss liquidity providers suffer when token prices diverge from the ratio at deposit — worse than simply holding the tokens','The temporary reduction in rewards during a bear market before protocol fees recover','The gas fees lost when a transaction fails due to insufficient network congestion allowance','Interest foregone by locking tokens in a pool instead of a fixed-term staking contract'],
+    answer:'The loss liquidity providers suffer when token prices diverge from the ratio at deposit — worse than simply holding the tokens',
+    explanation:'When you provide liquidity to an AMM (automated market maker) pool, the protocol automatically rebalances your holdings as prices shift — selling the appreciating token and buying the depreciating one. If ETH doubles vs. USDC, a 50/50 pool rebalances to hold less ETH than you would have simply holding. You end up with less value than a pure "hold" strategy — the difference is impermanent loss. It only crystallises when you withdraw; if prices return to the original ratio, the loss disappears.',
+    reward:{ capital:150, knowledge:18 },
+  },
 ];

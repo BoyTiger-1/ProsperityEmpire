@@ -64,7 +64,16 @@ const CODEX_DATA = {
         <li><strong>Price Floor</strong> (set above equilibrium, e.g., minimum wage): creates a surplus. Quantity supplied exceeds quantity demanded. Creates unemployment as firms hire fewer workers at the higher wage.</li>
       </ul>
       <h3>Elasticity</h3>
-      <p>Elasticity measures responsiveness. Price Elasticity of Demand = % change in quantity / % change in price. Elastic (|e| > 1): quantity very responsive to price — luxury goods, products with many substitutes. Inelastic (|e| < 1): quantity barely responds — necessities, addictive goods, medicines. Total revenue rises with price for inelastic goods and falls for elastic goods.</p>`,
+      <p>Elasticity measures responsiveness. Price Elasticity of Demand = % change in quantity / % change in price. Elastic (|e| > 1): quantity very responsive to price — luxury goods, products with many substitutes. Inelastic (|e| < 1): quantity barely responds — necessities, addictive goods, medicines. Total revenue rises with price for inelastic goods and falls for elastic goods.</p>
+      <h3>Price Elasticity of Supply</h3>
+      <p>Just as demand has elasticity, so does supply. <strong>Price Elasticity of Supply (PES)</strong> = % change in quantity supplied / % change in price. It measures how quickly producers can respond to price changes by increasing or decreasing output.</p>
+      <ul>
+        <li><strong>Elastic supply (PES &gt; 1)</strong>: Producers can rapidly scale output — manufactured goods with flexible factory capacity, agricultural crops with spare farmland. A 10% price rise produces more than a 10% increase in supply.</li>
+        <li><strong>Inelastic supply (PES &lt; 1)</strong>: Output cannot quickly respond — fine wine (Château Pétrus cannot plant more 1961 vines), prime London real estate (geography limits supply), commodities with long production lead times like copper mines (5-10 years from discovery to production).</li>
+        <li><strong>Perfectly inelastic supply (PES = 0)</strong>: Fixed quantity regardless of price — original Picasso paintings, beachfront plots in Monaco. Price is determined entirely by demand.</li>
+      </ul>
+      <div class="codex-formula">PES = % Change in Quantity Supplied / % Change in Price</div>
+      <p><strong>Commodity market dynamics:</strong> When demand surges for a commodity with inelastic supply (e.g., lithium for EV batteries), prices spike dramatically because production cannot respond fast enough. This price spike eventually attracts new investment, which expands supply over several years — the classic commodity "super-cycle." The 2020-22 semiconductor shortage illustrated the same principle: chip fabrication plants take 2-3 years and $20 billion to build, so supply elasticity is near-zero in the short run.</p>`,
     },
 
     {
@@ -132,7 +141,18 @@ const CODEX_DATA = {
       <h3>Debt Works the Same Way — Against You</h3>
       <p>Credit card debt at 20% APR: a 1,000 balance becomes 6,200 in 10 years if you only pay the minimum. The same mathematics that build wealth also destroy it when applied to debt. High-interest debt elimination is always the highest guaranteed return available.</p>
       <h3>Inflation Is Compound Interest Working Against Savings</h3>
-      <p>At 3% annual inflation, purchasing power halves in about 24 years (Rule of 72: 72/3 = 24). Cash under the mattress loses real value continuously. The goal of investing is to outrun inflation with compound returns — preserving and growing real wealth, not just nominal numbers.</p>`,
+      <p>At 3% annual inflation, purchasing power halves in about 24 years (Rule of 72: 72/3 = 24). Cash under the mattress loses real value continuously. The goal of investing is to outrun inflation with compound returns — preserving and growing real wealth, not just nominal numbers.</p>
+      <h3>Compound Growth Across Rates and Time</h3>
+      <p>The table below shows what £1,000 becomes at different annual return rates — illustrating why the rate of return matters as much as the time horizon:</p>
+      <ul>
+        <li><strong>At 3% (cash savings):</strong> 10 yr → £1,344 | 20 yr → £1,806 | 30 yr → £2,427</li>
+        <li><strong>At 6% (balanced portfolio):</strong> 10 yr → £1,791 | 20 yr → £3,207 | 30 yr → £5,743</li>
+        <li><strong>At 8% (equity-tilted):</strong> 10 yr → £2,159 | 20 yr → £4,661 | 30 yr → £10,063</li>
+        <li><strong>At 10% (global equities long-run average):</strong> 10 yr → £2,594 | 20 yr → £6,727 | 30 yr → £17,449</li>
+      </ul>
+      <p>The difference between 3% and 10% over 30 years is £15,022 on a single £1,000 investment — a factor of seven. This demonstrates why investors obsessively minimise costs (fees drag on compound returns) and why accepting appropriate equity risk over long time horizons is so powerful.</p>
+      <div class="codex-formula">Future Value = Principal × (1 + Rate)^Years</div>
+      <p><strong>The compounding frequency effect:</strong> £1,000 at 6% annual rate compounded annually → £1,791 after 10 years. Compounded monthly → £1,819. Compounded daily → £1,822. The difference is modest at 6% but becomes significant at higher rates. Continuously compounded (e^rt): at 6% for 10 years → £1,822. Banks that compound daily vs. annually offer meaningfully different effective yields — always compare the Annual Equivalent Rate (AER), not the headline rate.</p>`,
     },
     {
       id:'budgeting', cat:'personal', title:'Budgeting',
@@ -345,7 +365,16 @@ const CODEX_DATA = {
       <h3>Duration: Measuring Interest Rate Risk</h3>
       <p>Duration measures how sensitive a bond's price is to interest rate changes. A bond with duration of 5 years will lose approximately 5% of its value for every 1% rise in yields. Longer maturity and lower coupon rates increase duration. This is why in rising rate environments, long-dated government bonds can suffer significant capital losses despite being "safe" assets.</p>
       <h3>Credit Risk and Ratings</h3>
-      <p>Credit rating agencies (Moody's, S&P, Fitch) assess default risk. <strong>Investment grade</strong>: BBB-/Baa3 and above — institutional quality, lower yield. <strong>High yield (junk)</strong>: BB+/Ba1 and below — higher default risk, higher yield to compensate. Spreads (yield above government bonds) widen in recessions as default risk increases. In 2008-09, investment grade spreads reached 600 basis points; high yield spreads exceeded 2,000 basis points.</p>`,
+      <p>Credit rating agencies (Moody's, S&P, Fitch) assess default risk. <strong>Investment grade</strong>: BBB-/Baa3 and above — institutional quality, lower yield. <strong>High yield (junk)</strong>: BB+/Ba1 and below — higher default risk, higher yield to compensate. Spreads (yield above government bonds) widen in recessions as default risk increases. In 2008-09, investment grade spreads reached 600 basis points; high yield spreads exceeded 2,000 basis points.</p>
+      <h3>Yield Spreads and the High-Yield Bond Market</h3>
+      <p>The <strong>credit spread</strong> is the additional yield a bond pays above a risk-free benchmark (typically government bonds of the same maturity). It compensates investors for default risk, liquidity risk, and uncertainty. Spreads are a real-time barometer of market fear and economic confidence.</p>
+      <div class="codex-formula">Credit Spread = Corporate Bond Yield − Government Bond Yield (same maturity)</div>
+      <ul>
+        <li><strong>Investment grade spreads</strong>: Typically 50-200 basis points (0.5-2%) above Treasuries in normal conditions. A BBB-rated company might borrow at government rate + 1.5%. Spreads compress in bull markets and widen sharply in recessions.</li>
+        <li><strong>High-yield (HY) spreads</strong>: Typically 300-600 basis points above Treasuries in normal conditions. In severe crises (2008, March 2020) spreads exceeded 1,000-2,000 bps, implying significant near-term default expectations priced in.</li>
+        <li><strong>Spread as distress signal</strong>: An individual bond's spread above peers is an early warning of company-specific trouble — markets often detect credit deterioration months before rating agencies downgrade.</li>
+      </ul>
+      <p>The <strong>high-yield bond market</strong> ($1.5 trillion in the US alone) finances companies too risky or small for investment-grade status — leveraged buyouts, turnarounds, growth companies, and fallen angels (former investment-grade companies recently downgraded). Historically, HY bonds have delivered equity-like returns (6-8% annually) with lower volatility than stocks — though with sharp sell-offs in recessions. Annual default rates average 3-4% in normal years, rising to 10-14% in severe downturns. The recovery rate on defaulted bonds averages 40 cents on the dollar, so investors in a diversified HY portfolio can absorb defaults if spread income compensates adequately.</p>`,
     },
     {
       id:'portfolio_theory', cat:'markets', title:'Portfolio Theory',
@@ -444,6 +473,15 @@ const CODEX_DATA = {
       <h3>GDP Per Capita and Living Standards</h3>
       <p>Total GDP tells you nothing about average living standards — a large country with many poor people can have higher total GDP than a small wealthy country. GDP per capita (GDP / population) is a better measure. Norway's GDP per capita exceeds China's by 6× despite China's total GDP being 20× larger.</p>
       <p>GDP per capita also understates wellbeing: it does not capture inequality, leisure time, environmental quality, unpaid work (caring, volunteering), or informal/black market activity. The UN Human Development Index (HDI) adds health and education measures to income.</p>
+      <h3>The GDP Deflator and Measuring Inflation</h3>
+      <p>The <strong>GDP deflator</strong> is a broad price index that measures the change in prices across all goods and services produced in an economy — wider in scope than the Consumer Price Index (CPI), which only tracks a household consumption basket.</p>
+      <div class="codex-formula">GDP Deflator = (Nominal GDP / Real GDP) × 100</div>
+      <p>If nominal GDP is £2.5 trillion and real GDP (at base-year prices) is £2.3 trillion, the deflator is 108.7 — implying a 8.7% cumulative price increase since the base year. Unlike CPI, the deflator automatically adjusts its composition as the economy's output mix changes — it is not fixed to a historical basket. This makes it theoretically superior but less useful for measuring cost-of-living changes for typical households.</p>
+      <ul>
+        <li><strong>CPI</strong>: Fixed household basket — better for adjusting wages, pensions, and benefits to protect purchasing power.</li>
+        <li><strong>GDP Deflator</strong>: Economy-wide — better for converting nominal to real GDP and measuring overall price pressure on producers.</li>
+        <li><strong>PCE Deflator</strong>: Personal Consumption Expenditures deflator, used by the US Federal Reserve as its preferred inflation measure — broader than CPI and updates its basket more frequently.</li>
+      </ul>
       <h3>Growth Drivers</h3>
       <ul>
         <li><strong>Capital accumulation</strong>: Investment in physical capital (machinery, infrastructure) and human capital (education, health) raises worker productivity.</li>
@@ -464,7 +502,17 @@ const CODEX_DATA = {
       <p>Most central banks target approximately 2% annual inflation. Too low (especially deflation) is dangerous — falling prices cause consumers to delay purchases ("why buy today when it will be cheaper tomorrow?"), creating a deflationary spiral. Japan's "Lost Decade" (1990s-2000s) illustrated deflation's destructive power. Too high erodes real wages and savings, creates uncertainty, and eventually requires painful tightening to restore credibility.</p>
       <h3>Unconventional Tools</h3>
       <p><strong>Quantitative Easing (QE)</strong>: When rates hit zero (Zero Lower Bound), the central bank creates new reserves and uses them to purchase long-dated government bonds and other securities. This pushes down long-term yields, stimulates asset prices, and injects liquidity. First used systematically by the Bank of Japan (2001), then by the Fed after 2008. QE's effectiveness is debated — it clearly stabilised markets in crises but may have contributed to inequality by inflating asset prices disproportionately benefiting wealthy owners of financial assets.</p>
-      <p><strong>Forward guidance</strong>: Communicating the likely future path of interest rates. If the market believes rates will stay low for years, long-term rates fall today even without actual rate changes — managing expectations is itself a policy tool.</p>`,
+      <p><strong>Forward guidance</strong>: Communicating the likely future path of interest rates. If the market believes rates will stay low for years, long-term rates fall today even without actual rate changes — managing expectations is itself a policy tool.</p>
+      <h3>Quantitative Easing: Mechanics and Transmission</h3>
+      <p>QE works through several channels simultaneously — the <strong>monetary policy transmission mechanism</strong>:</p>
+      <ul>
+        <li><strong>Asset price channel</strong>: The central bank buys government bonds, pushing their prices up and yields down. Investors displaced from bonds seek higher returns in equities, corporate bonds, and property — raising all asset prices and stimulating investment through the "wealth effect."</li>
+        <li><strong>Bank lending channel</strong>: New central bank reserves improve bank balance sheets, potentially encouraging more lending to businesses and households — though this channel was weaker than expected post-2008 because banks used excess reserves to rebuild capital rather than lend.</li>
+        <li><strong>Exchange rate channel</strong>: Lower domestic yields make the currency less attractive to foreign capital, weakening it. A weaker currency boosts exports and raises import prices, supporting growth and inflation from both sides.</li>
+        <li><strong>Expectations channel</strong>: QE signals the central bank's commitment to accommodation, anchoring long-term rate expectations lower and supporting borrowing decisions made years in advance.</li>
+      </ul>
+      <div class="codex-formula">QE Impact: Central Bank Buys Bonds → Prices Rise → Yields Fall → Borrowing Cheaper → Spending Rises</div>
+      <p><strong>Quantitative Tightening (QT)</strong> — the reverse of QE — involves allowing bond holdings to mature without reinvestment (passive QT) or actively selling bonds back into the market (active QT). The Fed began QT in 2022 alongside rate hikes, shrinking its balance sheet from $9 trillion peak. The pace of QT is constrained by financial stability concerns: too aggressive QT can drain bank reserves, causing funding market stress (as happened briefly in September 2019 with the US repo rate spike).</p>`,
     },
     {
       id:'fiscal_policy_entry', cat:'macro', title:'Fiscal Policy',
