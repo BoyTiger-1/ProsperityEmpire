@@ -2,7 +2,7 @@
 
 A browser-based financial civilisation idle game where you build an empire from a handful of Labour units into a global economic superpower — while learning real-world finance and economics along the way.
 
-**Play it live:** [https://boytiger-1.github.io/FinanceCivClicker/](https://boytiger-1.github.io/ProsperityEmpire/)
+**Play it live:** [https://boytiger-1.github.io/ProsperityEmpire/](https://boytiger-1.github.io/ProsperityEmpire/)
 
 ---
 
