@@ -1576,6 +1576,17 @@ const CityScene = (() => {
     migrationWave:  { fog: 0xC8A060, sky: 0xA88040 },
     energySurplus:  { fog: 0xC8D848, sky: 0xA8B828 },
     babyBoom:       { fog: 0xF8C8D8, sky: 0xD8A8B8 },
+    earthquake:     { fog: 0x887766, sky: 0x665544 },
+    worldExpo:      { fog: 0x88C8F8, sky: 0x68A8E8 },
+    currencyCrisis: { fog: 0x887744, sky: 0x665522 },
+    startupBoom:    { fog: 0x78E8C8, sky: 0x58C8A8 },
+    harvestMoon:    { fog: 0xE8C870, sky: 0xC8A850 },
+    debtCrisis:     { fog: 0x664455, sky: 0x443344 },
+    renewableRush:  { fog: 0x88D878, sky: 0x68B858 },
+    criminalNetwork:{ fog: 0x443355, sky: 0x332244 },
+    peaceDividend:  { fog: 0xA8E8D8, sky: 0x88C8B8 },
+    taxRevolt:      { fog: 0x885533, sky: 0x663311 },
+    dataBreach:     { fog: 0x003322, sky: 0x002211 },
   };
 
   // ── Event particle effects ─────────────────────────────────────────
@@ -1758,11 +1769,11 @@ const CityScene = (() => {
       scene.background = new THREE.Color(0x87CEEB);
       scene.fog = new THREE.FogExp2(0xA8D8F0, 0.010);
 
-      camera = new THREE.PerspectiveCamera(42, W/H, 0.1, 300);
+      camera = new THREE.PerspectiveCamera(42, W/H, 0.5, 300);
       camera.position.set(CAM_DEFAULT.x, CAM_DEFAULT.y, CAM_DEFAULT.z);
       camera.lookAt(0, 4, 0);
 
-      renderer = new THREE.WebGLRenderer({ antialias:true });
+      renderer = new THREE.WebGLRenderer({ antialias:true, logarithmicDepthBuffer:true });
       renderer.setSize(W, H);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.shadowMap.enabled = true;

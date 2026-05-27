@@ -189,12 +189,11 @@ const EmpireUI = {
     const descEl = document.getElementById('bp-desc');
     if (descEl) descEl.textContent = def.desc || '';
 
-    // Position panel centered on the 3D building if screen coords provided
+    // Position panel: horizontally centered, vertically near the click point
     if (screenX !== undefined && screenY !== undefined) {
       const PW = 282, PH = Math.min(panel.scrollHeight || 520, 520);
-      let px = Math.round(screenX - PW / 2);
-      let py = Math.round(screenY - PH / 2 - 30); // offset slightly above building center
-      px = Math.max(8, Math.min(window.innerWidth  - PW - 8, px));
+      const px = Math.round((window.innerWidth - PW) / 2);
+      let py = Math.round(screenY - PH * 0.6);
       py = Math.max(56, Math.min(window.innerHeight - PH - 8, py));
       panel.classList.add('bp-over');
       panel.style.left = px + 'px';
@@ -395,6 +394,13 @@ const EmpireUI = {
     if (!list) return;
     const vitals = [
       {
+        name: '😊 Happiness',
+        val: GS.happiness,
+        fmt: v => v.toFixed(0) + '%',
+        note: v => v >= 80 ? '✓ THRIVING' : v >= 60 ? '✓ CONTENT' : v >= 40 ? '◉ UNEASY' : '⚠️ UNHAPPY',
+        cls: v => v >= 60 ? 'pos' : v >= 40 ? 'warn' : 'neg',
+      },
+      {
         name: '🏘️ Housing',
         val: GS.housingStress,
         fmt: v => v.toFixed(0) + '%',
@@ -412,24 +418,54 @@ const EmpireUI = {
         name: '🎓 Education',
         val: GS.educationLevel,
         fmt: v => v.toFixed(0) + '%',
-        note: v => v >= 70 ? '✓ EXCELLENT (+20%)' : v >= 40 ? '✓ GOOD (+10%)' : v >= 20 ? '◉ BASIC (+5%)' : '✗ POOR',
+        note: v => v >= 70 ? '✓ EXCELLENT' : v >= 40 ? '✓ GOOD' : v >= 20 ? '◉ BASIC' : '✗ POOR',
         cls: v => v >= 40 ? 'pos' : v >= 20 ? '' : 'neg',
       },
       {
         name: '🔒 Crime',
         val: GS.crimeRate,
         fmt: v => v.toFixed(0) + '%',
-        note: v => v >= 60 ? '⚠️ HIGH (-8% prod)' : v >= 35 ? '⚠️ MODERATE' : v >= 20 ? '◉ LOW' : '✓ MINIMAL',
+        note: v => v >= 60 ? '⚠️ HIGH' : v >= 35 ? '⚠️ MODERATE' : v >= 20 ? '◉ LOW' : '✓ MINIMAL',
         cls: v => v >= 60 ? 'neg' : v >= 35 ? 'warn' : 'pos',
       },
     ];
+    // Build happiness factor breakdown
+    const hapFactors = [];
+    const foodRate = GS.resources.food?.perSec || 0;
+    const foodNeeded = GS.population * 0.002;
+    if (foodRate >= foodNeeded * 1.5)       hapFactors.push({ label:'Food surplus', val:'+15', pos:true });
+    else if (foodRate >= foodNeeded)         hapFactors.push({ label:'Food adequate', val:'+5', pos:true });
+    else if (foodRate < foodNeeded * 0.5)   hapFactors.push({ label:'Food shortage', val:'-20', pos:false });
+    if (GS.resources.capital?.perSec > 100) hapFactors.push({ label:'Wealthy economy', val:'+10', pos:true });
+    else if (GS.resources.capital?.perSec > 10) hapFactors.push({ label:'Growing economy', val:'+5', pos:true });
+    if (GS.taxRate > 0.25)                  hapFactors.push({ label:'High taxes', val:'-10', pos:false });
+    else if (GS.taxRate < 0.1)              hapFactors.push({ label:'Low taxes', val:'+5', pos:true });
+    const hospitals = GS.buildings.hospital || 0;
+    if (hospitals >= 3)                     hapFactors.push({ label:'Excellent healthcare', val:'+12', pos:true });
+    else if (hospitals >= 1)                hapFactors.push({ label:'Basic healthcare', val:'+5', pos:true });
+    if (GS.pollution > 75)                  hapFactors.push({ label:'Severe pollution', val:'-20', pos:false });
+    else if (GS.pollution > 50)             hapFactors.push({ label:'High pollution', val:'-10', pos:false });
+    if (GS.crimeRate > 60)                  hapFactors.push({ label:'High crime', val:'-18', pos:false });
+    else if (GS.crimeRate > 35)             hapFactors.push({ label:'Moderate crime', val:'-8', pos:false });
+    if (GS.educationLevel > 70)             hapFactors.push({ label:'High education', val:'+12', pos:true });
+    else if (GS.educationLevel > 40)        hapFactors.push({ label:'Good education', val:'+6', pos:true });
+    if (GS.housingStress > 95)              hapFactors.push({ label:'Overcrowding', val:'-12', pos:false });
+
+    const factorHTML = hapFactors.length ? `
+      <div class="stat-row hap-factors">
+        <span class="stat-label" style="color:var(--txt4);font-size:0.82em">FACTORS</span>
+        <span class="stat-val" style="font-size:0.8em">${hapFactors.map(f =>
+          `<span style="color:${f.pos ? 'var(--green3)' : 'var(--red3)'}">${f.val} ${f.label}</span>`
+        ).join(' · ')}</span>
+      </div>` : '';
+
     list.innerHTML = vitals.map(v => {
       const cls = v.cls(v.val);
       return `<div class="stat-row">
         <span class="stat-label">${v.name}</span>
         <span class="stat-val ${cls}">${v.fmt(v.val)} — ${v.note(v.val)}</span>
       </div>`;
-    }).join('');
+    }).join('') + factorHTML;
   },
 
   renderAdvisors() {

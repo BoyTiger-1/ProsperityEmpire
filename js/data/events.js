@@ -296,8 +296,8 @@ const GLOBAL_EVENTS = [
     revert: gs => { gs.eventMods.labor = (gs.eventMods.labor||0.5)/0.5; },
   },
   {
-    id:'cyberAttack', name:'Cyber Attack', type:'negative', emoji:'💻',
-    desc:'Malicious actors target your digital infrastructure. Knowledge and Capital drop.',
+    id:'dataBreach', name:'Corporate Data Breach', type:'negative', emoji:'🔓',
+    desc:'Hackers exfiltrate sensitive financial data. Knowledge and Capital drop.',
     effect:'−40% Knowledge & −30% Capital for 75 seconds.',
     duration:75,
     trigger:{ minPhase:'late' },
@@ -440,5 +440,137 @@ const GLOBAL_EVENTS = [
       gs.population += gain;
     },
     choices:['Implement Policy (−800 Capital)','Decline'],
+  },
+
+  // ════ ADDITIONAL EVENTS ════
+  {
+    id:'earthquake', name:'Earthquake', type:'negative', emoji:'🌋',
+    desc:'A tremor shakes your empire! Infrastructure damaged.',
+    effect:'-50% Goods & Stone for 60 seconds. -5% population.',
+    duration:60,
+    trigger:{ minPhase:'early' },
+    apply: gs => {
+      gs.eventMods.goods = (gs.eventMods.goods||1)*0.5;
+      gs.eventMods.stone = (gs.eventMods.stone||1)*0.5;
+      const loss = Math.floor(gs.population * 0.05);
+      gs.population = Math.max(1, gs.population - loss);
+    },
+    revert: gs => {
+      gs.eventMods.goods = (gs.eventMods.goods||0.5)/0.5;
+      gs.eventMods.stone = (gs.eventMods.stone||0.5)/0.5;
+    },
+  },
+  {
+    id:'worldExpo', name:'World Exposition', type:'positive', emoji:'🌐',
+    desc:'Your empire hosts a grand world expo. Prestige and trade surge.',
+    effect:'×2.5 Influence & ×1.8 Capital for 120 seconds.',
+    duration:120,
+    trigger:{ minPhase:'late' },
+    apply: gs => { gs.eventMods.influence = (gs.eventMods.influence||1)*2.5; gs.eventMods.capital = (gs.eventMods.capital||1)*1.8; },
+    revert: gs => { gs.eventMods.influence = (gs.eventMods.influence||2.5)/2.5; gs.eventMods.capital = (gs.eventMods.capital||1.8)/1.8; },
+  },
+  {
+    id:'archFind', name:'Archaeological Discovery', type:'positive', emoji:'🏺',
+    desc:'Archaeologists uncover a trove of ancient artefacts, sparking national pride.',
+    effect:'+800 Knowledge & +200 Influence immediately.',
+    duration:1,
+    trigger:{ minPhase:'mid' },
+    apply: gs => {
+      if (gs.resources.knowledge) gs.resources.knowledge.amount += 800;
+      if (gs.resources.influence) gs.resources.influence.amount += 200;
+    },
+    revert: gs => {},
+  },
+  {
+    id:'currencyCrisis', name:'Currency Devaluation', type:'negative', emoji:'💱',
+    desc:'Speculative attacks batter your currency. Exports boom but imports cost more.',
+    effect:'-40% Capital income, +50% Goods output for 90 seconds.',
+    duration:90,
+    trigger:{ minPhase:'mid' },
+    apply: gs => { gs.eventMods.capital = (gs.eventMods.capital||1)*0.6; gs.eventMods.goods = (gs.eventMods.goods||1)*1.5; },
+    revert: gs => { gs.eventMods.capital = (gs.eventMods.capital||0.6)/0.6; gs.eventMods.goods = (gs.eventMods.goods||1.5)/1.5; },
+  },
+  {
+    id:'startupBoom', name:'Tech Startup Boom', type:'positive', emoji:'🦄',
+    desc:'A wave of innovation startups puts your empire on the global tech map.',
+    effect:'×3 Knowledge & ×2 Capital for 90 seconds.',
+    duration:90,
+    trigger:{ minPhase:'late' },
+    apply: gs => { gs.eventMods.knowledge = (gs.eventMods.knowledge||1)*3; gs.eventMods.capital = (gs.eventMods.capital||1)*2; },
+    revert: gs => { gs.eventMods.knowledge = (gs.eventMods.knowledge||3)/3; gs.eventMods.capital = (gs.eventMods.capital||2)/2; },
+  },
+  {
+    id:'harvestMoon', name:'Harvest Moon Festival', type:'positive', emoji:'🌕',
+    desc:'A bountiful moon festival lifts spirits. Food output and happiness soar.',
+    effect:'×2 Food for 90 seconds. Happiness boosted.',
+    duration:90,
+    trigger:{ minPhase:'early' },
+    apply: gs => { gs.eventMods.food = (gs.eventMods.food||1)*2; gs.happiness = Math.min(100, gs.happiness + 12); },
+    revert: gs => { gs.eventMods.food = (gs.eventMods.food||2)/2; },
+  },
+  {
+    id:'debtCrisis', name:'Sovereign Debt Scare', type:'negative', emoji:'📜',
+    desc:'Bond markets lose confidence. Interest rates spike, squeezing the economy.',
+    effect:'-35% Capital & -20% Goods for 120 seconds.',
+    duration:120,
+    trigger:{ minPhase:'late' },
+    apply: gs => { gs.eventMods.capital = (gs.eventMods.capital||1)*0.65; gs.eventMods.goods = (gs.eventMods.goods||1)*0.8; },
+    revert: gs => { gs.eventMods.capital = (gs.eventMods.capital||0.65)/0.65; gs.eventMods.goods = (gs.eventMods.goods||0.8)/0.8; },
+  },
+  {
+    id:'renewableRush', name:'Renewable Energy Rush', type:'positive', emoji:'🌱',
+    desc:'Green energy investment floods in. Energy production soars and pollution falls.',
+    effect:'×3 Energy for 120s. Pollution reduced by 15 points.',
+    duration:120,
+    trigger:{ minPhase:'mid' },
+    apply: gs => {
+      gs.eventMods.energy = (gs.eventMods.energy||1)*3;
+      gs.pollution = Math.max(0, (gs.pollution||0) - 15);
+    },
+    revert: gs => { gs.eventMods.energy = (gs.eventMods.energy||3)/3; },
+  },
+  {
+    id:'criminalNetwork', name:'Crime Syndicate Emerges', type:'negative', emoji:'🕵️',
+    desc:'An organised crime network operates in the shadows, siphoning capital.',
+    effect:'-20% Capital for 90 seconds. Crime rate +15.',
+    duration:90,
+    trigger:{ minPhase:'mid' },
+    apply: gs => { gs.eventMods.capital = (gs.eventMods.capital||1)*0.8; gs.crimeRate = Math.min(100, (gs.crimeRate||0) + 15); },
+    revert: gs => { gs.eventMods.capital = (gs.eventMods.capital||0.8)/0.8; gs.crimeRate = Math.max(0, (gs.crimeRate||15) - 15); },
+  },
+  {
+    id:'peaceDividend', name:'Peace Dividend', type:'positive', emoji:'🕊️',
+    desc:'An era of peace reduces military spending. All production improves.',
+    effect:'×1.6 all production for 150 seconds.',
+    duration:150,
+    trigger:{ minPhase:'mid' },
+    apply: gs => { gs.eventMods.all = (gs.eventMods.all||1)*1.6; },
+    revert: gs => { gs.eventMods.all = (gs.eventMods.all||1.6)/1.6; },
+  },
+  {
+    id:'climateAccord', name:'Climate Accord Signed', type:'neutral', emoji:'🌍',
+    desc:'A global climate treaty invites participation. Comply for prestige?',
+    effect:'Spend 600 Capital → reduce Pollution by 30 & gain +80 Influence.',
+    duration:25,
+    trigger:{ minPhase:'mid' },
+    isChoice:true,
+    acceptCost:600,
+    acceptReward: gs => {
+      gs.pollution = Math.max(0, (gs.pollution||0) - 30);
+      if (gs.resources.influence) gs.resources.influence.amount += 80;
+    },
+    choices:['Sign Accord (−600 Capital)','Decline'],
+  },
+  {
+    id:'taxRevolt', name:'Taxpayer Revolt', type:'negative', emoji:'😤',
+    desc:'Overtaxed citizens protest loudly. Happiness and capital both suffer.',
+    effect:'-25% Capital for 60 seconds. Happiness −12.',
+    duration:60,
+    trigger:{ minPhase:'early' },
+    apply: gs => {
+      gs.eventMods.capital = (gs.eventMods.capital||1)*0.75;
+      gs.happiness = Math.max(0, gs.happiness - 12);
+    },
+    revert: gs => { gs.eventMods.capital = (gs.eventMods.capital||0.75)/0.75; },
   },
 ];
