@@ -896,12 +896,9 @@ const CityScene = (() => {
     lookTarget = { x: wp.x*0.5, y: 3, z: wp.z*0.5 };
     _highlight(group);
     clickPulse = 1.0;
-    // Project building world-pos to screen so the panel can float above it
-    const proj = wp.clone().project(camera);
-    const sw = renderer.domElement.clientWidth  || window.innerWidth;
-    const sh = renderer.domElement.clientHeight || window.innerHeight;
-    const sx = (proj.x *  0.5 + 0.5) * sw;
-    const sy = (proj.y * -0.5 + 0.5) * sh;
+    // Use the raw click coordinates — they are already exactly on the building
+    const sx = e?.clientX ?? window.innerWidth  * 0.5;
+    const sy = e?.clientY ?? window.innerHeight * 0.5;
     if (typeof EmpireUI !== 'undefined') EmpireUI.showBuildingPanel(group.userData.buildingId, sx, sy);
   }
 

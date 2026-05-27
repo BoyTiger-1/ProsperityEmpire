@@ -180,7 +180,7 @@ const EmpireUI = {
         const allocated = GS.workerAlloc[bldId] ?? maxW;
         const eff = Math.round(Math.min(1, allocated / maxW) * 100);
         if (wkVal) wkVal.textContent = `${allocated} / ${maxW}`;
-        if (wkEff) wkEff.textContent = `${eff}% efficiency · ${GS.population} pop available`;
+        if (wkEff) wkEff.textContent = `${eff}% efficiency · ${Math.floor(GS.population)} pop available`;
       } else {
         wkRow.style.display = 'none';
       }
