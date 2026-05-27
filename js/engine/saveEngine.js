@@ -36,6 +36,7 @@ const SaveEngine = {
         eventHistory: EventsEngine.eventHistory,
         newsLog: (GS.newsLog || []).slice(0, 60),
         tutorial: GS.tutorial,
+        nations: GS.nations,
       };
       // Save resource amounts
       for (const [id, r] of Object.entries(GS.resources)) {
@@ -77,6 +78,7 @@ const SaveEngine = {
       GS.happiness    = data.happiness || 60;
       GS.taxRate      = data.taxRate || 0.15;
       GS.policies     = data.policies || {};
+      GS.nations      = data.nations || {};
       GS.newsLog      = data.newsLog || [];
       GS.tutorial     = Object.assign(GS.tutorial, data.tutorial || {});
       EventsEngine.eventHistory = data.eventHistory || [];

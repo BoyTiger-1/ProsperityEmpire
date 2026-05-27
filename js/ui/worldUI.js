@@ -83,14 +83,76 @@ const WorldUI = {
 
   renderDiplomacy() {
     const el = document.getElementById('world-diplomacy');
-    el.innerHTML = `
-      <div style="font-size:12px;color:var(--txt2);line-height:1.6">
-        <p>Diplomacy events occur automatically based on your empire's growth and decisions during events.</p>
-        <p>Maintaining friendly relations provides trade bonuses. Hostile relations may trigger sanctions.</p>
-        <div style="margin-top:12px">
-          <strong style="color:var(--gold)">Current Influence: <span id="world-inf-val">${FMT.num(GS.resources.influence.amount)}</span></strong><br>
-          <span style="color:var(--txt3);font-size:11px">High Influence unlocks special diplomatic options.</span>
+    const inf = GS.resources.influence.amount;
+
+    const UPGRADE_COST = { hostile: 300, neutral: 200 };
+    const NEXT_REL     = { hostile: 'neutral', neutral: 'friendly', friendly: 'allied' };
+    const REL_ORDER    = ['hostile', 'neutral', 'friendly', 'allied'];
+
+    const rows = NATIONS_DATA.map(n => {
+      const rel = GS.nations[n.id] || n.relation;
+      const nextRel = NEXT_REL[rel];
+      const cost = UPGRADE_COST[rel];
+      const canAfford = inf >= (cost || Infinity);
+      const btnHTML = nextRel && cost
+        ? `<button class="btn btn-ghost" style="font-size:10px;padding:3px 8px;margin-top:4px;${!canAfford?'opacity:0.45':''}"
+             onclick="WorldUI.improvRelation('${n.id}')" ${!canAfford?'disabled':''}>
+             Send Ambassador (${FMT.num(cost)} ✨)
+           </button>`
+        : rel === 'allied'
+        ? `<span style="font-size:10px;color:var(--gold)">★ Allied</span>`
+        : `<span style="font-size:10px;color:var(--txt3)">Max relation</span>`;
+
+      return `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bg3)">
+        <span style="font-size:18px">${n.flag}</span>
+        <div style="flex:1">
+          <div style="font-size:12px;font-weight:700">${n.name}</div>
+          <div style="font-size:10px;color:var(--txt3)">${n.specialty}</div>
+          ${btnHTML}
         </div>
+        <span class="nation-relation ${rel}">${rel.charAt(0).toUpperCase()+rel.slice(1)}</span>
       </div>`;
+    }).join('');
+
+    // Active trade bonuses from friendly/allied nations
+    const bonuses = NATIONS_DATA.filter(n => {
+      const rel = GS.nations[n.id] || n.relation;
+      return rel === 'friendly' || rel === 'allied';
+    }).map(n => {
+      const rel = GS.nations[n.id] || n.relation;
+      const bonus = rel === 'allied' ? `+20% ${n.specialty} bonus` : `+10% ${n.specialty} bonus`;
+      return `<div style="font-size:11px;color:var(--green3);padding:2px 0">${n.flag} ${n.name}: ${bonus}</div>`;
+    }).join('') || '<div style="font-size:11px;color:var(--txt3)">No active trade bonuses.</div>';
+
+    el.innerHTML = `
+      <div style="margin-bottom:10px">
+        <strong style="color:var(--gold);font-size:13px">Influence: <span id="world-inf-val">${FMT.num(inf)}</span> ✨</strong>
+        <span style="color:var(--txt3);font-size:10px;margin-left:6px">Spend to improve relations</span>
+      </div>
+      <div style="margin-bottom:12px">${rows}</div>
+      <div style="background:var(--bg3);border-radius:6px;padding:8px">
+        <div style="font-size:11px;font-weight:700;color:var(--txt2);margin-bottom:4px">Active Trade Bonuses</div>
+        ${bonuses}
+      </div>`;
+  },
+
+  improvRelation(nationId) {
+    const n = NATIONS_DATA.find(nd => nd.id === nationId);
+    if (!n) return;
+    const rel = GS.nations[nationId] || n.relation;
+    const UPGRADE_COST = { hostile: 300, neutral: 200 };
+    const NEXT_REL     = { hostile: 'neutral', neutral: 'friendly' };
+    const cost = UPGRADE_COST[rel];
+    const nextRel = NEXT_REL[rel];
+    if (!cost || !nextRel) return;
+    if (GS.resources.influence.amount < cost) {
+      Notifications.show('✨ Not enough Influence', `Need ${FMT.num(cost)} Influence to send ambassador.`, 'error');
+      return;
+    }
+    GS.resources.influence.amount -= cost;
+    GS.nations[nationId] = nextRel;
+    Notifications.show(`🤝 Diplomacy`, `Relations with ${n.name} improved to ${nextRel}!`, 'success');
+    NewsEngine.add('diplomacy', `🤝 ${n.name}`, `Relations improved to ${nextRel}.`);
+    this.render();
   },
 };

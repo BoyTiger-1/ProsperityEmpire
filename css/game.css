@@ -1010,6 +1010,7 @@ button, input, select, a,
 .nation-relation.friendly { background: rgba(42,102,64,0.2);  color: var(--green3); border: 1px solid rgba(80,184,120,0.25); }
 .nation-relation.neutral  { background: rgba(74,144,176,0.1); color: var(--cyan);   border: 1px solid rgba(74,144,176,0.25); }
 .nation-relation.hostile  { background: rgba(106,30,24,0.2);  color: var(--red3);   border: 1px solid rgba(200,64,48,0.25);  }
+.nation-relation.allied   { background: rgba(234,179,8,0.2);   color: var(--gold);   border: 1px solid rgba(234,179,8,0.4);   }
 
 /* ═══════════════════════════════════════════════
    PRESTIGE TAB

@@ -1359,6 +1359,38 @@ const CityScene = (() => {
     supplyShock:  { col:0xFF6633, lCol:0xFF4411, pat:'fall',  sz:0.8, grav:-2 },
   };
 
+  // Persistent atmospheric tints while events are active (subtler than particle-effect fog)
+  const EVENT_ATMO = {
+    drought:        { fog: 0xD4A060, sky: 0xC08040 },
+    flood:          { fog: 0x5577AA, sky: 0x334488 },
+    pandemic:       { fog: 0x4A5A44, sky: 0x3A4A33 },
+    greatPlague:    { fog: 0x2A3A28, sky: 0x1A2A18 },
+    famine:         { fog: 0x9B8060, sky: 0x6B5535 },
+    recession:      { fog: 0x663344, sky: 0x441122 },
+    marketCrash:    { fog: 0x663344, sky: 0x441122 },
+    bankRun:        { fog: 0x664433, sky: 0x442211 },
+    cyberAttack:    { fog: 0x003300, sky: 0x002200 },
+    warDraft:       { fog: 0x6A3A10, sky: 0x4A2808 },
+    powerOutage:    { fog: 0x333344, sky: 0x222233 },
+    tradeWar:       { fog: 0x7A5A30, sky: 0x5A3A18 },
+    energyCrisis:   { fog: 0x3A4A66, sky: 0x253354 },
+    laborStrike:    { fog: 0x6A4422, sky: 0x4A2810 },
+    workerStrike:   { fog: 0x6A4422, sky: 0x4A2810 },
+    supplyShock:    { fog: 0x7A5540, sky: 0x5A3A28 },
+    goldRush:       { fog: 0xD4A840, sky: 0xB08820 },
+    bullMarket:     { fog: 0xD4A840, sky: 0xB08820 },
+    stockRally:     { fog: 0xC8B848, sky: 0xA89828 },
+    harvestFestival:{ fog: 0x88C878, sky: 0x66A858 },
+    goodWeather:    { fog: 0xA8D890, sky: 0x88C870 },
+    techBreakthrough:{ fog: 0x68C8F8, sky: 0x48A8E0 },
+    techInnovation: { fog: 0x68C8F8, sky: 0x48A8E0 },
+    touristBoom:    { fog: 0x78C8E8, sky: 0x58A8D0 },
+    immigrationWave:{ fog: 0xC8A060, sky: 0xA88040 },
+    migrationWave:  { fog: 0xC8A060, sky: 0xA88040 },
+    energySurplus:  { fog: 0xC8D848, sky: 0xA8B828 },
+    babyBoom:       { fog: 0xF8C8D8, sky: 0xD8A8B8 },
+  };
+
   // ── Event particle effects ─────────────────────────────────────────
   function triggerEventEffect(type, eventId) {
     if (!scene) return;
@@ -1509,6 +1541,15 @@ const CityScene = (() => {
         scene.background.lerpColors(new THREE.Color(ea.skyTarget), new THREE.Color(ea.skyOrig), t);
         if (t >= 1) envAnim = null;
       }
+    } else {
+      // Persistent event atmosphere — gradually tint fog/sky while events are active
+      let tFog = 0xA8D8F0, tSky = 0x87CEEB;
+      for (const ae of (GS.activeEvents || [])) {
+        const a = EVENT_ATMO[ae.id];
+        if (a) { tFog = a.fog; tSky = a.sky; break; }
+      }
+      scene.fog.color.lerp(new THREE.Color(tFog), dt * 0.3);
+      scene.background.lerp(new THREE.Color(tSky), dt * 0.3);
     }
 
     const sig = _getBuildSig();
