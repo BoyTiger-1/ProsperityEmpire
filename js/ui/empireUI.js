@@ -223,14 +223,21 @@ const EmpireUI = {
     const now = Date.now();
     const timeSinceLast = now - (GS.lastClickTime || 0);
 
+    // Max combo and per-step multiplier scale with phase + buildings
+    const phaseMaxBonus  = { early:0, mid:30, late:80, advanced:180 };
+    const phaseStepBonus = { early:0.10, mid:0.13, late:0.17, advanced:0.22 };
+    const totalBuildings = Object.values(GS.buildings).reduce((a,v)=>a+v, 0);
+    const maxCombo  = 20 + (phaseMaxBonus[GS.phase]  || 0) + Math.floor(totalBuildings / 4);
+    const comboStep = phaseStepBonus[GS.phase] || 0.10;
+
     if (timeSinceLast < 600) {
-      this._comboCount = Math.min((this._comboCount || 0) + 1, 20);
+      this._comboCount = Math.min((this._comboCount || 0) + 1, maxCombo);
     } else {
       this._comboCount = 1;
     }
     GS.lastClickTime = now;
 
-    const comboMult = 1 + (this._comboCount - 1) * 0.1;
+    const comboMult = 1 + (this._comboCount - 1) * comboStep;
     const base  = (GS.clickPower || 1) * (GS.prestige.permanentMultiplier || 1) * (GS.multipliers.clickPower || 1);
     const labor = base * comboMult;
 
@@ -242,7 +249,8 @@ const EmpireUI = {
     const display = document.getElementById('combo-display');
     if (display) {
       if (this._comboCount >= 3) {
-        display.textContent = `×${comboMult.toFixed(1)} COMBO! (${this._comboCount})`;
+        const tier = this._comboCount >= maxCombo * 0.75 ? '🔥 MAX' : this._comboCount >= maxCombo * 0.4 ? '⚡' : '';
+        display.textContent = `${tier} ×${comboMult.toFixed(1)} COMBO! (${this._comboCount}/${maxCombo})`;
         display.style.opacity = '1';
       } else {
         display.style.opacity = '0';
