@@ -72,7 +72,7 @@ const SaveEngine = {
       GS.stats        = Object.assign(GS.stats, data.stats || {});
       GS.session.empireAge = data.session?.empireAge || 0;
       GS.achievements = new Set(data.achievements || []);
-      GS.population   = data.population || 0;
+      GS.population   = (data.population != null) ? data.population : 10;
       GS.maxPopulation = data.maxPopulation || 0;
       GS.happiness    = data.happiness || 60;
       GS.taxRate      = data.taxRate || 0.15;

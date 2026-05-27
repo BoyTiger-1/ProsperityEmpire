@@ -79,6 +79,18 @@ const Production = {
       }
     }
 
+    // Food spoilage: food above 500 decays at 0.3%/sec — forces active farming
+    const food = GS.resources.food;
+    if (food.amount > 500) {
+      food.amount -= food.amount * 0.003 * dt;
+    }
+
+    // Population tax revenue: citizens generate a trickle of capital passively
+    if (GS.population > 0) {
+      const taxTrickle = GS.population * GS.taxRate * 0.004 * dt;
+      GS.resources.capital.amount += taxTrickle;
+      GS.stats.totalCapitalEarned += taxTrickle;
+    }
   },
 
   // Calculate offline gains

@@ -692,5 +692,74 @@ const CODEX_DATA = {
       <h3>Risks and Controversies</h3>
       <p>PE's use of leverage means high debt loads can overwhelm companies in recessions, leading to bankruptcies that would not have occurred under lower leverage. Critics argue PE extracts value from companies at the expense of workers, creditors, and the broader economy. Academic evidence on employment effects is mixed. IRR as a performance metric can be gamed through early exits and dividend recapitalisations — the Public Market Equivalent (PME) is a more comparable benchmark.</p>`,
     },
+
+    // ── NEW ENTRIES ──
+    {
+      id:'game_theory', cat:'basics', title:'Game Theory',
+      subtitle:'Strategic decision-making when outcomes depend on others',
+      body:`<p>Game theory is the mathematical study of strategic interaction — situations where your best decision depends on what others do. Developed by John von Neumann and John Nash, it is foundational to economics, political science, evolutionary biology, and military strategy.</p>
+      <h3>Core Concepts</h3>
+      <ul>
+        <li><strong>Players</strong>: Decision-makers in the game (individuals, firms, countries).</li>
+        <li><strong>Strategies</strong>: The choices available to each player.</li>
+        <li><strong>Payoffs</strong>: The outcome each player receives for each combination of strategies.</li>
+        <li><strong>Nash Equilibrium</strong>: A set of strategies where no player can improve their payoff by unilaterally changing their strategy. Named after John Nash (depicted in <em>A Beautiful Mind</em>).</li>
+      </ul>
+      <h3>The Prisoner's Dilemma</h3>
+      <p>Two suspects are interrogated separately. If both stay silent: 1 year each. If one betrays the other: betrayer goes free, silent one gets 10 years. If both betray: 5 years each. Individually rational to betray — but both betraying is worse than both staying silent. This models arms races, price wars, and environmental agreements.</p>
+      <h3>Real-World Applications</h3>
+      <ul>
+        <li><strong>OPEC</strong>: Members have incentive to cheat on oil production quotas (prisoner's dilemma), undermining cartel agreements.</li>
+        <li><strong>Auction design</strong>: How to structure spectrum auctions, government procurement, or ad bidding systems (Google's Nobel-winning AdWords mechanism).</li>
+        <li><strong>Oligopoly pricing</strong>: Boeing vs. Airbus, Coca-Cola vs. Pepsi — strategic interdependence shapes pricing and investment.</li>
+        <li><strong>Repeated games</strong>: When games repeat, cooperation becomes stable (tit-for-tat strategies). This explains why reputation matters in business and why countries maintain trade agreements.</li>
+      </ul>
+      <h3>Tragedy of the Commons</h3>
+      <p>When a resource is shared (a commons), individual incentive to over-use it leads to collective depletion. Each user bears the full benefit of extraction but shares the cost of depletion. Solutions: privatisation (assign property rights), regulation (quotas, taxes), or community governance (Elinor Ostrom's Nobel-winning work showed communities can self-govern commons sustainably).</p>`,
+    },
+    {
+      id:'labor_markets', cat:'macro', title:'Labor Markets',
+      subtitle:'How wages and employment are determined',
+      body:`<p>The labour market is the meeting point of workers selling their time and skills, and employers buying those services. Unlike commodity markets, labour markets are shaped by power, law, social norms, and geography in ways that make them persistently imperfect.</p>
+      <h3>Wage Determination</h3>
+      <p>In a competitive market, the wage rate settles where labour supply equals demand. Supply: how many hours workers are willing to supply at each wage level. Demand: how productive workers are (their marginal revenue product). In practice, wages reflect skill scarcity, union bargaining, minimum wage laws, and firm-specific factors.</p>
+      <h3>Labor Market Concepts</h3>
+      <ul>
+        <li><strong>Monopsony</strong>: A single dominant employer (like a company town or Amazon in some logistics markets) can hold wages below competitive levels — the labour market equivalent of monopoly. Monopsony power explains why minimum wages sometimes don't reduce employment as textbook models predict.</li>
+        <li><strong>Efficiency wages</strong>: Paying above-market wages to attract better workers, reduce turnover, and boost morale — making higher wages profitable for the firm. Henry Ford doubled wages to $5/day in 1914, halving turnover.</li>
+        <li><strong>Human capital</strong>: Workers invest in skills (education, training) that raise their productivity. Returns to education — the wage premium from degrees — is a central debate in education policy.</li>
+        <li><strong>Structural vs. frictional unemployment</strong>: Structural = skills mismatch (coal miners when coal industry collapses). Frictional = temporary gaps between jobs. Both are distinct from cyclical unemployment (recession-driven).</li>
+      </ul>
+      <h3>Technological Change and Work</h3>
+      <p>Technology eliminates some jobs (ATMs reduced bank tellers) but creates others (ATM technicians, new bank products). The Industrial Revolution caused mass displacement followed by unprecedented prosperity. Today's AI wave follows the same pattern — but the speed and breadth of displacement may be unprecedented. Polarisation: technology complements high-skill work (coding, analysis) and can substitute low-skill routine tasks, squeezing the middle.</p>
+      <h3>Gig Economy</h3>
+      <p>Platforms like Uber, DoorDash, and Fiverr have created a new class of independent contractors. Benefits: flexibility, entry access. Costs: no benefits, unstable income, no collective bargaining. The classification of gig workers (employee vs. contractor) is one of the defining legal battles of the 2020s, with major implications for labour law globally.</p>`,
+    },
+    {
+      id:'environmental_economics', cat:'advanced', title:'Environmental Economics',
+      subtitle:'Pricing the planet — externalities, carbon, and sustainability',
+      body:`<p>Environmental economics applies economic tools to environmental problems. The core insight: environmental damage is often a <strong>market failure</strong> — costs imposed on third parties (negative externalities) not reflected in prices. Fix the prices, fix the incentives.</p>
+      <h3>Externalities and the Pigouvian Tax</h3>
+      <p>A factory emitting pollution imposes costs on neighbours (health damage, cleanup) without compensating them. The market produces too much pollution because the factory ignores these external costs. Arthur Pigou (1920) proposed taxing the factory at the exact social cost of the pollution — making the market price include all costs. This <strong>Pigouvian tax</strong> corrects the externality without government dictating production methods.</p>
+      <h3>Carbon Pricing</h3>
+      <p>Two main approaches: <strong>carbon tax</strong> (set the price, let the market determine quantity) and <strong>cap-and-trade</strong> (set the quantity, let the market determine price). The EU Emissions Trading System is the world's largest carbon market. British Columbia's carbon tax (since 2008) is among the most studied — evidence suggests it reduced emissions without significant economic harm. Economists almost unanimously prefer carbon pricing to command-and-control regulation as the least-cost way to reduce emissions.</p>
+      <h3>The Discount Rate Problem</h3>
+      <p>Climate change is a multi-generational problem — costs fall on future generations, benefits of action accrue slowly. The <strong>social discount rate</strong> used to value future climate damage is one of the most contested questions in economics. A 5% rate makes $1 trillion of damage in 50 years worth only ~$87 billion today. A 1% rate makes it worth ~$608 billion. Nordhaus used ~4.5% (less urgent action needed); Stern used ~1.4% (urgent action justified). The choice of discount rate is fundamentally an ethical question about how much we value future generations.</p>
+      <h3>Natural Capital and the Doughnut Economy</h3>
+      <p>Traditional GDP growth ignores depletion of natural capital (forests, fisheries, aquifers, climate stability). "Green GDP" or "inclusive wealth" accounting attempts to subtract environmental depletion from standard GDP. Kate Raworth's <em>Doughnut Economics</em> model argues economies should operate within a "safe and just space" — above a social foundation (meeting human needs) and below an ecological ceiling (planetary boundaries).</p>`,
+    },
+    {
+      id:'innovation_economics', cat:'advanced', title:'Innovation and Growth Economics',
+      subtitle:'Technology, disruption, and the engine of long-run prosperity',
+      body:`<p>Mainstream economics long treated technology as falling like manna from heaven — an exogenous factor outside the model. Modern growth theory makes innovation endogenous: it is produced by economic actors responding to incentives, and understanding that process is key to understanding why some countries become rich and others don't.</p>
+      <h3>Schumpeter and Creative Destruction</h3>
+      <p>Joseph Schumpeter (1942) argued that capitalism's defining feature is not price competition but innovation that renders existing products, processes, and industries obsolete. The automobile destroyed the horse-and-buggy industry. The smartphone destroyed cameras, GPS devices, music players, and landlines. Streaming destroyed video rental. This "creative destruction" causes pain for disrupted workers and industries but drives long-run productivity growth. Schumpeter worried that successful capitalism would eventually generate bureaucratic large firms hostile to the entrepreneurial spirit that creates it.</p>
+      <h3>Endogenous Growth Theory</h3>
+      <p>Paul Romer (Nobel 2018) showed that knowledge is non-rival (using an idea doesn't deplete it) and partially non-excludable (hard to prevent others from using it). This makes knowledge a special input — it generates increasing returns. Policies that encourage knowledge creation (education, R&D subsidies, patents, immigration of skilled workers) generate permanent increases in growth rates, not just one-time level shifts. This challenges the earlier Solow model, which predicted diminishing returns to capital.</p>
+      <h3>The Patent System and IP Trade-offs</h3>
+      <p>Patents grant temporary monopoly power (typically 20 years) in exchange for public disclosure of innovations. The rationale: without protection, innovators cannot recoup R&D costs, so they under-invest. The cost: monopoly pricing reduces access. The pharmaceutical industry illustrates this tension acutely — new drug development costs $1-3 billion; without patents, generics undercut immediately and no one funds new drugs. With patents, lifesaving medications are unaffordable in poor countries.</p>
+      <h3>Network Effects and Winner-Take-All Markets</h3>
+      <p>Many modern industries exhibit strong network effects: the product becomes more valuable as more people use it (telephones, social networks, payment systems). This creates winner-take-all dynamics — one or two platforms dominate. Facebook, Google, and Visa/Mastercard all benefit from network effects that create natural barriers to entry. These industries challenge traditional antitrust thinking built around price competition in commodity markets.</p>`,
+    },
   ],
 };

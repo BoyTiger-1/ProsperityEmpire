@@ -27,7 +27,6 @@ const PopulationEngine = {
     const growthRate = foodSurplus >= 0 ? 0.01 : -0.005;
     const targetPop = foodSurplus >= 0 ? maxPop : GS.population * 0.9;
     GS.population = Math.max(0, Math.min(GS.maxPopulation, GS.population + (targetPop - GS.population) * growthRate));
-    GS.population = Math.round(GS.population);
   },
 
   tick(dt) {
@@ -38,7 +37,7 @@ const PopulationEngine = {
     const surplus = foodRate - foodNeeded;
 
     let growthPerSec = surplus >= 0
-      ? Math.min(2, GS.maxPopulation * 0.001 + 0.1)
+      ? Math.min(8, GS.maxPopulation * 0.012 + 0.5)
       : -Math.min(5, GS.population * 0.002 + 0.1);
 
     // Hospitals reduce death rate and boost natural growth
@@ -59,7 +58,6 @@ const PopulationEngine = {
 
     GS.popGrowthRate = growthPerSec;
     GS.population = Math.max(0, Math.min(GS.maxPopulation, GS.population + growthPerSec * dt));
-    GS.population = Math.round(GS.population);
 
     this.updateCityMetrics();
     this.updateHappiness(dt);
@@ -165,7 +163,7 @@ const PopulationEngine = {
 
   updatePopBar() {
     const valEl = document.getElementById('pop-val');
-    if (valEl) valEl.textContent = FMT.num(GS.population, 0) + (GS.maxPopulation ? ' / ' + FMT.num(GS.maxPopulation, 0) : '');
+    if (valEl) valEl.textContent = FMT.num(Math.floor(GS.population), 0) + (GS.maxPopulation ? ' / ' + FMT.num(GS.maxPopulation, 0) : '');
 
     const hapFill = document.getElementById('hap-fill');
     if (hapFill) hapFill.style.width = GS.happiness.toFixed(0) + '%';
