@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="css/game.css">
   <!-- Three.js for 3D city -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <!-- Supabase for cloud saves (loaded early so CloudSave can reference it) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 
@@ -382,6 +384,7 @@
 <script src="js/engine/eventsEngine.js"></script>
 <script src="js/engine/prestigeEngine.js"></script>
 <script src="js/engine/saveEngine.js"></script>
+<script src="js/engine/cloudSave.js"></script>
 <script src="js/engine/achievementEngine.js"></script>
 <script src="js/engine/populationEngine.js"></script>
 <script src="js/engine/policyEngine.js"></script>
@@ -402,6 +405,7 @@
 <script src="js/ui/worldUI.js"></script>
 <script src="js/ui/prestigeUI.js"></script>
 <script src="js/ui/achievementsUI.js"></script>
+<script src="js/ui/authUI.js"></script>
 
 <script src="js/main.js"></script>
 </body>

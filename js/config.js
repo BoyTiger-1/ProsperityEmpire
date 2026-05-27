@@ -1,3 +1,9 @@
+/* ── SUPABASE CONFIG ── Fill in your project values to enable cloud saves.
+   Create a free project at https://supabase.com, then paste your URL and anon key here.
+   Leave empty strings to disable cloud saves. */
+const SUPABASE_URL      = 'https://nospmnolqmcokikejach.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5vc3Btbm9scW1jb2tpa2VqYWNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4NDU0NDAiLCJleHAiOjIwOTU0MjE0NDB9.GZcX_wjOUhz2EPEEmtIj8n6h8Dazc6C2s_xrYK59f_k';
+
 /* ── CONFIG ── Game-wide constants */
 const CFG = {
   TICK_MS:        100,       // main loop interval

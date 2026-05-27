@@ -44,6 +44,10 @@ const SaveEngine = {
       }
       localStorage.setItem(this.KEY, JSON.stringify(data));
       GS.session.lastSave = Date.now();
+      // Async cloud push if user is signed in
+      if (typeof CloudSave !== 'undefined' && CloudSave.isSignedIn) {
+        CloudSave.pushSave(data).catch(() => {});
+      }
       return true;
     } catch(e) {
       console.error('Save failed:', e);

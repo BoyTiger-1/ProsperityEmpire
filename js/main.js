@@ -53,6 +53,8 @@
     PoliciesUI.init();
     TutorialUI.init();
     NewsUI.init();
+    CloudSave.init();
+    AuthUI.init();
 
     // ── Load or fresh start ──
     const loaded = SaveEngine.load();
