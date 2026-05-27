@@ -356,7 +356,7 @@ const CityScene = (() => {
     box(1.4, 2.6, 1.3, 0xFF7722, 1.3, g);
     // Coloured merchant awnings around outside
     const awnColors = [0xFF2244, 0x22AAFF, 0xFFCC00, 0x44CC44];
-    [[1.2,0.9,-0.5],[−1.2,0.9,-0.5],[0.5,0.9,1.2],[-0.5,0.9,1.2]].forEach(([ax,ay,az], i) => {
+    [[1.2,0.9,-0.5],[-1.2,0.9,-0.5],[0.5,0.9,1.2],[-0.5,0.9,1.2]].forEach(([ax,ay,az], i) => {
       const awn = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.07, 0.6), mat(awnColors[i]));
       awn.position.set(ax, ay, az); awn.rotation.x = -0.25; g.add(awn);
       const post = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.9, 0.06), mat(0x886644));
@@ -367,7 +367,7 @@ const CityScene = (() => {
     const flag = new THREE.Mesh(new THREE.PlaneGeometry(0.55, 0.35), mat(0xFF4400));
     flag.position.set(0.88, 4.28, 0); flag.material.side = THREE.DoubleSide; g.add(flag);
     // Stacked barrels outside
-    [[−0.9,0.22,-0.8],[-0.9,0.55,-0.8]].forEach(([bx,by,bz]) => {
+    [[-0.9,0.22,-0.8],[-0.9,0.55,-0.8]].forEach(([bx,by,bz]) => {
       const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.35, 8), mat(0x885522));
       barrel.position.set(bx, by, bz); barrel.rotation.z = by > 0.3 ? Math.PI/2 : 0; g.add(barrel);
     });
