@@ -201,6 +201,8 @@ function updatePhase() {
   else if (c >= PHASE_THRESHOLDS.late.capital     && b >= PHASE_THRESHOLDS.late.buildings)     newPhase = 'late';
   else if (c >= PHASE_THRESHOLDS.mid.capital      && b >= PHASE_THRESHOLDS.mid.buildings)      newPhase = 'mid';
 
+  const phaseOrder = ['early','mid','late','advanced'];
+  if (phaseOrder.indexOf(newPhase) <= phaseOrder.indexOf(GS.phase)) return; // never regress
   if (newPhase !== GS.phase) {
     const old = GS.phase;
     GS.phase = newPhase;
