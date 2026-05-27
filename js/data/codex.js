@@ -1,12 +1,12 @@
 /* ── CODEX DATA — Financial Encyclopedia entries ── */
 const CODEX_DATA = {
   categories: [
-    { id:'basics', name:'📘 Economics Basics' },
+    { id:'basics',   name:'📘 Economics Basics' },
     { id:'personal', name:'💳 Personal Finance' },
     { id:'business', name:'🏢 Business Finance' },
-    { id:'markets', name:'📈 Markets & Investing' },
-    { id:'macro', name:'🌍 Macroeconomics' },
-    { id:'advanced', name:'🔬 Advanced Finance' },
+    { id:'markets',  name:'📈 Markets & Investing' },
+    { id:'macro',    name:'🌍 Macroeconomics' },
+    { id:'advanced', name:'🔬 Advanced Theory' },
   ],
   entries: [
 
@@ -760,6 +760,553 @@ const CODEX_DATA = {
       <p>Patents grant temporary monopoly power (typically 20 years) in exchange for public disclosure of innovations. The rationale: without protection, innovators cannot recoup R&D costs, so they under-invest. The cost: monopoly pricing reduces access. The pharmaceutical industry illustrates this tension acutely — new drug development costs $1-3 billion; without patents, generics undercut immediately and no one funds new drugs. With patents, lifesaving medications are unaffordable in poor countries.</p>
       <h3>Network Effects and Winner-Take-All Markets</h3>
       <p>Many modern industries exhibit strong network effects: the product becomes more valuable as more people use it (telephones, social networks, payment systems). This creates winner-take-all dynamics — one or two platforms dominate. Facebook, Google, and Visa/Mastercard all benefit from network effects that create natural barriers to entry. These industries challenge traditional antitrust thinking built around price competition in commodity markets.</p>`,
+    },
+
+    // ── MORE BASICS ──
+    {
+      id:'monopoly_power', cat:'basics', title:'Monopoly and Market Power',
+      subtitle:'When sellers control prices',
+      body:`<p>A monopoly exists when a single seller faces no close competition. Unlike the competitive firm which is a <em>price taker</em>, a monopolist is a <em>price maker</em> — it can choose any point on the demand curve, trading off higher price against lower quantity sold.</p>
+      <h3>The Monopolist's Rule</h3>
+      <p>Profit maximisation still requires MR = MC, but for a monopolist marginal revenue is always below price (because selling one more unit requires lowering price on all previous units). The result: monopolists produce less and charge more than competitive markets would.</p>
+      <div class="codex-formula">Deadweight Loss = ½ × (P_M − MC) × (Q_C − Q_M)</div>
+      <p>This deadweight loss is the social cost of monopoly: transactions that would benefit both buyer and seller don't happen. Antitrust regulators attempt to prevent or break up monopolies for this reason.</p>
+      <h3>Sources of Monopoly Power</h3>
+      <ul><li><strong>Natural monopoly:</strong> economies of scale so large that one firm can serve the market more cheaply than two (water, electricity grids)</li>
+      <li><strong>Patents and IP:</strong> temporary legal monopoly to reward innovation</li>
+      <li><strong>Control of key resources:</strong> De Beers and diamonds historically</li>
+      <li><strong>Network effects:</strong> switching costs lock in customers</li></ul>
+      <h3>Price Discrimination</h3>
+      <p>A monopolist with information about willingness to pay can charge different customers different prices. First-degree (perfect) discrimination extracts all consumer surplus. Airlines, software subscriptions, and pharmaceutical companies all practise forms of price discrimination — it can increase output and reduce deadweight loss, but distributional consequences are often regressive.</p>`,
+    },
+    {
+      id:'consumer_theory', cat:'basics', title:'Consumer Theory and Utility',
+      subtitle:'How rational agents make choices',
+      body:`<p>Consumer theory formalises how individuals allocate limited income across goods to maximise wellbeing. It underpins demand curves and is the microeconomic foundation for welfare analysis.</p>
+      <h3>Utility and Indifference Curves</h3>
+      <p>Utility is a numerical representation of preferences — not pleasure per se, but an ordinal ranking. Indifference curves show all combinations of goods giving equal utility; they slope downward (to get more of one good you give up the other) and are convex to the origin (reflecting diminishing marginal rate of substitution).</p>
+      <h3>The Budget Constraint</h3>
+      <p>The budget line shows all affordable bundles: P_x·X + P_y·Y = I. Its slope is −P_x/P_y, the relative price. The consumer optimises at the tangency: MRS = P_x/P_y — the rate at which you're willing to trade goods equals the rate at which the market lets you.</p>
+      <h3>Revealed Preference and Demand</h3>
+      <p>When prices change, consumption adjusts. The <strong>substitution effect</strong> (move along new indifference curve to cheaper good) is always negative. The <strong>income effect</strong> depends on whether the good is normal or inferior. Slutsky's equation decomposes these: ∂x/∂p = (∂x/∂p)|utility_const − x·(∂x/∂I).</p>
+      <h3>Giffen and Veblen Goods</h3>
+      <p>Giffen goods have upward-sloping demand — as price rises, consumption rises. This requires a strong positive income effect for an inferior good (bread during Irish famine). Veblen goods are different: demand rises with price because high price signals status (luxury watches, handbags). Both violate the ordinary law of demand but for different reasons.</p>`,
+    },
+    {
+      id:'production_costs', cat:'basics', title:'Production Theory and Costs',
+      subtitle:'How firms turn inputs into output',
+      body:`<p>Production theory studies how firms combine inputs to produce output efficiently. The production function Q = f(K, L) maps capital and labour into output.</p>
+      <h3>Short Run vs. Long Run</h3>
+      <p>In the short run at least one input (typically capital) is fixed. In the long run, all inputs are variable. This distinction drives the cost curve shapes that determine competitive market outcomes.</p>
+      <h3>The Cost Curves</h3>
+      <ul>
+        <li><strong>Fixed costs (FC)</strong>: don't vary with output — rent, loan payments</li>
+        <li><strong>Variable costs (VC)</strong>: change with output — materials, hourly labour</li>
+        <li><strong>Marginal cost (MC)</strong>: cost of one more unit — dTC/dQ</li>
+        <li><strong>Average total cost (ATC)</strong>: TC/Q — U-shaped due to spreading FC then rising MC</li>
+      </ul>
+      <div class="codex-formula">MC crosses ATC at ATC's minimum (the efficient scale)</div>
+      <h3>Returns to Scale</h3>
+      <p>Doubling all inputs: if output doubles = constant returns; more than doubles = increasing returns (economies of scale); less than doubles = decreasing returns. Most industries exhibit increasing returns at low output, eventually transitioning to decreasing returns (management complexity, coordination costs).</p>
+      <h3>Economies of Scope</h3>
+      <p>Cost savings from producing multiple products jointly. A firm producing both cars and trucks shares a factory; a bank providing savings and loans shares a customer base and risk systems. Scope economies explain diversified conglomerates and supermarkets.</p>`,
+    },
+    {
+      id:'oligopoly', cat:'basics', title:'Oligopoly and Strategic Interaction',
+      subtitle:'Markets with a few powerful players',
+      body:`<p>An oligopoly is a market dominated by a small number of firms whose decisions are <em>interdependent</em> — each firm's optimal strategy depends on what others do. This makes oligopoly analysis inherently game-theoretic.</p>
+      <h3>The Cournot Model</h3>
+      <p>Firms simultaneously choose output quantities. Each firm's best response (reaction function) is a downward-sloping function of the rival's output. The Nash equilibrium occurs where reaction functions intersect: output is between the competitive and monopoly levels, and price is between competitive price and monopoly price.</p>
+      <h3>The Bertrand Model</h3>
+      <p>Firms simultaneously choose prices. With homogeneous goods and constant costs, Bertrand predicts the competitive outcome even with just two firms — prices are driven to marginal cost. This is the Bertrand paradox: two competitors produce the competitive result, contradicting intuition about market power.</p>
+      <h3>Price Leadership and Tacit Collusion</h3>
+      <p>Without explicit coordination (which is illegal cartel behaviour), oligopolists may tacitly collude through price signalling, following an industry price leader, or practising price rigidity (kinked demand curve). These mechanisms sustain prices above competitive levels without overt agreement.</p>
+      <h3>OPEC and Real-World Cartels</h3>
+      <p>OPEC is an explicit production cartel attempting to maintain prices by coordinating output cuts. The fundamental problem: each member has an incentive to cheat (produce more at the high cartel price). Cartels tend to be unstable for exactly this reason — the prisoner's dilemma logic applies at the national scale.</p>`,
+    },
+
+    // ── MORE MACROECONOMICS ──
+    {
+      id:'business_cycles', cat:'macro', title:'Business Cycles',
+      subtitle:'Expansions, recessions, and the rhythms of economic activity',
+      body:`<p>A business cycle is the fluctuation in economic activity around its long-run growth trend. Phases include expansion (rising output, employment, confidence), peak (activity at maximum), contraction/recession (two or more consecutive quarters of negative GDP growth), and trough (the low point before recovery).</p>
+      <h3>Stylised Facts</h3>
+      <p>Investment is far more volatile than consumption. Inventories lead the cycle — firms accumulate stocks in expansion and deplete them in recession. Consumer durables are procyclical and volatile. Services are stable. Unemployment lags output — firms hoard labour in mild downturns rather than fire and rehire. Credit conditions tighten at peaks, amplifying the downturn.</p>
+      <h3>Theories of the Cycle</h3>
+      <ul>
+        <li><strong>Keynesian:</strong> demand shocks drive cycles; expectations are self-fulfilling; fiscal policy can stabilise</li>
+        <li><strong>Monetarist:</strong> cycles caused by erratic money supply growth (Friedman and Schwartz); monetary policy is the key stabiliser</li>
+        <li><strong>Real Business Cycle:</strong> cycles are efficient responses to technology shocks; government intervention is counterproductive</li>
+        <li><strong>New Keynesian:</strong> sticky prices mean demand shocks have real effects; monetary policy has traction</li>
+        <li><strong>Financial accelerator:</strong> Bernanke-Gertler: credit frictions amplify and propagate shocks; collateral values and balance sheets matter</li>
+      </ul>
+      <h3>Leading vs. Lagging Indicators</h3>
+      <p>Leading indicators (stock prices, building permits, consumer confidence, yield curve shape) predict turning points. Coincident indicators (GDP, payrolls, personal income) move with the cycle. Lagging indicators (unemployment duration, business loans outstanding) confirm turning points after they occur.</p>`,
+    },
+    {
+      id:'keynesian_economics', cat:'macro', title:'Keynesian Economics',
+      subtitle:'Demand management and the role of government',
+      body:`<p>John Maynard Keynes's <em>General Theory</em> (1936) argued that market economies can get stuck in equilibria below full employment — and that government spending can cure this. Published in the depths of the Great Depression, it fundamentally reshaped macroeconomics and economic policy.</p>
+      <h3>The Fundamental Insight</h3>
+      <p>In a depression, the problem is insufficient aggregate demand. Saving is a virtue individually but collectively dangerous: if everyone saves simultaneously, income falls (the paradox of thrift), making it harder to save. This fallacy of composition means decentralised decisions produce socially bad outcomes, justifying intervention.</p>
+      <h3>The Multiplier</h3>
+      <p>Government spending injects income, which gets spent again (partially), creating further income. The multiplier k = 1/(1−MPC), where MPC is the marginal propensity to consume. If MPC = 0.8, k = 5: each £1 of government spending raises GDP by £5 in theory. In practice, leakages (imports, saving, taxes) reduce the multiplier substantially, and Ricardian equivalence (people save now to pay future taxes) reduces it further.</p>
+      <div class="codex-formula">Multiplier = 1 / (1 − MPC × (1 − t))</div>
+      <h3>Liquidity Trap</h3>
+      <p>When interest rates hit zero, conventional monetary policy (lowering rates) loses traction. People and banks hoard cash rather than invest. Keynes called this the liquidity trap. Japan in the 1990s–2000s and the post-2008 world both illustrated this, reviving interest in fiscal policy as the only remaining stabilisation tool.</p>
+      <h3>New Keynesianism</h3>
+      <p>Modern Keynesian economics adds microfoundations — rational agents, sticky wages and prices. The New Keynesian IS-LM gives monetary policy real effects via the Taylor rule, and the New Keynesian Phillips Curve relates inflation to expected inflation and the output gap.</p>`,
+    },
+    {
+      id:'monetarism', cat:'macro', title:'Monetarism',
+      subtitle:'Money, inflation, and the limits of stabilisation policy',
+      body:`<p>Monetarism, associated with Milton Friedman, holds that the money supply is the primary determinant of nominal spending and that monetary instability is the main cause of macroeconomic instability. The Federal Reserve's erratic money supply contraction turned a recession into the Great Depression, Friedman argued — not capitalism's inherent instability.</p>
+      <h3>The Quantity Theory of Money</h3>
+      <div class="codex-formula">MV = PQ</div>
+      <p>M = money supply, V = velocity of circulation, P = price level, Q = real output. If V is stable (Friedman's key empirical claim) and Q grows at its natural rate, M growth determines inflation 1-for-1 in the long run. Therefore: control money growth, and you control inflation.</p>
+      <h3>The Natural Rate of Unemployment</h3>
+      <p>Friedman (1968) introduced the natural rate: the unemployment rate consistent with stable inflation. Attempts to push unemployment below it through demand stimulus generate accelerating inflation as workers demand higher wages to compensate for rising prices. The short-run Phillips Curve (inflation-unemployment trade-off) exists; the long-run curve is vertical at the natural rate.</p>
+      <h3>Rules vs. Discretion</h3>
+      <p>Friedman advocated a constant money growth rule (the k-percent rule). Discretionary policy suffers from long and variable lags, political pressure, and time-inconsistency (policymakers promise low inflation but inflate away debts). Rules constrain policymakers and anchor expectations. This debate between rules and discretion remains central to central banking — modern central banks use inflation targeting as a rule-like framework.</p>`,
+    },
+    {
+      id:'solow_growth', cat:'macro', title:'The Solow Growth Model',
+      subtitle:'Capital accumulation, diminishing returns, and convergence',
+      body:`<p>Robert Solow's 1956 model (Nobel 1987) is the canonical framework for understanding long-run economic growth. It explains why poor countries can grow faster than rich ones, why growth eventually slows, and what determines the long-run standard of living.</p>
+      <h3>The Core Equation</h3>
+      <div class="codex-formula">Δk = sf(k) − (δ + n + g)k</div>
+      <p>Where k = capital per effective worker, s = savings rate, f(k) = output per worker, δ = depreciation, n = population growth, g = technology growth. Capital accumulates when investment (sf(k)) exceeds break-even investment ((δ + n + g)k). The economy converges to a <strong>steady state</strong> where Δk = 0.</p>
+      <h3>Key Predictions</h3>
+      <ul>
+        <li>Countries converge to a steady state determined by s, δ, n, g and technology</li>
+        <li>Higher saving rate → higher steady-state capital and output, but not higher long-run growth rate</li>
+        <li>Long-run growth is driven entirely by exogenous technological progress (TFP)</li>
+        <li>Conditional convergence: poor countries grow faster than rich ones IF they have similar fundamentals</li>
+      </ul>
+      <h3>The Solow Residual</h3>
+      <p>Growth accounting decomposes output growth into contributions from capital growth, labour growth, and the residual — Total Factor Productivity (TFP). In most advanced economies TFP explains 50–80% of growth. Yet the model treats it as exogenous — it "fell from the sky." This motivated endogenous growth theory (Romer, Lucas) which seeks to explain where TFP comes from.</p>
+      <h3>Golden Rule</h3>
+      <p>The savings rate that maximises consumption in steady state is called the Golden Rule. At the Golden Rule: MPK = δ + n + g. If MPK > δ + n + g, the economy is dynamically efficient (as in most rich countries) — saving more would help, but future generations benefit at the cost of current consumption.</p>`,
+    },
+    {
+      id:'ad_as_model', cat:'macro', title:'Aggregate Demand and Supply',
+      subtitle:'The workhorse model of macroeconomics',
+      body:`<p>The AD-AS model is the standard framework for analysing short-run fluctuations and long-run trends in output and the price level, distinguishing the roles of demand-side and supply-side factors.</p>
+      <h3>Aggregate Demand (AD)</h3>
+      <p>AD shows combinations of price level and output where both the goods market (IS) and money market (LM) are in equilibrium. It slopes downward: a higher price level reduces real money supply (tightening money markets), raises interest rates, and reduces investment spending. AD shifts with fiscal and monetary policy, consumer confidence, and foreign demand.</p>
+      <h3>Short-Run Aggregate Supply (SRAS)</h3>
+      <p>SRAS is upward sloping because wages and prices are sticky in the short run — firms respond to higher demand by increasing output before fully adjusting prices. SRAS shifts with input cost changes (oil prices, wages), supply shocks, and productivity changes.</p>
+      <h3>Long-Run Aggregate Supply (LRAS)</h3>
+      <p>LRAS is vertical at the potential (full-employment) output level. In the long run, wages and prices fully adjust; only real factors determine output. Shifts come from changes in capital, labour, or technology — not demand.</p>
+      <h3>The Self-Correcting Mechanism vs. Policy Intervention</h3>
+      <p>After a negative demand shock (AD shifts left), output falls below potential. Classical economists say: wait — wages fall, SRAS shifts right, restoring potential output. Keynesians say: the adjustment is slow and painful; use fiscal/monetary policy to shift AD right now. This tension between the self-correcting market and active stabilisation policy is the central debate in macroeconomic policy.</p>`,
+    },
+    {
+      id:'international_macro', cat:'macro', title:'Balance of Payments and Exchange Rates',
+      subtitle:'How countries interact financially with the world',
+      body:`<p>Every transaction between residents of different countries is recorded in the Balance of Payments (BoP), which must always balance. Understanding it is essential for grasping exchange rate movements, current account deficits, and international financial crises.</p>
+      <h3>Structure of the Balance of Payments</h3>
+      <ul>
+        <li><strong>Current Account:</strong> trade in goods and services, income flows, transfers. A deficit means spending exceeds production; the country borrows from abroad.</li>
+        <li><strong>Capital Account:</strong> transfers of wealth (debt forgiveness, migrant remittances)</li>
+        <li><strong>Financial Account:</strong> foreign direct investment, portfolio flows, reserve changes</li>
+      </ul>
+      <p>Current Account + Capital Account + Financial Account = 0 (by accounting identity)</p>
+      <h3>Exchange Rate Determination</h3>
+      <p>In the long run, <strong>Purchasing Power Parity (PPP)</strong> holds: exchange rates adjust so that identical goods cost the same in both countries. In the short run, exchange rates are driven by capital flows, interest rate differentials, and expectations. The <strong>uncovered interest parity (UIP)</strong> condition: the interest rate differential equals the expected exchange rate change.</p>
+      <h3>Fixed vs. Flexible Exchange Rates</h3>
+      <p>Fixed rates provide stability for trade but require giving up monetary policy independence (Mundell's impossible trinity: you cannot simultaneously have free capital flows, a fixed exchange rate, AND independent monetary policy). Flexible rates allow monetary policy but create exchange rate volatility that disrupts trade. The Euro experiment: fixed exchange rates within the Eurozone eliminated currency risk but prevented national monetary adjustment to asymmetric shocks.</p>`,
+    },
+    {
+      id:'financial_crises', cat:'macro', title:'Financial Crises and Systemic Risk',
+      subtitle:'When the financial system amplifies shocks into catastrophes',
+      body:`<p>Financial crises — bank runs, credit crunches, sovereign debt crises — are recurring features of capitalism with devastating real consequences. Understanding their mechanics is essential for regulation and policy.</p>
+      <h3>The Anatomy of a Crisis: Minsky's View</h3>
+      <p>Hyman Minsky argued that stability breeds instability. During long expansions, optimism grows; borrowing becomes increasingly speculative ("Ponzi finance" — borrowing even interest payments). Asset prices rise, reinforcing confidence — until some trigger causes values to fall, exposing overleveraged positions. A "Minsky moment" ensues: forced asset sales collapse prices, credit freezes, and the real economy implodes.</p>
+      <h3>Bank Runs and Self-Fulfilling Crises</h3>
+      <p>Banks are inherently fragile: they borrow short (deposits) and lend long (mortgages). If depositors fear insolvency, a run is individually rational even for a solvent bank — the run itself causes insolvency. Diamond-Dybvig (1983) formalised this multiple-equilibria problem: deposit insurance eliminates the bad equilibrium by removing the incentive to run.</p>
+      <h3>Systemic Risk and Contagion</h3>
+      <p>Financial institutions are interconnected through interbank lending, derivatives exposures, and common asset holdings. Failure of one can propagate through the system. The 2008 Lehman bankruptcy froze global interbank markets overnight — demonstrating that "too interconnected to fail" is as dangerous as "too big to fail." Macroprudential regulation (stress tests, countercyclical capital buffers) targets these systemic risks rather than individual bank safety.</p>`,
+    },
+    {
+      id:'development_economics', cat:'macro', title:'Development Economics',
+      subtitle:'Why nations escape poverty — or don\'t',
+      body:`<p>Development economics studies why some countries grow rich while others remain trapped in poverty, and what policies accelerate growth and reduce inequality. It is one of the most contested and policy-relevant fields in economics.</p>
+      <h3>Traps and Vicious Circles</h3>
+      <p>Poor countries may face <strong>poverty traps</strong>: too poor to save and invest enough to grow. The "big push" model (Rosenstein-Rodan, Murphy-Shleifer-Vishny): industrialisation is a coordination problem — investment is only profitable if others also invest, creating demand. Without a coordinating mechanism, each agent under-invests. Foreign aid or large-scale state investment might break the trap.</p>
+      <h3>Institutions as the Deep Cause</h3>
+      <p>Acemoglu, Johnson, and Robinson (Nobel 2024) argue that institutions — the rules of the political and economic game — are the fundamental cause of prosperity. Inclusive institutions (property rights, rule of law, competitive markets, political voice) enable sustained growth. Extractive institutions concentrate power and wealth, blocking innovation. Geography and culture matter less than institutions: North and South Korea have the same geography and culture; their institutional divergence explains the 20:1 income gap.</p>
+      <h3>The Role of Trade</h3>
+      <p>Export-led growth (South Korea, Taiwan, China) has been the most consistent path out of poverty. Access to global markets provides scale and technology transfer. However, Rodrik argues that good growth strategies are context-specific and often involve selective industrial policy, not pure free-market orthodoxy. The "Washington Consensus" — privatise, liberalise, stabilise — produced mixed results in Africa and Latin America.</p>`,
+    },
+    {
+      id:'public_choice', cat:'macro', title:'Public Choice Theory',
+      subtitle:'Applying economic thinking to political behaviour',
+      body:`<p>Public choice theory (Buchanan, Nobel 1986; Tullock) applies the tools of economics — rational self-interest, incentives, information problems — to political decision-making. Its central insight: politicians and bureaucrats are not benevolent social planners; they respond to incentives just like anyone else.</p>
+      <h3>Rent-Seeking</h3>
+      <p>Rent-seeking is spending resources to obtain transfers from others rather than creating new value. Lobbying for tariffs, subsidies, or regulations that protect incumbents is pure rent-seeking. The social cost is not just the subsidy itself but the resources wasted in lobbying — the competition for rents dissipates much of the rent value.</p>
+      <h3>The Problem of Special Interests</h3>
+      <p>Small, concentrated interest groups (steel producers) have strong incentives to lobby for policies that benefit them at diffuse cost to the general public (higher steel prices spread across millions of consumers). Each consumer loses little and has weak incentive to organise; the producer gains a lot and lobbies intensely. This asymmetry systematically biases policy toward special interests — explaining protectionism, occupational licensing, and agricultural subsidies in democratic societies.</p>
+      <h3>Median Voter and Electoral Competition</h3>
+      <p>The median voter theorem (Downs, 1957): in a two-party system with single-issue voting on a spectrum, both parties converge to the position of the median voter. This predicts centrist policies but fails to explain polarisation, abstention, and multi-issue politics. Real-world politics adds party activism, primaries, money in politics, and information costs.</p>`,
+    },
+
+    // ── MORE MARKETS & INVESTING ──
+    {
+      id:'capm_factors', cat:'markets', title:'CAPM and Factor Models',
+      subtitle:'Pricing risk in financial markets',
+      body:`<p>The Capital Asset Pricing Model (CAPM) is the foundational framework for understanding how financial assets are priced in equilibrium. It links expected return to systematic (undiversifiable) risk.</p>
+      <h3>The CAPM Equation</h3>
+      <div class="codex-formula">E(R_i) = R_f + β_i × [E(R_m) − R_f]</div>
+      <p>Where R_f is the risk-free rate, E(R_m) is the expected market return, and β_i is the asset's sensitivity to market movements. Beta measures systematic risk: a stock with β = 1.5 moves 1.5% for every 1% market move. High-beta stocks demand higher expected returns — you're taking on more market risk.</p>
+      <h3>Beyond CAPM: Factor Models</h3>
+      <p>CAPM's single-factor model fails empirically — certain stock characteristics predict returns beyond beta. Fama and French (Nobel 2013) documented the size premium (small stocks outperform large stocks) and value premium (cheap stocks outperform expensive ones). Their three-factor model adds SMB (small minus big) and HML (high minus low book-to-market) to market beta.</p>
+      <p>Carhart added momentum (winners continue to outperform losers). The current Fama-French five-factor model adds profitability and investment factors. These "smart beta" factors underpin the modern factor-investing industry — hundreds of billions in systematic quantitative strategies.</p>
+      <h3>Are Factors Risk or Anomaly?</h3>
+      <p>The debate: are factor premia compensation for systematic risks we haven't fully identified (rational pricing), or persistent mispricings due to behavioural biases? The data survival bias and factor zoo problem (hundreds of factors "discovered" by data mining) complicates interpretation. After publication, many factors decay — suggesting at least some are arbitraged away.</p>`,
+    },
+    {
+      id:'options_pricing', cat:'markets', title:'Options Pricing and Black-Scholes',
+      subtitle:'Valuing contingent claims with mathematics',
+      body:`<p>Options give the right, but not the obligation, to buy (call) or sell (put) an asset at a set price (strike) before or at a set date (expiry). Pricing them correctly requires solving one of the most elegant problems in financial mathematics.</p>
+      <h3>The Black-Scholes Formula</h3>
+      <div class="codex-formula">C = S·N(d₁) − K·e^(−rT)·N(d₂)</div>
+      <p>Where d₁ = [ln(S/K) + (r + σ²/2)T] / (σ√T), d₂ = d₁ − σ√T, S = stock price, K = strike, r = risk-free rate, T = time to expiry, σ = volatility, N(·) = cumulative normal distribution. The formula assumes log-normally distributed stock prices, constant volatility, no dividends, and continuous trading.</p>
+      <h3>The Greeks</h3>
+      <p>Options traders manage risk through the Greeks: <strong>Delta</strong> (sensitivity to stock price) is N(d₁); <strong>Gamma</strong> (rate of change of delta) is highest near strike at expiry; <strong>Vega</strong> (sensitivity to volatility) explains why options are bets on uncertainty; <strong>Theta</strong> (time decay) erodes option value as expiry approaches; <strong>Rho</strong> (sensitivity to interest rates) is small for short-dated options but significant for long-dated ones.</p>
+      <h3>Volatility Smile and Real-World Departures</h3>
+      <p>If Black-Scholes were exactly right, implied volatility (backed out from option prices) would be constant across strikes. It isn't — options on the same stock at different strikes show a "volatility smile" or "smirk." This reflects fat tails, jump risk, and leverage effects that the log-normal assumption misses. Modern practitioners use local volatility, stochastic volatility (Heston model), or jump-diffusion models to fit the smile.</p>`,
+    },
+    {
+      id:'fixed_income_math', cat:'markets', title:'Fixed Income Mathematics',
+      subtitle:'Duration, convexity, and yield curve analysis',
+      body:`<p>Bonds are promises to pay fixed cash flows. Bond mathematics governs how price and yield relate, how sensitive bond prices are to interest rate changes, and how to construct and manage fixed income portfolios.</p>
+      <h3>Price-Yield Relationship</h3>
+      <div class="codex-formula">P = Σ C_t / (1+y)^t + F / (1+y)^n</div>
+      <p>Bond price is the present value of all cash flows discounted at yield y. Price and yield move inversely — when interest rates rise, existing bond prices fall. A 10-year bond falls much more than a 2-year bond for the same yield change.</p>
+      <h3>Duration and Convexity</h3>
+      <p><strong>Modified Duration</strong> measures interest rate sensitivity: ΔP/P ≈ −D × Δy. A bond with duration 8 loses about 8% for each 1% rise in yield. Duration is the weighted average time to receive cash flows.<br>
+      <strong>Convexity</strong> is the second-order correction: actual price changes are better than duration predicts because the price-yield curve is convex (curves toward the investor). Portfolio managers use duration-matched positions and then tilt for convexity.</p>
+      <h3>Yield Curve and the Term Premium</h3>
+      <p>The yield curve plots yields against maturity. Normally upward sloping (longer maturities demand higher yield — term premium for inflation risk, uncertainty). An inverted yield curve (short rates > long rates) has predicted every US recession since 1960 — because it reflects expected future short-rate cuts (central bank easing in response to anticipated slowdown).</p>`,
+    },
+    {
+      id:'commodities_markets', cat:'markets', title:'Commodities Markets',
+      subtitle:'Raw materials, futures, and real asset investing',
+      body:`<p>Commodities — oil, gold, copper, wheat, natural gas — form the physical foundation of industrial economies. Their markets have unique features: seasonality, storage costs, supply shocks, and geopolitical sensitivity.</p>
+      <h3>Spot and Futures Prices</h3>
+      <p>A futures contract locks in a price today for delivery at a future date. The futures price F = S·e^(r+u−y)T, where S is spot price, r is risk-free rate, u is storage cost, and y is convenience yield (the premium from holding physical inventory — avoids stockout risk). Commodity futures markets in contango (F > S) reflect storage costs; backwardation (F < S) reflects high convenience yield from tight supply.</p>
+      <h3>The "Super-Cycle"</h3>
+      <p>Long commodity price cycles (15–20 years) reflect the slow supply response to demand booms. High prices stimulate investment in mines, wells, and farms — but the lag between investment decision and new supply coming online (often 5–10 years) creates overshoots and crashes. China's industrialisation drove a commodity super-cycle from 2000–2014; the subsequent bust hurt resource-dependent economies severely.</p>
+      <h3>Oil as a Macro Asset</h3>
+      <p>Oil occupies a unique position: it is simultaneously an industrial input (cost to firms and consumers), a financial asset (traded by speculators), and a geopolitical instrument (petrodollar recycling, OPEC bargaining). Every major global recession since 1970 except 2001 was preceded by a sharp oil price spike. The shale revolution (US hydraulic fracturing from ~2010) fundamentally changed the oil market's supply dynamics — OPEC lost its monopoly on swing production.</p>`,
+    },
+
+    // ── MORE BUSINESS FINANCE ──
+    {
+      id:'capital_structure', cat:'business', title:'Capital Structure: Modigliani-Miller',
+      subtitle:'Does how you finance a firm matter?',
+      body:`<p>How a firm is financed — the mix of debt and equity — is one of corporate finance's central questions. Modigliani and Miller (Nobel 1985 and 1990) provided the benchmark framework: in perfect markets, capital structure is irrelevant. The real world deviates from this in ways that define optimal financing.</p>
+      <h3>The MM Theorems</h3>
+      <p><strong>MM Proposition I (no taxes):</strong> firm value is independent of capital structure. Leverage does not create or destroy value — investors can borrow on their own account (homemade leverage). <strong>MM Proposition II:</strong> as debt increases, equity becomes riskier, demanding higher expected return. The benefit of cheap debt is exactly offset by the higher required return on equity — weighted average cost of capital (WACC) is unchanged.</p>
+      <h3>With Taxes: The Trade-Off Theory</h3>
+      <p>Interest payments are tax-deductible but equity dividends are not. This creates a tax shield worth τD (tax rate × debt). With taxes, firm value rises with leverage: V_L = V_U + τD. But debt also creates financial distress costs (bankruptcy, agency costs, foregone investment). The optimal capital structure balances tax shields against distress costs — the trade-off theory.</p>
+      <h3>Pecking Order Theory</h3>
+      <p>Myers-Majluf (1984): firms prefer internal finance (retained earnings) > debt > equity, because equity issuance signals management believes the stock is overvalued. This information asymmetry creates an ordering — a "pecking order" — that explains observed financing patterns better than the static trade-off model.</p>
+      <h3>Practical Implications</h3>
+      <p>Highly profitable, stable-cashflow businesses (utilities, supermarkets) can sustain high leverage. Young, growth-oriented, asset-light firms should use equity. Buyouts load debt onto targets because interest tax shields are valuable and private equity can monitor management. Capital structure signals — stock repurchases signal undervaluation; rights issues signal overvaluation.</p>`,
+    },
+    {
+      id:'wacc', cat:'business', title:'WACC and the Cost of Capital',
+      subtitle:'What return must investments earn to create value?',
+      body:`<p>A firm creates value only if its investments earn a return exceeding the cost of the capital used to finance them. The Weighted Average Cost of Capital (WACC) is the minimum required return — the hurdle rate for investment decisions.</p>
+      <div class="codex-formula">WACC = (E/V)·Re + (D/V)·Rd·(1−T)</div>
+      <p>Where E = equity value, D = debt value, V = E+D, Re = cost of equity, Rd = cost of debt (pre-tax), T = tax rate. The cost of equity Re comes from CAPM: Re = Rf + β(Rm − Rf).</p>
+      <h3>Using WACC in Practice</h3>
+      <p>Discount a project's free cash flows at WACC to get NPV. If NPV > 0, the project earns more than its cost of capital — value is created. Corporate strategy often involves buying businesses where the acquirer can lower the target's WACC (by diversifying revenue, adding debt capacity, or improving credit rating).</p>
+      <h3>Common Pitfalls</h3>
+      <p>Using book value instead of market value weights gives wrong WACC. Using historical returns for cost of equity is backward-looking. Applying the same WACC to divisions with different risk levels is wrong — use divisional WACCs. Ignoring non-operating assets in firm value computations understates value.</p>`,
+    },
+    {
+      id:'mergers_acquisitions', cat:'business', title:'Mergers and Acquisitions',
+      subtitle:'Corporate control, synergies, and the market for companies',
+      body:`<p>M&A activity — one firm buying another — is a major channel for capital reallocation, corporate restructuring, and wealth creation or destruction. It is also one of the most reliably overpriced transactions in corporate finance.</p>
+      <h3>Why Mergers Happen</h3>
+      <ul>
+        <li><strong>Synergies:</strong> combined entity is worth more than sum of parts (cost savings from combining operations, revenue cross-selling, financial synergies from increased debt capacity)</li>
+        <li><strong>Market power:</strong> acquiring competitors reduces competition (regulators watch this)</li>
+        <li><strong>Undervaluation:</strong> acquirer believes target is worth more than market price</li>
+        <li><strong>Managerial hubris:</strong> Roll (1986): acquirer CEOs overestimate their ability to create value, pay too much</li>
+        <li><strong>Diversification:</strong> usually destroys value — investors can diversify themselves more cheaply</li>
+      </ul>
+      <h3>The Acquirer's Curse</h3>
+      <p>On average, acquirer stock prices fall on announcement by 1–3%; target stock prices rise 20–30%. The merger premium (amount paid above market price) consistently exceeds estimated synergies. CEO overconfidence, empire-building incentives, and the winner's curse (you win the auction by overestimating value) explain this persistent pattern.</p>
+      <h3>Hostile Takeovers and Defence</h3>
+      <p>A hostile bid bypasses the target's board and goes directly to shareholders. Defences include poison pills (rights issue flooding the market to dilute acquirer), staggered boards (only ⅓ of directors elected each year), white knights (find a preferred bidder), and leveraged buyouts (take the company private to avoid takeover). Takeover defences reduce the disciplining role of the market for corporate control.</p>`,
+    },
+    {
+      id:'corporate_governance', cat:'business', title:'Corporate Governance',
+      subtitle:'Agency problems, boards, and shareholder rights',
+      body:`<p>Corporate governance is the system of rules, practices, and incentives by which corporations are directed and controlled. It addresses a fundamental agency problem: managers (agents) run companies on behalf of shareholders (principals) but may pursue their own interests.</p>
+      <h3>The Principal-Agent Problem in Corporations</h3>
+      <p>Shareholders want maximum long-term value; managers may prefer empire-building, perks, job security, or excessive risk aversion. Separation of ownership and control (Berle and Means, 1932) creates this tension. Shareholders can't perfectly monitor management — this is the core corporate governance challenge.</p>
+      <h3>Mechanisms of Governance</h3>
+      <ul>
+        <li><strong>Board of directors:</strong> monitor and fire management; independent directors supposed to be objective</li>
+        <li><strong>Executive compensation:</strong> equity-based pay aligns incentives; also creates short-termism and manipulation risks</li>
+        <li><strong>Market for corporate control:</strong> takeover threat disciplines management</li>
+        <li><strong>Institutional investors:</strong> large shareholders (pension funds, BlackRock) can engage management</li>
+        <li><strong>Debt as discipline:</strong> debt covenants and bankruptcy threat constrain managers</li>
+      </ul>
+      <h3>International Differences</h3>
+      <p>Anglo-American model: dispersed ownership, active capital markets, shareholder primacy. German stakeholder model: concentrated ownership, worker codetermination on boards, long-term relationship banking. Japanese keiretsu: cross-shareholdings with banks and suppliers, patient capital, lifetime employment. Each model has different strengths — Anglo-American is better at innovation and reallocation; German/Japanese at long-horizon investment and worker stability.</p>`,
+    },
+
+    // ── ADVANCED ──
+    {
+      id:'principal_agent', cat:'advanced', title:'Principal-Agent Theory',
+      subtitle:'Incentives, hidden information, and mechanism design',
+      body:`<p>Agency relationships are everywhere: shareholders and managers, voters and politicians, patients and doctors, employers and workers, clients and lawyers. The agent has private information or takes hidden actions; the principal must design contracts to align incentives. Principal-agent theory formalises this challenge.</p>
+      <h3>Moral Hazard</h3>
+      <p>Moral hazard arises when an agent takes actions hidden from the principal. A worker paid a fixed salary has incentive to shirk; an insured driver may drive less carefully. The solution: performance-related pay that shares risk between principal and agent. The optimal contract balances incentives (variable pay creates effort) against insurance (fixed pay protects the risk-averse agent from income volatility). Neither pure fixed nor pure variable pay is optimal in general.</p>
+      <h3>Adverse Selection</h3>
+      <p>Adverse selection occurs when one party has private information before contracting. In insurance, high-risk individuals select in (Akerlof's "Market for Lemons," 1970). In labour markets, firms cannot observe worker quality — good workers may be unable to credibly signal their quality. Solutions: screening (ask workers to reveal information through education, costly signalling), or second-best contracts that sort types.</p>
+      <h3>Mechanism Design (Reverse Game Theory)</h3>
+      <p>Standard game theory asks: given the rules, what do agents do? Mechanism design asks: given desired outcomes, what rules should we design? Hurwicz, Maskin, and Myerson (Nobel 2007) formalised this. The revelation principle: any equilibrium outcome of any mechanism can be achieved by a direct mechanism where agents truthfully report their private information. This powerful result underlies auction theory, voting systems, and market design.</p>`,
+    },
+    {
+      id:'auction_theory', cat:'advanced', title:'Auction Theory',
+      subtitle:'Designing markets for selling valuable objects',
+      body:`<p>Auction theory studies how to sell (or buy) goods when buyers have private information about their values. It is pure mechanism design — the auctioneer chooses rules to achieve desired outcomes such as efficiency, revenue maximisation, or fairness.</p>
+      <h3>The Four Classic Auction Formats</h3>
+      <ul>
+        <li><strong>English (ascending):</strong> open bidding, last bidder wins; dominant strategy is bid up to your value</li>
+        <li><strong>Dutch (descending):</strong> price falls until someone accepts; equivalent to sealed-bid first price</li>
+        <li><strong>First-price sealed bid:</strong> highest bid wins and pays their bid; bid below value to balance winning probability against payment</li>
+        <li><strong>Second-price (Vickrey):</strong> highest bid wins but pays second-highest; dominant strategy is bid exactly your true value — truthful revelation</li>
+      </ul>
+      <h3>Revenue Equivalence Theorem</h3>
+      <p>Under standard conditions (risk-neutral bidders, symmetric private values, independent signals), all four formats yield the same expected revenue and the same expected payment by each bidder type. This elegant result shows that format choice matters less than common intuition suggests — what matters are the information and incentive structures.</p>
+      <h3>Common Value Auctions and the Winner's Curse</h3>
+      <p>In common value auctions (oil field leases, spectrum licences — the good has the same value to all bidders but no one knows it exactly), winning reveals you are the most optimistic bidder — hence you probably overpaid. Rational bidders shade bids below their estimates. Naive bidders don't shade enough and suffer the winner's curse. Milgrom and Wilson (Nobel 2020) designed FCC spectrum auctions accounting for these effects.</p>`,
+    },
+    {
+      id:'general_equilibrium', cat:'advanced', title:'General Equilibrium Theory',
+      subtitle:'How all markets clear simultaneously',
+      body:`<p>Partial equilibrium (supply and demand in one market) ignores interactions with other markets. General equilibrium analyses all markets simultaneously, asking whether prices exist that clear all markets at once and whether such an equilibrium is desirable.</p>
+      <h3>Walras and Tâtonnement</h3>
+      <p>Léon Walras (1874) first formalised the idea that all markets are interconnected. His auctioneer calls prices, agents reveal excess demand, prices adjust (tâtonnement), and the process converges (hopefully) to equilibrium. Arrow and Debreu (Nobel 1972 and 1983) gave the first rigorous existence proof: under standard convexity and continuity assumptions, a competitive equilibrium always exists.</p>
+      <h3>The Welfare Theorems</h3>
+      <p><strong>First Welfare Theorem:</strong> every competitive equilibrium is Pareto efficient (cannot make anyone better off without making someone else worse off). This is the formal foundation of the invisible hand — decentralised markets achieve efficient allocation. <strong>Second Welfare Theorem:</strong> any Pareto efficient allocation can be achieved as a competitive equilibrium after appropriate lump-sum redistribution. Equity and efficiency are separable in theory — redistribute first, then let markets allocate. In practice, lump-sum transfers are impossible, so there are efficiency costs to redistribution.</p>
+      <h3>Market Failures and the Limits</h3>
+      <p>The welfare theorems require no externalities, no public goods, complete markets for all goods (including contingent claims on all possible states of nature — Arrow-Debreu securities), and perfect information. The real world violates all these. Market failures are not anomalies to be ignored but systematic departures from the Arrow-Debreu ideal that justify targeted intervention.</p>`,
+    },
+    {
+      id:'dsge_models', cat:'advanced', title:'DSGE Models',
+      subtitle:'The frontier of macroeconomic modelling',
+      body:`<p>Dynamic Stochastic General Equilibrium (DSGE) models are the state-of-the-art framework for macroeconomic analysis and policy evaluation. They describe the economy as the outcome of decisions by optimising households and firms, subject to constraints and aggregate shocks.</p>
+      <h3>Structure of a DSGE Model</h3>
+      <ul>
+        <li><strong>Households:</strong> choose consumption and labour supply by maximising lifetime utility, subject to an intertemporal budget constraint</li>
+        <li><strong>Firms:</strong> choose prices and labour demand to maximise profits, subject to technology and Calvo pricing frictions (sticky prices)</li>
+        <li><strong>Government/Central bank:</strong> fiscal and monetary policy rules (Taylor rule)</li>
+        <li><strong>Market clearing:</strong> goods, labour, and asset markets clear in every period</li>
+      </ul>
+      <h3>The Smets-Wouters Model</h3>
+      <p>The Smets-Wouters (2007) model became a benchmark for central banks worldwide. It includes nominal rigidities (sticky prices and wages), real rigidities (habit formation in consumption, investment adjustment costs), and multiple shocks (technology, demand, monetary, fiscal, risk premium). It fits US data well and is used for policy counterfactuals — "what would GDP be if the Fed had not cut rates?"</p>
+      <h3>Criticism and Limitations</h3>
+      <p>DSGE models failed to predict the 2008 crisis because they had no meaningful financial sector or endogenous crisis mechanism. Their linearisation around steady state breaks down for large shocks. Their micro-foundations are controversial — rational expectations, representative agent, no heterogeneity. Post-2008 development has focused on adding heterogeneous agents (HANK models — Heterogeneous Agent New Keynesian) and financial frictions.</p>`,
+    },
+    {
+      id:'behavioral_economics', cat:'advanced', title:'Behavioural Economics',
+      subtitle:'How real people actually make decisions',
+      body:`<p>Behavioural economics (Kahneman, Nobel 2002; Thaler, Nobel 2017) documents systematic departures from rational expected-utility maximisation and builds richer models of how people actually think and choose.</p>
+      <h3>Prospect Theory</h3>
+      <p>Kahneman and Tversky's (1979) prospect theory replaced expected utility with a framework capturing real patterns: people evaluate outcomes as gains and losses relative to a reference point; losses loom roughly twice as large as equivalent gains (loss aversion); probability weighting overweights small probabilities and underweights moderate-to-large ones.</p>
+      <div class="codex-formula">V = Σ π(p_i) · v(x_i − reference)</div>
+      <h3>Cognitive Biases Catalogue</h3>
+      <ul>
+        <li><strong>Anchoring:</strong> first number seen disproportionately influences estimates</li>
+        <li><strong>Availability heuristic:</strong> probability judged by how easily examples come to mind</li>
+        <li><strong>Representativeness:</strong> judge probability by similarity to prototype (base rate neglect)</li>
+        <li><strong>Overconfidence:</strong> people systematically overestimate their knowledge and skill</li>
+        <li><strong>Present bias:</strong> hyperbolic discounting — disproportionate preference for the present</li>
+        <li><strong>Status quo bias:</strong> default options have powerful hold; inertia is real</li>
+      </ul>
+      <h3>Nudge Theory</h3>
+      <p>Thaler and Sunstein (2008): policymakers can improve outcomes by changing "choice architecture" — the way choices are presented — without restricting freedom. Default enrolment in pension plans dramatically increases retirement savings. Placing healthy food first in school cafeterias reduces obesity. Opt-out organ donation increases donor rates. These nudges exploit behavioural biases for socially beneficial ends — a "libertarian paternalism."</p>`,
+    },
+    {
+      id:'risk_management', cat:'advanced', title:'Risk Management: VaR, CVaR, and Stress Testing',
+      subtitle:'Measuring and managing the risk of loss',
+      body:`<p>Risk management quantifies potential losses and ensures institutions hold sufficient capital to absorb them. After major failures (LTCM 1998, Lehman 2008, Archegos 2021), risk management practice has evolved substantially.</p>
+      <h3>Value at Risk (VaR)</h3>
+      <div class="codex-formula">P(Loss > VaR) = 1 − confidence level</div>
+      <p>The 99% one-day VaR is the loss that will not be exceeded on 99% of trading days — equivalently, the loss that <em>will</em> be exceeded on roughly 2-3 days per year. VaR is simple, comparable across desks, and widely used for regulatory capital (Basel rules). Its fatal flaw: it says nothing about the magnitude of losses when they exceed VaR — the tail beyond VaR can be catastrophic.</p>
+      <h3>Conditional VaR (CVaR / Expected Shortfall)</h3>
+      <p>CVaR is the expected loss given that the loss exceeds VaR — the average of the worst outcomes. It is more informative about tail risk and mathematically coherent (subadditive — diversification always helps). Basel III/IV regulations have shifted from VaR to Expected Shortfall as the primary risk measure. CVaR is also a coherent risk measure satisfying monotonicity, subadditivity, homogeneity, and translation invariance.</p>
+      <h3>Stress Testing</h3>
+      <p>Statistical models assume the future resembles the past. Stress tests ask: what happens in scenarios that history doesn't include — a 40% equity crash, a 300bp rate rise, a housing collapse? Post-2008, central banks (Fed, EBA) run mandatory annual stress tests on systemically important banks, requiring them to hold capital sufficient to survive scenarios as severe as the 2008 crisis.</p>`,
+    },
+    {
+      id:'asset_pricing_theory', cat:'advanced', title:'Stochastic Asset Pricing',
+      subtitle:'Pricing assets in a world of uncertainty',
+      body:`<p>Modern asset pricing theory unifies the pricing of all financial assets — stocks, bonds, derivatives, real estate — through the concept of the stochastic discount factor (SDF). It provides a coherent framework derived from first principles of investor optimisation.</p>
+      <h3>The Stochastic Discount Factor</h3>
+      <div class="codex-formula">P_t = E_t[M_{t+1} · X_{t+1}]</div>
+      <p>Every asset with payoff X_{t+1} has price P_t equal to the expected product of the SDF (pricing kernel) M_{t+1} and the payoff. The SDF is the intertemporal marginal rate of substitution of a representative investor — high in bad states (when the investor values wealth most), low in good states. This implies: assets that pay off in bad states are priced expensively (low expected return); assets that pay off in good states are priced cheaply (high expected return).</p>
+      <h3>The Equity Premium Puzzle</h3>
+      <p>Mehra and Prescott (1985): over the 20th century, US stocks returned ~7% real annually while T-bills returned ~1%. This 6% equity premium requires implausibly high risk aversion in standard models. Various explanations: rare disasters (Rietz-Barro), habit formation (Campbell-Cochrane), long-run risks (Bansal-Yaron), ambiguity aversion (Ellsberg). None fully resolves the puzzle.</p>
+      <h3>The Term Premium Puzzle</h3>
+      <p>Long-term bonds should yield more than short-term bonds for bearing duration risk — this is the term premium. Empirically, the term premium varies over time and is sometimes negative (as in 2010s Japan and Europe). Affine term structure models (Vasicek, CIR, Nelson-Siegel) attempt to model yield curve dynamics through the evolution of state variables.</p>`,
+    },
+    {
+      id:'search_theory', cat:'advanced', title:'Search Theory and Matching',
+      subtitle:'How agents find each other in decentralised markets',
+      body:`<p>In many real markets, buyers and sellers don't automatically find each other — they must search. Search theory (Diamond, Mortensen, Pissarides, Nobel 2010) models this friction, with profound implications for labour markets, marriage, housing, and more.</p>
+      <h3>The Diamond-Mortensen-Pissarides Model</h3>
+      <p>The DMP model of the labour market has three key elements: a job creation condition (firms post vacancies until the cost equals the discounted value of a filled job); a job destruction condition (matches separate when the match value falls below a threshold); and Nash bargaining over the wage split. The equilibrium determines unemployment, vacancies, and wages jointly.</p>
+      <h3>Why Unemployment Persists</h3>
+      <p>Search frictions mean unemployment always exists in equilibrium — workers and jobs take time to match. The Beveridge curve plots unemployment against vacancies: it slopes downward (more vacancies → lower unemployment). Structural unemployment shifts the Beveridge curve outward (mismatch between skills available and skills demanded). Cyclical unemployment is a movement along the curve (few vacancies in recession).</p>
+      <h3>Applications Beyond Labour</h3>
+      <p>Search theory applies widely: housing markets (buyers and sellers search; matching quality determines prices — Wheaton model); marriage and matching (Gale-Shapley stable matching algorithm, Nobel 2012); money (Diamond 1982: money arises endogenously as a medium of exchange to reduce search costs); credit markets (banks and borrowers search for each other).</p>`,
+    },
+    {
+      id:'health_economics', cat:'advanced', title:'Health Economics',
+      subtitle:'Markets, information failures, and healthcare policy',
+      body:`<p>Healthcare markets are uniquely prone to market failure: insurance creates moral hazard, asymmetric information between doctors and patients creates a principal-agent problem, and uninsured externalities (infectious disease) justify public provision. Understanding these failures is essential for healthcare policy design.</p>
+      <h3>The Peculiarities of Healthcare Markets</h3>
+      <p>Kenneth Arrow's seminal 1963 paper identified what makes healthcare different: uncertainty about illness (demand is unpredictable); asymmetric information (patients can't evaluate treatment quality — doctors are both advisors and sellers); externalities (your vaccination protects others); and the non-competitive nature of medical licensing. These failures justify departures from pure market provision.</p>
+      <h3>The RAND Health Insurance Experiment</h3>
+      <p>The largest randomised experiment in social science history: 6,000 people randomly assigned to insurance plans with different cost-sharing from 1971–82. Results: higher cost-sharing reduces use of all types of care; it also reduces health for the poor and sick (who are most price sensitive) but not for the healthy and well-off. This landmark study still shapes policy debates about copays and deductibles.</p>
+      <h3>Single-Payer vs. Multi-Payer Systems</h3>
+      <p>Single-payer (Canada, UK's NHS) uses monopsony purchasing power to reduce prices, achieves universal coverage, has lower administrative costs, but may reduce innovation incentives and supply responsiveness. Multi-payer (US, Germany) achieves more system diversity and potentially more innovation but faces adverse selection, higher administrative costs, and coverage gaps. No country has found a perfect solution to the cost-quality-access trilemma.</p>`,
+    },
+    {
+      id:'urban_economics', cat:'advanced', title:'Urban Economics and Agglomeration',
+      subtitle:'Why cities exist and why they matter so much',
+      body:`<p>Urban economics studies why people and firms cluster in cities, what determines city size, and the implications of urbanisation for productivity, housing prices, and inequality. It sits at the intersection of economic geography, labour economics, and public finance.</p>
+      <h3>Agglomeration Economies</h3>
+      <p>Workers and firms in denser areas are more productive. Three mechanisms (Marshall, 1890): <strong>labour market pooling</strong> (firms and workers find better matches in thick labour markets); <strong>input sharing</strong> (specialised suppliers cluster where demand is concentrated); and <strong>knowledge spillovers</strong> (ideas spread more easily face-to-face). Silicon Valley, Wall Street, and London's City all illustrate different agglomeration stories.</p>
+      <h3>The Housing Crisis as a Zoning Problem</h3>
+      <p>Glaeser and Gyourko (2003): high housing prices in productive cities are driven by <em>supply restrictions</em> — zoning laws, height limits, historic preservation, NIMBYism — not inherent scarcity. San Francisco is expensive because regulations prevent building; Houston is affordable because it lets markets respond. Restricting housing supply in productive cities prevents workers from moving to opportunity, reducing aggregate productivity and increasing inequality.</p>
+      <h3>Urban Inequality and Gentrification</h3>
+      <p>Productive cities attract high-skill workers, bidding up rents and displacing low-income residents — gentrification. The policy challenge: gentrification brings investment and reduces crime but harms existing residents. Rent control protects current residents but reduces housing supply and efficiency. Inclusionary zoning (requiring affordable units in new developments) raises costs and reduces overall construction. No policy dominates; there are genuine trade-offs.</p>`,
+    },
+    {
+      id:'institutional_economics', cat:'advanced', title:'Institutional Economics',
+      subtitle:'Rules, norms, and transaction costs as foundations of economic life',
+      body:`<p>Institutional economics places the rules of the game — property rights, contracts, norms, organisations — at the centre of economic analysis. Markets don't spring from thin air; they require institutions that make promises credible, reduce transaction costs, and provide coordination mechanisms.</p>
+      <h3>Transaction Cost Economics (Coase, Williamson)</h3>
+      <p>Ronald Coase's (Nobel 1991) insight: firms exist because markets have transaction costs — the cost of using the price mechanism (search, bargaining, contract writing, enforcement). When transaction costs are high, internalising transactions within a firm (hierarchy) is cheaper than using markets. Oliver Williamson (Nobel 2009) systematised this into a framework for choosing between markets, hybrid arrangements, and hierarchy based on asset specificity, uncertainty, and frequency.</p>
+      <h3>Property Rights and the Coase Theorem</h3>
+      <p>The Coase Theorem: if property rights are well-defined and transaction costs are zero, private bargaining will achieve an efficient outcome regardless of initial rights assignment. (If the factory damages the laundry, efficiency is achieved whether the factory has the right to pollute or the laundry has the right to clean air — they bargain to the optimal outcome.) In practice, transaction costs are never zero, so initial rights assignment matters enormously. This reframes regulation: the question is not "should government regulate?" but "which assignment of rights minimises transaction costs?"</p>
+      <h3>North's Institutional Framework</h3>
+      <p>Douglass North (Nobel 1993) argued that institutions — both formal (constitutions, laws, property rights) and informal (customs, norms, codes of conduct) — determine economic performance by shaping incentives. Institutional change is slow (path dependence) because powerful groups benefit from existing rules and resist change. This explains persistent poverty: countries don't escape poverty traps because their institutions are captured by elites who gain from them.</p>`,
+    },
+    {
+      id:'environmental_econ_advanced', cat:'advanced', title:'Carbon Pricing and Climate Economics',
+      subtitle:'The economics of the world\'s greatest externality',
+      body:`<p>Climate change is the largest market failure in history: burning fossil fuels imposes costs on the entire world and on future generations who have no voice in current decisions. Economics provides the tools to understand and address it — though translating theory into policy faces profound political challenges.</p>
+      <h3>The Social Cost of Carbon</h3>
+      <p>The SCC is the marginal damage from emitting one additional tonne of CO₂ — the present value of all future climate harms. Estimates range from $50 to $1,000 per tonne depending on discount rate, damage function, and treatment of catastrophic risk. The Biden administration used $51/tonne; many economists advocate $200+. An efficient carbon tax equals the SCC — setting the price of emissions to their true social cost.</p>
+      <h3>Carbon Tax vs. Cap and Trade</h3>
+      <p>Both correct the externality by making emitters pay. A carbon tax sets the price and lets quantity adjust; cap-and-trade sets quantity (a cap on total emissions) and lets price adjust. Under certainty, they're equivalent. Under uncertainty: if damage is highly convex (cliff-edge tipping points), quantitative limits (cap) are better; if damage is smoothly increasing, price instruments (tax) are more efficient. The EU ETS is the world's largest cap-and-trade system; Sweden has the highest carbon tax (~$130/tonne).</p>
+      <h3>The Stern-Nordhaus Debate</h3>
+      <p>The choice of discount rate dominates climate cost-benefit analysis. Stern (2007) used a near-zero social discount rate (future generations matter as much as current), finding climate change costs ~20% of global GDP — recommending immediate dramatic action. Nordhaus (Nobel 2018) used market-based discount rates (~5%), finding optimal policy is gradual — a slowly rising carbon price. The deep question is ethical: how much do we discount the welfare of people born in 2100?</p>`,
+    },
+    {
+      id:'political_economy', cat:'advanced', title:'Political Economy and Institutions',
+      subtitle:'Why bad policies persist and how institutions shape outcomes',
+      body:`<p>Political economy analyses how political systems and economic incentives interact to produce policies, regulations, and institutions. Why do governments adopt policies that reduce welfare? Why do some democracies deliver good governance and others don't?</p>
+      <h3>The Logic of Collective Action (Olson)</h3>
+      <p>Mancur Olson's (1965) insight: groups with concentrated interests (steel companies) overcome free-rider problems more easily than dispersed groups (consumers). Steel companies can organise and lobby for tariffs; millions of consumers cannot organise to oppose them. This asymmetry produces systematic policy bias toward organised interests — tariffs, subsidies, occupational licensing — that reduce overall welfare.</p>
+      <h3>Political Business Cycles</h3>
+      <p>Opportunistic politicians manipulate economic policy before elections — loose monetary/fiscal policy boosts output and employment in the election year; austerity comes after. Partisan models predict different policies depending on which party wins — left governments run higher deficits and accept more inflation; right governments prioritise price stability. Central bank independence is partly a mechanism to insulate monetary policy from these cycles.</p>
+      <h3>Why Do Nations Fail? (Acemoglu-Robinson)</h3>
+      <p>Extractive political institutions concentrate power in the hands of elites who benefit from the status quo and block economic and political change. Creative destruction threatens existing elites — they resist technology adoption and market competition even when it would raise aggregate welfare. The critical juncture thesis: historical accidents (colonial contact, disease environment, geography) determined whether countries developed inclusive or extractive institutions — and these path-dependent outcomes explain most of today's income differences.</p>`,
+    },
+    {
+      id:'inequality_economics', cat:'advanced', title:'The Economics of Inequality',
+      subtitle:'Measurement, causes, and consequences of income and wealth gaps',
+      body:`<p>Inequality has risen sharply in many rich countries since the 1980s — understanding why, and what the consequences are, is one of the most actively debated topics in economics.</p>
+      <h3>Measuring Inequality</h3>
+      <p>The <strong>Gini coefficient</strong> summarises the income distribution in a single number: 0 = perfect equality, 1 = one person has everything. The US Gini (~0.45) is much higher than Nordic countries (~0.25). But the Gini misses distributional shape — the same Gini can reflect very different distributions. Piketty, Saez, and Zucman use tax records to show the <strong>top 1% and 0.1%</strong> income and wealth shares — finding dramatic concentration at the very top not captured by survey data.</p>
+      <h3>Causes of Rising Inequality</h3>
+      <ul>
+        <li><strong>Skill-biased technical change:</strong> technology (computers, automation) raises demand for high-skill workers and reduces demand for routine tasks, widening the wage gap</li>
+        <li><strong>Globalisation:</strong> trade with low-wage countries reduces manufacturing wages; financial globalisation gives capital more bargaining power over labour</li>
+        <li><strong>Winner-take-all markets:</strong> network effects mean the best songwriter, software, or fund manager captures global markets; superstar effects compress the distribution at the top</li>
+        <li><strong>Policy changes:</strong> declining unionisation, weakened minimum wages, tax cuts at the top have amplified pre-tax trends</li>
+      </ul>
+      <h3>Piketty's r > g Thesis</h3>
+      <p>Thomas Piketty (2014) argues that when the rate of return on capital (r) exceeds economic growth (g), wealth concentrates without bound. Historical data shows this gap prevailed before WWI and is returning today. The policy implication: progressive wealth taxes are needed to prevent dynastic inequality. Critics note that r varies by asset class and by who invests, and that historically high r > g did not always produce extreme wealth concentration.</p>`,
+    },
+    {
+      id:'information_economics', cat:'advanced', title:'Information Economics',
+      subtitle:'How asymmetric information shapes markets and institutions',
+      body:`<p>Information economics (Akerlof, Spence, Stiglitz, Nobel 2001) analyses how markets function when participants have different information — one of the most pervasive features of real economic life.</p>
+      <h3>The Market for Lemons (Akerlof, 1970)</h3>
+      <p>In used car markets, sellers know whether their car is good or a "lemon" but buyers don't. Buyers will only pay the average quality price. This drives good car owners out of the market (price below their reservation price), lowering average quality, lowering the price, driving out more sellers — a death spiral. In the limit, the market collapses entirely. Credit markets, labour markets, and insurance all face similar adverse selection problems.</p>
+      <h3>Signalling (Spence)</h3>
+      <p>Education as a signal: if education is cheaper for high-ability workers (they find it less costly to sit in class), employers can use education as a signal of ability even if education adds no skills. Workers get education to signal ability; firms pay more to educated workers. This is a separating equilibrium — but potentially wasteful: if education is just signalling, all the resources spent on degrees create no social value. Sheepskin effects (the degree itself, not the years of study, raises wages) support the signalling view.</p>
+      <h3>Screening (Stiglitz)</h3>
+      <p>When the uninformed party moves first, they can screen — design contracts that make different types self-select. Insurance companies offer contracts with different deductibles: high-risk individuals choose low deductibles, low-risk choose high. This reveals private information through revealed preference, solving adverse selection without direct information. The key insight: second-best contracts can achieve near-efficient outcomes despite information asymmetry.</p>`,
+    },
+    {
+      id:'network_economics', cat:'advanced', title:'Network Economics and Platforms',
+      subtitle:'Two-sided markets, platforms, and the economics of the digital age',
+      body:`<p>Network effects, platform markets, and two-sided businesses represent a major frontier in economics — accounting for the largest firms in the world (Alphabet, Meta, Amazon, Alibaba) and requiring new theoretical tools to analyse.</p>
+      <h3>Direct and Indirect Network Effects</h3>
+      <p><strong>Direct network effects:</strong> each additional user makes the network more valuable to all existing users (telephones, messaging apps, cryptocurrencies). Value approximately proportional to n² (Metcalfe's Law). <strong>Indirect network effects:</strong> platforms serve two sides that benefit each other — more iPhone users attract more app developers, who attract more users. The value of each side depends on the size of the other.</p>
+      <h3>Two-Sided Market Pricing</h3>
+      <p>Rochet and Tirole (2003): the optimal price to each side of a platform depends on the demand elasticity of that side and the cross-side network effect. Platforms often subsidise one side (users get free email; content creators get free platforms) to attract the other side (advertisers pay). This means price ≠ marginal cost even in competitive platform markets — the conventional pricing rule breaks down. Antitrust analysis must recognise that "free" services on one side are funded by fees on the other.</p>
+      <h3>Winner-Take-All and Antitrust</h3>
+      <p>Strong network effects, low marginal costs, and switching costs naturally lead to monopolisation. Google has >90% of search globally; Facebook/Instagram/WhatsApp dominate social networking. Traditional antitrust (predatory pricing, mergers that raise prices) struggles with free digital services. New frameworks focus on data concentration, interoperability, and the competitive effects of platform self-preferencing — the issues motivating EU Digital Markets Act and US antitrust actions against Big Tech.</p>`,
+    },
+    {
+      id:'econometrics', cat:'advanced', title:'Econometrics and Causal Inference',
+      subtitle:'How economists establish what causes what',
+      body:`<p>Economics generates much of its value from causal claims: minimum wages reduce employment (or don't), immigration lowers native wages (or doesn't), education increases earnings (or reflects pre-existing ability). Establishing causation — not just correlation — requires careful statistical methods.</p>
+      <h3>The Fundamental Problem of Causal Inference</h3>
+      <p>To know the causal effect of a policy on person i, we need to compare their outcome with vs. without the policy. But we can only observe one — the <em>fundamental problem of causal inference</em>. All econometric methods are ways of constructing a plausible <em>counterfactual</em> — what would have happened without the policy.</p>
+      <h3>The Credibility Revolution</h3>
+      <p>Angrist and Pischke (2009) describe the "credibility revolution": the shift from structural modelling (imposing theoretical assumptions to identify effects) to quasi-experimental methods that find natural experiments in data. Four key methods:</p>
+      <ul>
+        <li><strong>Randomised Controlled Trials (RCTs):</strong> gold standard; random assignment ensures treatment and control groups are identical in expectation</li>
+        <li><strong>Instrumental Variables (IV):</strong> find a variable that affects treatment but affects outcomes only through treatment (e.g., Vietnam draft lottery as instrument for military service)</li>
+        <li><strong>Difference-in-Differences:</strong> compare changes over time in treated vs. untreated groups (parallel trends assumption)</li>
+        <li><strong>Regression Discontinuity:</strong> exploit sharp cut-offs in policy assignment (test score just above vs. just below scholarship threshold)</li>
+      </ul>
+      <h3>Machine Learning in Econometrics</h3>
+      <p>Modern methods combine ML (lasso, random forests, deep learning) with causal inference. Double-machine-learning (Chernozhukov 2018) uses ML to control for high-dimensional confounders while preserving valid causal inference. Causal forests extend regression discontinuity to heterogeneous treatment effects — identifying which subgroups benefit most from a policy.</p>`,
+    },
+    {
+      id:'international_finance', cat:'advanced', title:'International Finance and Capital Flows',
+      subtitle:'Cross-border investment, crises, and the global monetary system',
+      body:`<p>International capital flows — foreign direct investment, portfolio investment, bank lending — now dwarf trade flows in scale. Understanding their drivers, benefits, and risks is essential for modern macroeconomics.</p>
+      <h3>The Impossible Trinity (Mundell-Fleming)</h3>
+      <p>A country cannot simultaneously have all three of: free capital mobility, fixed exchange rate, and independent monetary policy. The trade-offs:</p>
+      <ul>
+        <li>Fixed rate + free capital → monetary policy follows the anchor country (Eurozone periphery)</li>
+        <li>Fixed rate + independent monetary policy → capital controls (China historically)</li>
+        <li>Free capital + independent monetary policy → floating exchange rate (US, UK, Japan)</li>
+      </ul>
+      <h3>Sudden Stops and Currency Crises</h3>
+      <p>Emerging market crises (Mexico 1994, Asia 1997–98, Russia 1998, Argentina 2001) followed a pattern: external borrowing finances consumption and investment booms; the real exchange rate appreciates; current account deficit widens; a trigger (political uncertainty, US rate rise) causes capital outflow reversal — a "sudden stop." Without foreign exchange reserves, the currency crashes, domestic debt burdens explode, and banking crises follow. IMF bailouts provide liquidity but often impose harsh austerity conditions.</p>
+      <h3>Global Imbalances and the Dollar's Role</h3>
+      <p>The US runs persistent current account deficits financed by the rest of the world's desire to hold dollar assets (Triffin's dilemma: the reserve currency issuer must run deficits to supply the world with safe assets, creating dollar overvaluation). China's massive export surplus and reserve accumulation represent a structural imbalance. Eichengreen and others debate whether this "exorbitant privilege" will persist as China's renminbi internationalises.</p>`,
+    },
+    {
+      id:'public_finance', cat:'advanced', title:'Public Finance and Optimal Taxation',
+      subtitle:'Government revenue, spending, and redistribution',
+      body:`<p>Public finance studies what governments should do, why private markets may under-provide certain goods, and how to finance public expenditure with minimum efficiency cost and maximum equity.</p>
+      <h3>The Optimal Tax Problem (Mirrlees)</h3>
+      <p>James Mirrlees (Nobel 1996) formalised the optimal income tax problem: government wants to redistribute from high- to low-earners but can't observe ability — only income (which reflects effort as well as ability). High tax rates cause high-ability workers to work less. The optimal nonlinear income tax balances equity (redistribute) against efficiency (preserve incentives). Key result: the marginal tax rate at the top of the income distribution should be less than 100% — there are always incentive costs to redistribution.</p>
+      <h3>Ramsey Taxation</h3>
+      <p>For commodity taxes, the Ramsey rule (1927) minimises deadweight loss: tax goods in inverse proportion to their price elasticity of demand. Inelastic goods (necessities) should face higher taxes — the quantity doesn't change much, so the efficiency cost is low. But taxing necessities is regressive — it takes more from poor people as a share of income. The equity-efficiency trade-off is inescapable. Diamonds' optimal commodity tax rule extends this to account for cross-price elasticities.</p>
+      <h3>Fiscal Federalism</h3>
+      <p>Tiebout (1956): decentralised governments allow "voting with feet" — people choose jurisdictions offering their preferred tax-service package, revealing preferences and creating competition among governments. But race-to-the-bottom dynamics (tax competition) may lead to underprovision of public goods and excessive tax breaks for mobile capital. Optimal fiscal federalism assigns expenditures to the lowest level of government that can internalise all costs and benefits, while centralising redistribution (since local redistribution attracts poor and repels rich).</p>`,
     },
   ],
 };

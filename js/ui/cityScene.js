@@ -174,40 +174,224 @@ const CityScene = (() => {
     });
   }
 
-  // ── Primitive era building (used for all buildings in early phase) ──
+  // ── Primitive era building — unique shape per archetype ───────────
   const PRIM_WALLS = [0xAA9977, 0x9B8B6F, 0xBBAA88, 0x8B7355, 0xC4A880, 0x957A5A, 0xB09878];
   const PRIM_ROOFS = [0x6B4C1A, 0x7A5520, 0x5A3E10, 0x8B6320, 0x4A3308, 0x6D5015];
+  // Map each building id to a visual archetype
+  const PRIM_ARCH = {
+    hut:'hut', cottage:'cottage', inn:'inn', hospital:'hospital',
+    farm:'farm', solarFarm:'farm', lumberMill:'lumber', quarry:'quarry', fishery:'fishery',
+    workshop:'workshop', textileMill:'workshop',
+    coalMine:'mine', oilRefinery:'mine',
+    factory:'industrial', steelMill:'industrial', powerPlant:'industrial',
+    market:'market', tradingPost:'market',
+    warehouse:'warehouse', cryptoFarm:'warehouse',
+    harbor:'harbor', airport:'airport',
+    school:'school', university:'school',
+    library:'library', researchInstitute:'library',
+    bank:'temple', mint:'temple', centralBank:'temple',
+    insurance:'tower', stockExchange:'tower', investmentFirm:'tower', globalTradeHub:'tower',
+    techPark:'modern', mediaEmpire:'modern',
+    spacePort:'spaceport',
+  };
 
   function _buildPrimitive(g, id) {
-    const bld = BLD[id] || { w:1.2, h:1.5, d:1.2 };
-    const w = Math.max(0.9, bld.w * 0.85);
-    const h = Math.max(0.8, bld.h * 0.65);
-    const d = Math.max(0.9, bld.d * 0.85);
     const seed = id.split('').reduce((s, c, i) => s + c.charCodeAt(0) * (i+1), 0);
-    const wallMat = new THREE.MeshLambertMaterial({ color: PRIM_WALLS[seed % PRIM_WALLS.length] });
-    const roofMat = new THREE.MeshLambertMaterial({ color: PRIM_ROOFS[seed % PRIM_ROOFS.length] });
-    const doorMat = new THREE.MeshLambertMaterial({ color: 0x2D1E06 });
+    const W = new THREE.MeshLambertMaterial({ color: PRIM_WALLS[seed % PRIM_WALLS.length] });
+    const R = new THREE.MeshLambertMaterial({ color: PRIM_ROOFS[seed % PRIM_ROOFS.length] });
+    const DK = new THREE.MeshLambertMaterial({ color: 0x3A2010 });
+    const ST = new THREE.MeshLambertMaterial({ color: 0x888880 });
+    const arch = PRIM_ARCH[id] || 'hut';
+    const m = (col) => new THREE.MeshLambertMaterial({ color: col });
+    const addMesh = (geo, mat, x, y, z) => {
+      const mesh = new THREE.Mesh(geo, mat); mesh.position.set(x||0, y||0, z||0);
+      mesh.castShadow = true; g.add(mesh); return mesh;
+    };
 
-    // Stone/mud body
-    const body = new THREE.Mesh(new THREE.BoxGeometry(w, h * 0.72, d), wallMat);
-    body.position.y = h * 0.36; body.castShadow = true; g.add(body);
-
-    // Thatched pyramid roof
-    const roofR = Math.max(w, d) * 0.70;
-    const roof = new THREE.Mesh(new THREE.ConeGeometry(roofR, h * 0.46, 4), roofMat);
-    roof.position.y = h * 0.72 + h * 0.23; roof.rotation.y = Math.PI/4; roof.castShadow = true; g.add(roof);
-
-    // Rough wooden door
-    const door = new THREE.Mesh(new THREE.BoxGeometry(w * 0.22, h * 0.38, 0.06), doorMat);
-    door.position.set(0, h * 0.19, d * 0.46); g.add(door);
-
-    // Tall buildings get a stone tower on top
-    if (h >= 2.5) {
-      const tw = new THREE.Mesh(new THREE.BoxGeometry(w*0.5, h*0.38, d*0.5), wallMat);
-      tw.position.y = h * 0.72 + h * 0.19; tw.castShadow = true; g.add(tw);
-      const tr = new THREE.Mesh(new THREE.ConeGeometry(w*0.38, h*0.28, 4), roofMat);
-      tr.position.y = h * 0.72 + h * 0.38 + h * 0.14; tr.rotation.y = Math.PI/4; g.add(tr);
+    switch (arch) {
+      case 'hut': {
+        addMesh(new THREE.BoxGeometry(1.0, 0.9, 1.0), W, 0, 0.45);
+        addMesh(new THREE.ConeGeometry(0.72, 0.72, 4), R, 0, 1.26).rotation.y = Math.PI/4;
+        addMesh(new THREE.BoxGeometry(0.22, 0.35, 0.06), DK, 0, 0.175, 0.51);
+        break;
+      }
+      case 'cottage': {
+        addMesh(new THREE.BoxGeometry(1.3, 1.4, 1.2), W, 0, 0.7);
+        addMesh(new THREE.ConeGeometry(1.0, 0.85, 4), R, 0, 2.025).rotation.y = Math.PI/4;
+        addMesh(new THREE.BoxGeometry(0.28, 0.52, 0.06), DK, 0, 0.26, 0.61);
+        addMesh(new THREE.BoxGeometry(0.75, 0.1, 0.12), m(0x5A3410), 0, 0.65, 0.62); // flower box
+        break;
+      }
+      case 'inn': {
+        addMesh(new THREE.BoxGeometry(1.8, 2.0, 1.5), W, 0, 1.0);
+        addMesh(new THREE.BoxGeometry(2.0, 0.18, 1.7), R, 0, 2.09);
+        addMesh(new THREE.ConeGeometry(1.3, 1.0, 4), R, 0, 2.69).rotation.y = Math.PI/4;
+        addMesh(new THREE.BoxGeometry(0.55, 0.32, 0.05), m(0x3A2000), 0, 1.4, 0.76); // sign
+        addMesh(new THREE.BoxGeometry(0.38, 0.68, 0.06), DK, 0, 0.34, 0.76); // door
+        break;
+      }
+      case 'farm': {
+        addMesh(new THREE.BoxGeometry(2.6, 0.16, 2.6), m(0x5D8820), 0, 0.08); // field
+        addMesh(new THREE.BoxGeometry(1.2, 1.4, 0.85), W, -0.55, 0.7, -0.7);
+        const br = addMesh(new THREE.ConeGeometry(0.72, 0.72, 4), R, -0.55, 1.76, -0.7); br.rotation.y = Math.PI/4;
+        addMesh(new THREE.CylinderGeometry(0.26, 0.26, 1.55, 9), m(0xC0A060), 0.7, 0.775, -0.6); // silo
+        addMesh(new THREE.ConeGeometry(0.3, 0.38, 9), m(0x997744), 0.7, 1.74, -0.6);
+        break;
+      }
+      case 'lumber': {
+        addMesh(new THREE.BoxGeometry(1.5, 1.5, 1.1), W, 0, 0.75);
+        addMesh(new THREE.ConeGeometry(0.92, 0.7, 4), R, 0, 1.85).rotation.y = Math.PI/4;
+        for (let i = 0; i < 3; i++) {
+          const log = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 1.3, 7), DK);
+          log.rotation.z = Math.PI/2; log.position.set(0.85, 0.13+i*0.3, -0.1+i*0.05);
+          log.castShadow = true; g.add(log);
+        }
+        addMesh(new THREE.CylinderGeometry(0.1, 0.13, 0.85, 6), ST, -0.35, 2.12); // chimney
+        break;
+      }
+      case 'quarry': {
+        addMesh(new THREE.CylinderGeometry(1.3, 1.5, 0.22, 8), ST, 0, 0.11);
+        [[0.35,0,-0.25],[-0.42,0,0.38],[0.05,0,0.52]].forEach(([rx,,rz], i) => {
+          const rock = addMesh(new THREE.BoxGeometry(0.44+i*0.1, 0.35+i*0.1, 0.44+i*0.1), ST, rx, 0.36+i*0.1, rz);
+          rock.rotation.y = i*0.7;
+        });
+        addMesh(new THREE.BoxGeometry(0.1, 2.4, 0.1), DK, 0.75, 1.2, 0); // derrick post
+        addMesh(new THREE.BoxGeometry(1.1, 0.1, 0.1), DK, 0.2, 2.4, 0); // arm
+        break;
+      }
+      case 'fishery': {
+        const dock = addMesh(new THREE.BoxGeometry(1.5, 0.18, 1.4), DK, 0, 0.09, 0.4);
+        const wm = m(0x1A5599); wm.transparent = true; wm.opacity = 0.65;
+        addMesh(new THREE.BoxGeometry(1.6, 0.11, 1.0), wm, 0, 0.055, 1.25);
+        addMesh(new THREE.BoxGeometry(0.85, 1.1, 0.75), W, 0, 0.55, -0.15);
+        addMesh(new THREE.ConeGeometry(0.62, 0.6, 4), R, 0, 1.4, -0.15).rotation.y = Math.PI/4;
+        addMesh(new THREE.BoxGeometry(0.07, 2.0, 0.07), DK, 0.55, 1.0, 1.2); // mast
+        break;
+      }
+      case 'workshop': {
+        addMesh(new THREE.BoxGeometry(1.5, 1.9, 1.2), W, 0, 0.95);
+        addMesh(new THREE.ConeGeometry(1.05, 0.8, 4), R, 0, 2.25).rotation.y = Math.PI/4;
+        addMesh(new THREE.BoxGeometry(0.26, 1.1, 0.26), ST, -0.32, 2.5); // chimney
+        addMesh(new THREE.BoxGeometry(0.36, 0.65, 0.06), DK, 0, 0.325, 0.61); // door
+        break;
+      }
+      case 'mine': {
+        // A-frame headframe
+        const lB = new THREE.Mesh(new THREE.BoxGeometry(0.12, 3.2, 0.12), DK);
+        lB.position.set(-0.7, 1.6, 0); lB.rotation.z = 0.2; lB.castShadow = true; g.add(lB);
+        const rB = new THREE.Mesh(new THREE.BoxGeometry(0.12, 3.2, 0.12), DK);
+        rB.position.set(0.7, 1.6, 0); rB.rotation.z = -0.2; rB.castShadow = true; g.add(rB);
+        addMesh(new THREE.BoxGeometry(1.6, 0.12, 0.12), DK, 0, 2.85); // crossbar
+        const wh = addMesh(new THREE.TorusGeometry(0.32, 0.06, 7, 14), ST, 0, 3.3); wh.rotation.x = Math.PI/2;
+        addMesh(new THREE.BoxGeometry(1.1, 1.0, 1.0), W, 0, 0.5); // shed
+        break;
+      }
+      case 'industrial': {
+        addMesh(new THREE.BoxGeometry(2.0, 2.6, 1.7), m(0x7A5548), 0, 1.3); // brick body
+        [-0.55, 0.55].forEach(cx => {
+          addMesh(new THREE.CylinderGeometry(0.14, 0.18, 3.2, 8), m(0x6A4440), cx, 4.2);
+          const ring = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.04, 5, 10), ST);
+          ring.position.set(cx, 5.85, 0); ring.rotation.x = Math.PI/2; g.add(ring);
+        });
+        break;
+      }
+      case 'market': {
+        addMesh(new THREE.BoxGeometry(2.3, 0.13, 2.3), ST, 0, 0.065); // plaza
+        const awnC = [0xCC3322, 0x2266AA, 0xCC9900, 0x226633];
+        [[-0.62,-0.52],[0.62,-0.52],[-0.62,0.52],[0.62,0.52]].forEach(([sx,sz], i) => {
+          addMesh(new THREE.BoxGeometry(0.65, 1.1, 0.5), W, sx, 0.68, sz);
+          addMesh(new THREE.BoxGeometry(0.88, 0.05, 0.68), m(awnC[i]), sx, 1.31, sz);
+        });
+        addMesh(new THREE.CylinderGeometry(0.08, 0.1, 1.7, 6), ST, 0, 0.85); // central post
+        break;
+      }
+      case 'warehouse': {
+        addMesh(new THREE.BoxGeometry(2.5, 1.6, 1.9), m(0x7A6655), 0, 0.8);
+        // barrel-vault roof
+        const av = new THREE.Mesh(new THREE.CylinderGeometry(0.84, 0.84, 2.5, 10, 1, false, 0, Math.PI), m(0x5A4A3A));
+        av.position.set(0, 1.6, 0); av.rotation.z = Math.PI/2; av.castShadow = true; g.add(av);
+        addMesh(new THREE.BoxGeometry(0.7, 0.85, 0.09), DK, 0, 0.425, 0.96); // door
+        break;
+      }
+      case 'harbor': {
+        addMesh(new THREE.BoxGeometry(2.7, 0.2, 1.5), DK, 0, 0.1, 0.3); // dock planks
+        const wm2 = m(0x1A5599); wm2.transparent = true; wm2.opacity = 0.6;
+        addMesh(new THREE.BoxGeometry(2.9, 0.11, 1.1), wm2, 0, 0.055, 1.35); // water
+        addMesh(new THREE.BoxGeometry(0.2, 3.4, 0.2), DK, -1.1, 1.7, -0.25); // crane post
+        addMesh(new THREE.BoxGeometry(2.1, 0.13, 0.13), DK, 0, 3.4, -0.25); // crane arm
+        addMesh(new THREE.BoxGeometry(1.3, 1.5, 1.0), W, 0.55, 0.75, -0.5); // shed
+        addMesh(new THREE.ConeGeometry(0.78, 0.6, 4), R, 0.55, 1.8, -0.5).rotation.y = Math.PI/4;
+        break;
+      }
+      case 'airport': {
+        addMesh(new THREE.BoxGeometry(3.0, 1.0, 0.85), W, 0, 0.5); // long terminal
+        addMesh(new THREE.BoxGeometry(3.4, 0.15, 1.05), R, 0, 1.075); // flat roof
+        addMesh(new THREE.CylinderGeometry(0.2, 0.25, 1.4, 8), ST, 1.1, 1.775); // tower
+        addMesh(new THREE.CylinderGeometry(0.35, 0.25, 0.4, 8), m(0xAADDFF), 1.1, 2.675); // cab
+        addMesh(new THREE.BoxGeometry(0.4, 0.02, 3.2), m(0x333333), -0.8, 0.01, 0.9); // runway
+        break;
+      }
+      case 'school': {
+        addMesh(new THREE.BoxGeometry(1.5, 2.5, 1.3), W, 0, 1.25);
+        addMesh(new THREE.BoxGeometry(1.7, 0.15, 1.5), R, 0, 2.575);
+        addMesh(new THREE.CylinderGeometry(0.2, 0.26, 1.2, 8), W, 0.3, 3.25); // bell tower
+        addMesh(new THREE.ConeGeometry(0.25, 0.52, 6), R, 0.3, 3.91);
+        addMesh(new THREE.SphereGeometry(0.16, 7, 5), m(0xEECC00), 0.3, 4.52); // bell
+        break;
+      }
+      case 'library': {
+        addMesh(new THREE.BoxGeometry(2.2, 2.1, 1.5), m(0xD0C8B0), 0, 1.05);
+        [-0.75, 0, 0.75].forEach(cx => addMesh(new THREE.CylinderGeometry(0.1, 0.13, 1.9, 7), m(0xE0D8C0), cx, 1.05, 0.8));
+        addMesh(new THREE.ConeGeometry(1.3, 0.55, 3), m(0xC0B898), 0, 2.375, 0.75).rotation.y = Math.PI/6; // pediment
+        addMesh(new THREE.BoxGeometry(0.35, 0.6, 0.06), DK, 0, 0.3, 0.76); // door
+        break;
+      }
+      case 'temple': {
+        addMesh(new THREE.BoxGeometry(2.2, 0.22, 2.2), m(0xCCCCAA), 0, 0.11); // base
+        addMesh(new THREE.BoxGeometry(1.8, 3.1, 1.6), m(0xDDD8C0), 0, 1.66);
+        [-0.7, 0.7].forEach(cx => addMesh(new THREE.CylinderGeometry(0.12, 0.15, 2.8, 8), m(0xEEEAD0), cx, 1.62, 0.85));
+        const dome = new THREE.Mesh(new THREE.SphereGeometry(0.52, 10, 7, 0, Math.PI*2, 0, Math.PI/2), m(0xD4B840));
+        dome.position.y = 3.38; dome.castShadow = true; g.add(dome);
+        break;
+      }
+      case 'tower': {
+        addMesh(new THREE.BoxGeometry(1.1, 4.8, 1.1), W, 0, 2.4); // tall stone keep
+        addMesh(new THREE.BoxGeometry(1.3, 0.22, 1.3), R, 0, 4.91); // parapet slab
+        for (let i = 0; i < 4; i++) {
+          const a = (i/4)*Math.PI*2;
+          addMesh(new THREE.BoxGeometry(0.28, 0.38, 0.28), ST, Math.cos(a)*0.52, 5.08, Math.sin(a)*0.52);
+        }
+        break;
+      }
+      case 'modern': {
+        addMesh(new THREE.BoxGeometry(1.6, 3.6, 1.4), W, 0, 1.8);
+        addMesh(new THREE.BoxGeometry(1.75, 0.2, 1.55), R, 0, 3.7);
+        addMesh(new THREE.CylinderGeometry(0.06, 0.08, 1.5, 6), ST, 0.2, 4.55); // antenna
+        // windows hint
+        for (let i = 0; i < 3; i++) addMesh(new THREE.BoxGeometry(0.28, 0.32, 0.05), m(0x99CCEE), -0.35+i*0.35, 1.4+i*0.7, 0.71);
+        break;
+      }
+      case 'spaceport': {
+        addMesh(new THREE.CylinderGeometry(0.38, 0.72, 4.8, 9), W, 0, 2.4); // obelisk
+        addMesh(new THREE.ConeGeometry(0.36, 1.1, 9), R, 0, 5.35);
+        // fins
+        [0, Math.PI*2/3, Math.PI*4/3].forEach(a => {
+          const fin = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.8, 0.7), DK);
+          fin.position.set(Math.cos(a)*0.55, 1.2, Math.sin(a)*0.55); fin.rotation.y = a; fin.castShadow = true; g.add(fin);
+        });
+        break;
+      }
+      case 'hospital': {
+        addMesh(new THREE.BoxGeometry(1.9, 2.8, 1.6), m(0xEEEEDD), 0, 1.4);
+        addMesh(new THREE.ConeGeometry(1.1, 0.7, 4), m(0xDDCCBB), 0, 3.15).rotation.y = Math.PI/4;
+        const cr = m(0xDD1111);
+        addMesh(new THREE.BoxGeometry(0.6, 0.14, 0.06), cr, 0, 2.0, 0.82);
+        addMesh(new THREE.BoxGeometry(0.14, 0.6, 0.06), cr, 0, 2.0, 0.83);
+        addMesh(new THREE.BoxGeometry(0.36, 0.62, 0.06), DK, 0, 0.31, 0.81);
+        break;
+      }
     }
+    g.traverse(c => { if (c.isMesh) c.castShadow = true; });
   }
 
   // ── Building-specific geometry ─────────────────────────────────
@@ -704,7 +888,7 @@ const CityScene = (() => {
     if (selectedGroup && selectedGroup !== group) _unhighlight(selectedGroup);
     selectedGroup = group;
     rotPaused = true;
-    rotTarget = null; // stop any in-progress zone zoom
+    rotTarget = null;
     const wp = new THREE.Vector3();
     group.getWorldPosition(wp);
     const frac = Math.max(0.25, 1 - wp.length()/40);
@@ -712,7 +896,13 @@ const CityScene = (() => {
     lookTarget = { x: wp.x*0.5, y: 3, z: wp.z*0.5 };
     _highlight(group);
     clickPulse = 1.0;
-    if (typeof EmpireUI !== 'undefined') EmpireUI.showBuildingPanel(group.userData.buildingId, e);
+    // Project building world-pos to screen so the panel can float above it
+    const proj = wp.clone().project(camera);
+    const sw = renderer.domElement.clientWidth  || window.innerWidth;
+    const sh = renderer.domElement.clientHeight || window.innerHeight;
+    const sx = (proj.x *  0.5 + 0.5) * sw;
+    const sy = (proj.y * -0.5 + 0.5) * sh;
+    if (typeof EmpireUI !== 'undefined') EmpireUI.showBuildingPanel(group.userData.buildingId, sx, sy);
   }
 
   function _clearSelection() {

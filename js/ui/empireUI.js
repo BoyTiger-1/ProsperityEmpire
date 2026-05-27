@@ -110,7 +110,7 @@ const EmpireUI = {
   },
 
   // ── Called by CityScene when a 3D building is clicked ──
-  showBuildingPanel(bldId) {
+  showBuildingPanel(bldId, screenX, screenY) {
     this._activeBldId = bldId;
     const def = BUILDINGS[bldId];
     if (!def) return;
@@ -189,13 +189,32 @@ const EmpireUI = {
     const descEl = document.getElementById('bp-desc');
     if (descEl) descEl.textContent = def.desc || '';
 
+    // Position panel centered on the 3D building if screen coords provided
+    if (screenX !== undefined && screenY !== undefined) {
+      const PW = 282, PH = Math.min(panel.scrollHeight || 520, 520);
+      let px = Math.round(screenX - PW / 2);
+      let py = Math.round(screenY - PH / 2 - 30); // offset slightly above building center
+      px = Math.max(8, Math.min(window.innerWidth  - PW - 8, px));
+      py = Math.max(56, Math.min(window.innerHeight - PH - 8, py));
+      panel.classList.add('bp-over');
+      panel.style.left = px + 'px';
+      panel.style.top  = py + 'px';
+    } else {
+      panel.classList.remove('bp-over');
+      panel.style.left = '';
+      panel.style.top  = '';
+    }
     panel.classList.add('bp-open');
   },
 
   hideBuildingPanel() {
     this._activeBldId = null;
     const panel = document.getElementById('building-panel');
-    if (panel) panel.classList.remove('bp-open');
+    if (panel) {
+      panel.classList.remove('bp-open', 'bp-over');
+      panel.style.left = '';
+      panel.style.top  = '';
+    }
     const hintEl = document.getElementById('bp-hint');
     if (hintEl) hintEl.style.display = '';
   },
@@ -261,11 +280,14 @@ const EmpireUI = {
       const meta = RESOURCE_META[id];
       const rateStr   = FMT.rate(r.perSec);
       const rateClass = r.perSec < 0 ? 'neg' : '';
+      const isFood = id === 'food';
+      const valStr = isFood ? FMT.num(Math.floor(r.amount), 0) : FMT.num(r.amount);
+      const rStr   = isFood ? (r.perSec > 0 ? '+' : '') + Math.floor(r.perSec) + '/s' : rateStr;
       return `<div class="hdr-res">
         <span class="hdr-res-icon">${meta.emoji}</span>
         <span>
-          <span class="hdr-res-val">${id === 'food' ? FMT.num(Math.floor(r.amount), 0) : FMT.num(r.amount)}</span>
-          <span class="hdr-res-rate ${rateClass}"> ${rateStr}</span>
+          <span class="hdr-res-val">${valStr}</span>
+          <span class="hdr-res-rate ${rateClass}"> ${rStr}</span>
         </span>
       </div>`;
     }).join('');
