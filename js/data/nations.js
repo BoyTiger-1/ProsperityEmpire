@@ -60,4 +60,30 @@ const NATIONS_DATA = [
       { type:'tradeNormalization', text:'Stonewall agrees to normalize trade relations.' },
     ],
   },
+  {
+    id:'solarisle', name:'Solar Isles Federation', flag:'☀️',
+    desc:'A tropical archipelago leading the world in renewable energy and eco-tourism.',
+    specialty:'Clean Energy & Tourism', gdp:80000, relation:'friendly',
+    color:'#f97316',
+    traits:['Green Pioneer','Tourism Hub','Climate Leader'],
+    events:[
+      { type:'energyGrant', text:'Solar Isles shares breakthrough solar panel designs!', reward:'+400 Knowledge, +2.0 Energy/s for 60s' },
+      { type:'touristInflux', text:'Solar Isles tourists flood your cities!', reward:'+800 Capital, +5 Happiness' },
+      { type:'climateAccord', text:'Solar Isles proposes a climate accord — reducing your pollution by 10% if accepted.' },
+      { type:'hurricaneDamage', text:'A hurricane from the Solar Isles region disrupts shipping routes.', effect:'-20% Capital for 45s' },
+    ],
+  },
+  {
+    id:'siberon', name:'Siberon Empire', flag:'❄️',
+    desc:'A vast frozen empire with enormous energy reserves and a powerful military-industrial complex.',
+    specialty:'Energy & Military Industry', gdp:300000, relation:'hostile',
+    color:'#60a5fa',
+    traits:['Energy Superpower','Military Power','Expansionist'],
+    events:[
+      { type:'energyHold', text:'Siberon threatens to cut energy exports to your allies.', effect:'-30% Energy for 90s' },
+      { type:'armsRace', text:'Siberon announces a major military build-up, diverting global capital.', effect:'-15% Capital for 60s' },
+      { type:'resourceDeal', text:'Siberon offers a resource deal — cheap energy in exchange for Influence.', cost:'200 Influence', reward:'+4.0 Energy/s for 120s' },
+      { type:'diplomaticOpening', text:'Siberon sends a diplomatic delegation — a rare chance for détente.', reward:'+300 Influence if accepted' },
+    ],
+  },
 ];

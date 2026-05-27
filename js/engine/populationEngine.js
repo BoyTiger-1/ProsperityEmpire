@@ -37,7 +37,7 @@ const PopulationEngine = {
     const surplus = foodRate - foodNeeded;
 
     let growthPerSec = surplus >= 0
-      ? Math.min(8, GS.maxPopulation * 0.012 + 0.5)
+      ? Math.min(5, GS.maxPopulation * 0.006 + 0.25)
       : -Math.min(5, GS.population * 0.002 + 0.1);
 
     // Hospitals reduce death rate and boost natural growth
@@ -49,11 +49,20 @@ const PopulationEngine = {
 
     // Happiness-based immigration: high happiness attracts settlers
     if (GS.happiness > 68 && GS.population < GS.maxPopulation) {
-      growthPerSec += (GS.happiness - 68) * 0.006;
+      growthPerSec += (GS.happiness - 68) * 0.004;
     }
     // Very low happiness accelerates emigration
     if (GS.happiness < 30 && GS.population > 0) {
-      growthPerSec -= (30 - GS.happiness) * 0.004;
+      growthPerSec -= (30 - GS.happiness) * 0.003;
+    }
+
+    // Overpopulation soft cap: growth slows as you approach housing limit
+    if (GS.maxPopulation > 0 && growthPerSec > 0) {
+      const capacityRatio = GS.population / GS.maxPopulation;
+      if (capacityRatio > 0.75) {
+        const slowdown = 1 - ((capacityRatio - 0.75) / 0.25);
+        growthPerSec *= Math.max(0.02, slowdown);
+      }
     }
 
     GS.popGrowthRate = growthPerSec;

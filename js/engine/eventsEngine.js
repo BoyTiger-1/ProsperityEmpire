@@ -38,7 +38,18 @@ const EventsEngine = {
       try { evt.apply(GS); } catch(e) {}
     }
     const typeClass = { positive:'success', negative:'error', neutral:'info' }[evt.type] || 'info';
-    Notifications.show(`${evt.emoji} ${evt.name}`, evt.desc, typeClass, 6000);
+    // Build a detailed effect summary for the notification
+    let effectNote = '';
+    if (evt.mods) {
+      const parts = [];
+      for (const [k, v] of Object.entries(evt.mods)) {
+        if (k === 'all') parts.push(`All production ×${v}`);
+        else parts.push(`${k.charAt(0).toUpperCase()+k.slice(1)} ×${v}`);
+      }
+      if (parts.length) effectNote = ' — ' + parts.join(', ');
+    }
+    const body = evt.desc + (effectNote ? `<br><span style="opacity:0.7;font-size:11px">${effectNote}</span>` : '');
+    Notifications.show(`${evt.emoji} ${evt.name}`, body, typeClass, 9000);
     NewsEngine.add('event', `${evt.emoji} ${evt.name}`, evt.desc);
     if (window.CityScene) CityScene.triggerEventEffect(evt.type, evt.id);
     if (window.WorldUI) WorldUI.render();

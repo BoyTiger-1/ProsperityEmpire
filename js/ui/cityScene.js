@@ -78,42 +78,42 @@ const CityScene = (() => {
 
   // Fallback BLD data for generic buildings
   const BLD = {
-    hut:              { w:1.0, h:1.0, d:1.0, color:0x8B6914, roof:0x5D3E10 },
-    cottage:          { w:1.2, h:1.6, d:1.2, color:0xCD853F, roof:0x8B4513 },
-    inn:              { w:1.6, h:2.0, d:1.6, color:0xAA7733, roof:0x885522 },
-    hospital:         { w:2.0, h:3.5, d:2.4, color:0xFFFFFF, roof:0xDDEEFF },
-    farm:             { w:2.4, h:0.3, d:2.4, color:0x5D9E2A, roof:0x3D6E1A },
-    lumberMill:       { w:1.6, h:1.8, d:1.2, color:0x8B6914, roof:0x5D3E10 },
-    quarry:           { w:2.0, h:0.5, d:2.0, color:0x888888, roof:0x666666 },
-    fishery:          { w:1.8, h:1.2, d:1.8, color:0x4488AA, roof:0x226688 },
-    workshop:         { w:1.4, h:2.5, d:1.4, color:0x7A8899, roof:0x4A5568 },
-    coalMine:         { w:1.2, h:1.2, d:1.2, color:0x555555, roof:0x333333 },
-    textileMill:      { w:2.0, h:2.0, d:1.4, color:0xAA6688, roof:0x884466 },
-    factory:          { w:2.2, h:3.5, d:2.0, color:0x4A4A4A, roof:0x2A2A2A },
-    steelMill:        { w:2.8, h:4.0, d:2.0, color:0x555555, roof:0x333333 },
-    powerPlant:       { w:2.2, h:4.0, d:2.2, color:0xAAAAAA, roof:0x888888 },
-    oilRefinery:      { w:2.4, h:2.0, d:2.0, color:0xC0C0C0, roof:0x888888 },
-    market:           { w:2.0, h:2.2, d:2.0, color:0xFFB800, roof:0xCC9200 },
-    tradingPost:      { w:1.4, h:2.8, d:1.4, color:0xDA70D6, roof:0xA040A6 },
-    warehouse:        { w:2.8, h:1.8, d:2.0, color:0x556677, roof:0x3A4455 },
-    harbor:           { w:2.8, h:0.3, d:1.8, color:0x8B6914, roof:0x665500 },
-    airport:          { w:3.2, h:1.2, d:1.0, color:0xCCCCCC, roof:0xAAAAAA },
-    school:           { w:1.6, h:3.0, d:1.6, color:0x5A85ED, roof:0x3A65BD },
-    library:          { w:2.4, h:2.5, d:1.6, color:0xDDB88C, roof:0xCC9966 },
-    university:       { w:3.0, h:3.5, d:2.4, color:0x4169E1, roof:0x2145A0 },
-    researchInstitute:{ w:2.0, h:4.0, d:2.0, color:0x223344, roof:0x112233 },
-    techPark:         { w:1.2, h:2.0, d:1.0, color:0x88DDFF, roof:0x66BBDD },
-    mediaEmpire:      { w:2.0, h:5.0, d:1.8, color:0xAA4488, roof:0x882266 },
-    bank:             { w:2.2, h:4.5, d:1.8, color:0xC8D8E8, roof:0x7888A8 },
-    mint:             { w:1.6, h:3.5, d:1.4, color:0xCCCCAA, roof:0xAA9988 },
-    insurance:        { w:1.8, h:4.0, d:1.6, color:0x668899, roof:0x446677 },
-    stockExchange:    { w:2.0, h:7.0, d:1.8, color:0x88CCFF, roof:0x5599CC },
-    investmentFirm:   { w:1.8, h:6.0, d:1.6, color:0x334455, roof:0x223344 },
-    centralBank:      { w:2.8, h:8.0, d:2.4, color:0xEEEECC, roof:0xCCCC99 },
-    globalTradeHub:   { w:2.5, h:5.0, d:2.5, color:0x44AACC, roof:0x226688 },
-    cryptoFarm:       { w:1.8, h:2.5, d:1.6, color:0x336633, roof:0x224422 },
-    solarFarm:        { w:3.5, h:0.1, d:2.8, color:0x223366, roof:0x112244 },
-    spacePort:        { w:2.0, h:6.0, d:2.0, color:0x00CED1, roof:0x009BA0 },
+    hut:              { w:1.0, h:1.0, d:1.0, color:0xC8882A, roof:0x7A4E18 },
+    cottage:          { w:1.2, h:1.6, d:1.2, color:0xE8A060, roof:0xA05020 },
+    inn:              { w:1.6, h:2.0, d:1.6, color:0xCC8844, roof:0x994422 },
+    hospital:         { w:2.0, h:3.5, d:2.4, color:0xF5F5FF, roof:0xCCDDFF },
+    farm:             { w:2.4, h:0.3, d:2.4, color:0x44CC44, roof:0x228822 },
+    lumberMill:       { w:1.6, h:1.8, d:1.2, color:0x9B7240, roof:0x6B4E20 },
+    quarry:           { w:2.0, h:0.5, d:2.0, color:0xAAA090, roof:0x887860 },
+    fishery:          { w:1.8, h:1.2, d:1.8, color:0x2299CC, roof:0x117799 },
+    workshop:         { w:1.4, h:2.5, d:1.4, color:0x7A8F99, roof:0x4A6070 },
+    coalMine:         { w:1.2, h:1.2, d:1.2, color:0x554444, roof:0x332222 },
+    textileMill:      { w:2.0, h:2.0, d:1.4, color:0xDD5588, roof:0xAA2255 },
+    factory:          { w:2.2, h:3.5, d:2.0, color:0x5A5050, roof:0x382828 },
+    steelMill:        { w:2.8, h:4.0, d:2.0, color:0x607080, roof:0x3A4858 },
+    powerPlant:       { w:2.2, h:4.0, d:2.2, color:0xCCCCCC, roof:0x999999 },
+    oilRefinery:      { w:2.4, h:2.0, d:2.0, color:0xD4C8A0, roof:0xA8987A },
+    market:           { w:2.0, h:2.2, d:2.0, color:0xFFCC00, roof:0xCC8800 },
+    tradingPost:      { w:1.4, h:2.8, d:1.4, color:0xFF7722, roof:0xCC4400 },
+    warehouse:        { w:2.8, h:1.8, d:2.0, color:0x556688, roof:0x334466 },
+    harbor:           { w:2.8, h:0.3, d:1.8, color:0x775522, roof:0x553300 },
+    airport:          { w:3.2, h:1.2, d:1.0, color:0xDDE8F5, roof:0xAABBCC },
+    school:           { w:1.6, h:3.0, d:1.6, color:0x3377EE, roof:0x1144BB },
+    library:          { w:2.4, h:2.5, d:1.6, color:0xC4996A, roof:0xAA7744 },
+    university:       { w:3.0, h:3.5, d:2.4, color:0x2244CC, roof:0x0F2299 },
+    researchInstitute:{ w:2.0, h:4.0, d:2.0, color:0x1A2F44, roof:0x0D1A2A },
+    techPark:         { w:1.2, h:2.0, d:1.0, color:0x44DDFF, roof:0x22AACC },
+    mediaEmpire:      { w:2.0, h:5.0, d:1.8, color:0xEE2277, roof:0xAA0044 },
+    bank:             { w:2.2, h:4.5, d:1.8, color:0xEEF4FF, roof:0x8899BB },
+    mint:             { w:1.6, h:3.5, d:1.4, color:0xF0E878, roof:0xCCCC44 },
+    insurance:        { w:1.8, h:4.0, d:1.6, color:0x44889A, roof:0x226677 },
+    stockExchange:    { w:2.0, h:7.0, d:1.8, color:0x44AAFF, roof:0x1166CC },
+    investmentFirm:   { w:1.8, h:6.0, d:1.6, color:0x102040, roof:0x081428 },
+    centralBank:      { w:2.8, h:8.0, d:2.4, color:0xF8F4E8, roof:0xE8D888 },
+    globalTradeHub:   { w:2.5, h:5.0, d:2.5, color:0x0099DD, roof:0x006699 },
+    cryptoFarm:       { w:1.8, h:2.5, d:1.6, color:0x112211, roof:0x081808 },
+    solarFarm:        { w:3.5, h:0.1, d:2.8, color:0x1155CC, roof:0x003388 },
+    spacePort:        { w:2.0, h:6.0, d:2.0, color:0x00E5EE, roof:0x00AACC },
   };
 
   // ── Zone grid: spiral around zone center ───────────────────────
@@ -350,14 +350,27 @@ const CityScene = (() => {
     cyl(0.12, 0.12, 1.8, 8, 0xAAAAAA, 0, 0.9, 0, g);
   }
   function _buildTradingPost(g) {
-    box(1.4, 2.8, 1.4, 0xDA70D6, 1.4, g);
-    [[-0.5,-0.5],[0.5,-0.5],[-0.5,0.5],[0.5,0.5]].forEach(([mx,mz]) => {
-      box(0.25, 0.4, 0.25, 0xBB50B6, 3.0, g);
-      const mer = g.children[g.children.length-1]; mer.position.set(mx, 3.0, mz);
+    // Stone base / courtyard
+    box(2.4, 0.2, 2.4, 0xBBAA88, 0.1, g);
+    // Main warehouse building — earthy orange
+    box(1.4, 2.6, 1.3, 0xFF7722, 1.3, g);
+    // Coloured merchant awnings around outside
+    const awnColors = [0xFF2244, 0x22AAFF, 0xFFCC00, 0x44CC44];
+    [[1.2,0.9,-0.5],[−1.2,0.9,-0.5],[0.5,0.9,1.2],[-0.5,0.9,1.2]].forEach(([ax,ay,az], i) => {
+      const awn = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.07, 0.6), mat(awnColors[i]));
+      awn.position.set(ax, ay, az); awn.rotation.x = -0.25; g.add(awn);
+      const post = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.9, 0.06), mat(0x886644));
+      post.position.set(ax, ay-0.5, az); g.add(post);
     });
-    cyl(0.04, 0.04, 1.5, 6, 0x888888, 0, 3.75, 0, g);
-    const flag = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 0.3), mat(0xFF4400));
-    flag.position.set(0.25, 4.35, 0); flag.material.side = THREE.DoubleSide; g.add(flag);
+    // Flag pole + flag
+    cyl(0.04, 0.04, 1.8, 6, 0x888888, 0.6, 3.5, 0, g);
+    const flag = new THREE.Mesh(new THREE.PlaneGeometry(0.55, 0.35), mat(0xFF4400));
+    flag.position.set(0.88, 4.28, 0); flag.material.side = THREE.DoubleSide; g.add(flag);
+    // Stacked barrels outside
+    [[−0.9,0.22,-0.8],[-0.9,0.55,-0.8]].forEach(([bx,by,bz]) => {
+      const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.35, 8), mat(0x885522));
+      barrel.position.set(bx, by, bz); barrel.rotation.z = by > 0.3 ? Math.PI/2 : 0; g.add(barrel);
+    });
   }
   function _buildWarehouse(g) {
     box(2.8, 1.8, 2.0, 0x556677, 0.9, g);
@@ -468,21 +481,56 @@ const CityScene = (() => {
     cyl(0.04, 0.06, 3.0, 6, 0x888888, 0, 6.0, 0, g);
   }
   function _buildTechPark(g) {
-    const gm = mat(0x88DDFF, 0x1155AA, 0.15);
-    [[0,2.0,0],[-1.1,1.2,0.3],[1.1,1.5,-0.2]].forEach(([bx,bh,bz]) => {
-      const bld = new THREE.Mesh(new THREE.BoxGeometry(1.2, bh, 1.0), gm);
-      bld.position.set(bx, bh/2, bz); bld.castShadow = true; g.add(bld);
-    });
-    const wk = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.08, 0.3), mat(0x446688));
-    wk.position.set(0, 1.0, 0.2); g.add(wk);
+    // Main glass tower — faceted blue-cyan
+    const gm = mat(0x44DDFF, 0x0066AA, 0.25);
+    const main = new THREE.Mesh(new THREE.BoxGeometry(1.4, 3.0, 1.2), gm);
+    main.position.y = 1.5; main.castShadow = true; g.add(main);
+    // Setback upper floor
+    const upper = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.2, 0.9), mat(0x88EEFF, 0x0088CC, 0.3));
+    upper.position.set(0, 3.6, 0); g.add(upper);
+    // Side annex — lower, offset
+    const annex = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.8, 0.9), mat(0x33BBDD, 0x005588, 0.2));
+    annex.position.set(-1.2, 0.9, 0.2); g.add(annex);
+    // Rooftop solar panel array
+    const sp = mat(0x1133AA, 0x001166, 0.4);
+    for (let i = 0; i < 3; i++) {
+      const panel = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.04, 0.28), sp);
+      panel.position.set(-0.4+i*0.4, 3.08, 0); panel.rotation.x = -0.3; g.add(panel);
+    }
+    // Connecting walkway bridge between buildings
+    const bridge = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.1, 0.3), mat(0x88CCDD));
+    bridge.position.set(-0.6, 1.6, 0.15); g.add(bridge);
+    // Antenna mast on top
+    cyl(0.03, 0.03, 1.2, 5, 0x888888, 0, 4.8, 0, g);
+    const blink = new THREE.Mesh(new THREE.SphereGeometry(0.06, 6, 4), mat(0xFF4444, 0xFF0000, 0.8));
+    blink.position.set(0, 5.46, 0); g.add(blink);
   }
   function _buildHospital(g) {
-    box(2.0, 3.5, 1.4, 0xFFFFFF, 1.75, g);
-    const wing = new THREE.Mesh(new THREE.BoxGeometry(1.0, 2.5, 2.4), mat(0xFFFFFF));
-    wing.position.y = 1.25; g.add(wing);
-    const rm = mat(0xFF2222);
-    const ch = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.14, 0.14), rm); ch.position.set(0, 2.8, 0.72); g.add(ch);
-    const cv = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.7, 0.14), rm); cv.position.set(0, 2.8, 0.73); g.add(cv);
+    // Main body — crisp white
+    box(2.0, 3.5, 1.6, 0xF8F8FF, 1.75, g);
+    // Left wing
+    const lwing = new THREE.Mesh(new THREE.BoxGeometry(0.9, 2.2, 2.2), mat(0xF0F0FF));
+    lwing.position.set(-1.4, 1.1, 0); g.add(lwing);
+    // Right wing
+    const rwing = new THREE.Mesh(new THREE.BoxGeometry(0.9, 2.2, 2.2), mat(0xF0F0FF));
+    rwing.position.set(1.4, 1.1, 0); g.add(rwing);
+    // Red cross on front — horizontal bar
+    const rm = mat(0xEE1111);
+    const ch = new THREE.Mesh(new THREE.BoxGeometry(0.75, 0.18, 0.06), rm);
+    ch.position.set(0, 2.9, 0.82); g.add(ch);
+    // Red cross — vertical bar
+    const cv = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.75, 0.06), rm);
+    cv.position.set(0, 2.9, 0.83); g.add(cv);
+    // Blue emergency strip along bottom
+    const strip = new THREE.Mesh(new THREE.BoxGeometry(2.02, 0.18, 1.62), mat(0x2244CC));
+    strip.position.y = 0.09; g.add(strip);
+    // Rooftop helipad — circle
+    const pad = new THREE.Mesh(new THREE.CylinderGeometry(0.58, 0.58, 0.06, 12), mat(0x88AA88));
+    pad.position.y = 3.53; g.add(pad);
+    const padH = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.02, 0.12), mat(0xFFFFFF));
+    padH.position.y = 3.6; g.add(padH);
+    const padV = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.02, 0.6), mat(0xFFFFFF));
+    padV.position.y = 3.61; g.add(padV);
   }
   function _buildMediaEmpire(g) {
     box(2.0, 5.0, 1.8, 0xAA4488, 2.5, g);
@@ -491,12 +539,29 @@ const CityScene = (() => {
     dish.position.set(-0.6, 6.0, 0.3); dish.rotation.z = 0.4; g.add(dish);
   }
   function _buildCryptoFarm(g) {
-    box(1.8, 2.5, 1.6, 0x223322, 1.25, g);
-    for (let r = 0; r < 3; r++) for (let c = 0; c < 2; c++) {
-      const srv = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.35, 0.05), mat(0x336633, 0x00FF00, 0.25));
-      srv.position.set(-0.3+c*0.7, 0.5+r*0.65, 0.81); g.add(srv);
+    // Low dark warehouse body
+    box(2.2, 1.8, 1.8, 0x0F1F0F, 0.9, g);
+    // Server rack rows with bright green LED glow
+    for (let row = 0; row < 4; row++) {
+      const rack = new THREE.Mesh(new THREE.BoxGeometry(0.38, 1.4, 0.08), mat(0x1A3A1A, 0x00FF44, 0.4));
+      rack.position.set(-0.75+row*0.5, 0.9, 0.92); g.add(rack);
+      // LED strip on each rack
+      for (let l = 0; l < 3; l++) {
+        const led = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.04, 0.03), mat(0x00FF44, 0x00FF44, 1.0));
+        led.position.set(-0.75+row*0.5, 0.4+l*0.4, 0.97); g.add(led);
+      }
     }
-    cyl(0.14, 0.14, 1.8, 6, 0x888888, -0.6, 2.4, -0.7, g);
+    // Large cooling exhaust fans on side
+    [-0.6, 0.6].forEach(fz => {
+      const fan = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.12, 10), mat(0x333333));
+      fan.position.set(-1.12, 1.0, fz); fan.rotation.z = Math.PI/2; g.add(fan);
+      const blade = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.5, 0.06), mat(0x555555));
+      blade.position.set(-1.14, 1.0, fz); g.add(blade);
+    });
+    // Bitcoin antenna tower
+    cyl(0.06, 0.08, 1.4, 6, 0x888844, 0.7, 2.5, 0, g);
+    const btc = new THREE.Mesh(new THREE.SphereGeometry(0.16, 8, 6), mat(0xFFAA00, 0xFF8800, 0.6));
+    btc.position.set(0.7, 3.3, 0); g.add(btc);
   }
   function _buildSolarFarm(g) {
     const pm = mat(0x223366, 0x112244, 0.3);

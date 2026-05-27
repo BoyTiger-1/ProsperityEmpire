@@ -264,7 +264,7 @@ const EmpireUI = {
       return `<div class="hdr-res">
         <span class="hdr-res-icon">${meta.emoji}</span>
         <span>
-          <span class="hdr-res-val">${FMT.num(r.amount)}</span>
+          <span class="hdr-res-val">${id === 'food' ? FMT.num(Math.floor(r.amount), 0) : FMT.num(r.amount)}</span>
           <span class="hdr-res-rate ${rateClass}"> ${rateStr}</span>
         </span>
       </div>`;
